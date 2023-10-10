@@ -14,7 +14,7 @@ public class FoodOrderingSystem {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.println("hehe oo ...");
+        System.out.println("by the order of the three cobblers");
     }
     
 }
