@@ -199,13 +199,13 @@ public class CRUDVendor extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Name", "Email", "Phone Number", "Address"
+                "Name", "Email", "Phone Number", "Address", "Operting hours", "Operating days"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
