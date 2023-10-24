@@ -1,0 +1,1 @@
+1;McDonalds;012888333;mcD@gmail.com;mcd123;4.5;fast food;Bukit Jalil

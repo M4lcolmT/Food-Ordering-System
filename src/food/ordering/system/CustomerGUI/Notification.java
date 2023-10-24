@@ -4,6 +4,8 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import textFiles.TextFilePaths;
+
 /**
  *
  * @author jiasi
@@ -221,6 +223,8 @@ public class Notification extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
+        TextFilePaths path = new TextFilePaths();
+        System.out.println(path.getVendorTextFile());
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
