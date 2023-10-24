@@ -4,6 +4,13 @@
  */
 package food.ordering.system;
 
+import food.ordering.system.RunnerGUI.RunnerMainMenu;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author LENOVO
@@ -27,8 +34,8 @@ public class RunnerLogin extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        usernameInput = new javax.swing.JTextField();
+        passwordInput = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
@@ -36,16 +43,21 @@ public class RunnerLogin extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTextField1.setText("username");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        usernameInput.setText("username");
+        usernameInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                usernameInputActionPerformed(evt);
             }
         });
 
-        jPasswordField1.setText("jPasswordField1");
+        passwordInput.setText("jPasswordField1");
 
         jButton1.setText("Login");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("RUNNER LOGIN");
 
@@ -58,8 +70,8 @@ public class RunnerLogin extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jTextField1)
-                        .addComponent(jPasswordField1)
+                        .addComponent(usernameInput)
+                        .addComponent(passwordInput)
                         .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(165, Short.MAX_VALUE))
         );
@@ -69,9 +81,9 @@ public class RunnerLogin extends javax.swing.JFrame {
                 .addGap(58, 58, 58)
                 .addComponent(jLabel1)
                 .addGap(43, 43, 43)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(usernameInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(passwordInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
                 .addComponent(jButton1)
                 .addContainerGap(64, Short.MAX_VALUE))
@@ -91,9 +103,40 @@ public class RunnerLogin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void usernameInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameInputActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_usernameInputActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        File file = new File(path);
+        try (BufferedReader br = new BufferedReader(new FileReader(file))){
+            boolean success = false;
+            String line;
+            while ((line=br.readLine())!=null){
+                String[] stringArrays = line.split(",");
+                String nameInput = usernameInput.getText();
+                String passInput = passwordInput.getText();
+                //if the username and password matched, boolean success becaome true and stop reading line and login   
+                if (nameInput.trim().equals(stringArrays[0]) && passInput.trim().equals(stringArrays[1])){
+                    JOptionPane.showMessageDialog(null,"Login Successfull","Welcome",JOptionPane.INFORMATION_MESSAGE); 
+                    success = true;
+                    new RunnerMainMenu().setVisible(true);
+                    this.dispose();
+                }
+            }
+        br.close();
+        if (!success){
+            //if not matched, clear the field
+            usernameInput.setText("");
+            passwordInput.setText("");
+            JOptionPane.showMessageDialog(null,"Login Fail","Error",JOptionPane.INFORMATION_MESSAGE);
+        }
+        } catch (IOException ex) {
+            usernameInput.setText("");
+            passwordInput.setText("");
+            JOptionPane.showMessageDialog(null,"File not found!", "Error",JOptionPane.ERROR_MESSAGE);
+          }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -134,7 +177,7 @@ public class RunnerLogin extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JPasswordField passwordInput;
+    private javax.swing.JTextField usernameInput;
     // End of variables declaration//GEN-END:variables
 }
