@@ -4,11 +4,54 @@
  */
 package food.ordering.system;
 
+
+import food.ordering.system.CustomerGUI.MainMenu;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
+import textFiles.TextFilePaths;
+
 /**
  *
  * @author LENOVO
  */
 public class CustomerLogin extends javax.swing.JFrame {
+    TextFilePaths path=new TextFilePaths();
+    String vendorTextFilePath=path.getVendorTextFile();
+    public boolean checkLogin(String usernameInput, String passwordInput){
+    
+        
+    String username;
+    String password;
+    
+    try (var br = new BufferedReader(new FileReader(vendorTextFilePath))) {
+          String line;
+          while ((line = br.readLine()) != null) {
+            String[] parts = line.split(";");
+            username = parts[3];
+            password = parts[4];
+
+            if (usernameInput.trim().equals(username) && passwordInput.trim().equals(password)) {
+              return true;
+            }
+          }
+        } catch (IOException e) {
+          System.out.println("Error reading file: " + e.getMessage());
+        }
+        return false;
+    }
+    
+    private boolean isValidEmail(String email) {
+        // Regular expression for email validation
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+
+        return pattern.matcher(email).matches();
+    }
+    
 
     /**
      * Creates new form CustomerLogin
@@ -27,8 +70,8 @@ public class CustomerLogin extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        userNameInput = new javax.swing.JTextField();
+        passwordInput = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
@@ -36,16 +79,26 @@ public class CustomerLogin extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTextField1.setText("username");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        userNameInput.setText("username");
+        userNameInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                userNameInputActionPerformed(evt);
             }
         });
 
-        jPasswordField1.setText("jPasswordField1");
+        passwordInput.setText("jPasswordField1");
+        passwordInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordInputActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Login");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("CUSTOMER LOGIN");
 
@@ -58,8 +111,8 @@ public class CustomerLogin extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jTextField1)
-                        .addComponent(jPasswordField1)
+                        .addComponent(userNameInput)
+                        .addComponent(passwordInput)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(164, Short.MAX_VALUE))
         );
@@ -69,9 +122,9 @@ public class CustomerLogin extends javax.swing.JFrame {
                 .addContainerGap(53, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(35, 35, 35)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(userNameInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(passwordInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
                 .addComponent(jButton1)
                 .addGap(77, 77, 77))
@@ -91,9 +144,32 @@ public class CustomerLogin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void userNameInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userNameInputActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_userNameInputActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String UsernameInput= userNameInput.getText();
+        String PasswordInput= passwordInput.getText();
+
+        if (checkLogin(UsernameInput, PasswordInput)) {
+            if(isValidEmail(UsernameInput)){
+            JOptionPane.showMessageDialog(this,"Login Successful!");
+            new MainMenu().setVisible(true);
+            this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid Email Format For Username.");
+            }
+        }else{
+            JOptionPane.showMessageDialog(this,"Login Unsuccessful. Please re-enter your username and password.");
+        }
+        
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void passwordInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordInputActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passwordInputActionPerformed
 
     /**
      * @param args the command line arguments
@@ -104,25 +180,12 @@ public class CustomerLogin extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CustomerLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CustomerLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CustomerLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CustomerLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
+        
         //</editor-fold>
-
-        /* Create and display the form */
+       
+        
+        
+        //</editor-fold>/* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new CustomerLogin().setVisible(true);
@@ -134,7 +197,7 @@ public class CustomerLogin extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JPasswordField passwordInput;
+    private javax.swing.JTextField userNameInput;
     // End of variables declaration//GEN-END:variables
 }
