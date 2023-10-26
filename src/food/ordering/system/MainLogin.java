@@ -27,33 +27,33 @@ public class MainLogin extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        vendorLoginButton = new javax.swing.JButton();
+        customerLoginButton = new javax.swing.JButton();
+        runnerLoginButton = new javax.swing.JButton();
+        adminLoginButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton1.setText("Vendor");
+        vendorLoginButton.setText("Vendor");
 
-        jButton2.setText("Customer");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        customerLoginButton.setText("Customer");
+        customerLoginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                customerLoginButtonActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Runner");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        runnerLoginButton.setText("Runner");
+        runnerLoginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                runnerLoginButtonActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Admin");
+        adminLoginButton.setText("Admin");
 
         jLabel1.setText("MAIN LOGIN");
 
@@ -65,13 +65,13 @@ public class MainLogin extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(38, 38, 38)
-                        .addComponent(jButton1)
+                        .addComponent(vendorLoginButton)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2)
+                        .addComponent(customerLoginButton)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3)
+                        .addComponent(runnerLoginButton)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton4))
+                        .addComponent(adminLoginButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(190, 190, 190)
                         .addComponent(jLabel1)))
@@ -84,10 +84,10 @@ public class MainLogin extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(vendorLoginButton)
+                    .addComponent(customerLoginButton)
+                    .addComponent(runnerLoginButton)
+                    .addComponent(adminLoginButton))
                 .addGap(94, 94, 94))
         );
 
@@ -105,13 +105,14 @@ public class MainLogin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void customerLoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerLoginButtonActionPerformed
+        new CustomerLogin().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_customerLoginButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void runnerLoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runnerLoginButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_runnerLoginButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -149,11 +150,11 @@ public class MainLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton adminLoginButton;
+    private javax.swing.JButton customerLoginButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton runnerLoginButton;
+    private javax.swing.JButton vendorLoginButton;
     // End of variables declaration//GEN-END:variables
 }

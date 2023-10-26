@@ -1,0 +1,10 @@
+1;sheng khai;0139008765;nsk@gmail.com;nsk123;Kajang
+2;John Doe;0123456789;johndoe@email.com;pass123;Shah Alam
+3;Alice Smith;0198765432;alice@email.com;password;Kuala Lumpur
+4;David Lee;0161234567;david@email.com;abc123;Subang Jaya
+5;Sarah Brown;0112345678;sarah@email.com;securepass;Petaling Jaya
+6;Michael Johnson;0139876543;michael@email.com;mike123;Klang
+7;Emily Davis;0187654321;emily@email.com;pwd123;Ampang
+8;James Wilson;0145678901;james@email.com;jw123;Cyberjaya
+9;Olivia White;0109876543;olivia@email.com;olivia123;Seri Kembangan
+10;Daniel Harris;0198765434;dan@email.com;dan123;Hulu Langat

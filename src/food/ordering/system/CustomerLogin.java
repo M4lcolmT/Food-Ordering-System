@@ -5,11 +5,13 @@
 package food.ordering.system;
 
 
+import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.CustomerGUI.MainMenu;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import textFiles.TextFilePaths;
@@ -19,29 +21,58 @@ import textFiles.TextFilePaths;
  * @author LENOVO
  */
 public class CustomerLogin extends javax.swing.JFrame {
-    TextFilePaths path=new TextFilePaths();
-    String vendorTextFilePath=path.getVendorTextFile();
-    public boolean checkLogin(String usernameInput, String passwordInput){
+    TextFilePaths path = new TextFilePaths();
+    String customerTextFilePath = path.getCustomerTextFile();
+    private Customer customer;
     
-        
-    String username;
-    String password;
-    
-    try (var br = new BufferedReader(new FileReader(vendorTextFilePath))) {
-          String line;
-          while ((line = br.readLine()) != null) {
-            String[] parts = line.split(";");
-            username = parts[3];
-            password = parts[4];
+    public List<Customer> readCustomersFromFile() {
+        List<Customer> customers = new ArrayList<>();
 
-            if (usernameInput.trim().equals(username) && passwordInput.trim().equals(password)) {
-              return true;
+        try (BufferedReader reader = new BufferedReader(new FileReader(customerTextFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(";");
+                if (parts.length == 6) {
+                    int customerId = Integer.parseInt(parts[0]);
+                    String name = parts[1];
+                    String phoneNumber = parts[2];
+                    String email = parts[3];
+                    String password = parts[4];
+                    String address = parts[5];
+
+                    Customer customerItem = new Customer(customerId, name, phoneNumber, email, password, address);
+                    customers.add(customerItem);
+                } else {
+                    // Log that the line doesn't have the correct number of parts
+                    System.out.println("Skipping a line with an incorrect number of parts");
+                }
             }
-          }
         } catch (IOException e) {
-          System.out.println("Error reading file: " + e.getMessage());
+            // Handle the exception, e.g., log or display an error message
+            e.printStackTrace();
         }
-        return false;
+        return customers;
+    }
+    
+    public boolean checkLogin(String emailInput, String passwordInput){
+        String username;
+        String password;
+
+        try (var br = new BufferedReader(new FileReader(customerTextFilePath))) {
+              String line;
+              while ((line = br.readLine()) != null) {
+                String[] parts = line.split(";");
+                username = parts[3];
+                password = parts[4];
+
+                if (emailInput.trim().equals(username) && passwordInput.trim().equals(password)) {
+                  return true;
+                }
+              }
+            } catch (IOException e) {
+              System.out.println("Error reading file: " + e.getMessage());
+            }
+            return false;
     }
     
     private boolean isValidEmail(String email) {
@@ -52,10 +83,17 @@ public class CustomerLogin extends javax.swing.JFrame {
         return pattern.matcher(email).matches();
     }
     
+    public Customer findCustomerByEmail(List<Customer> customers, String email) {
+        for (Customer customerItem : customers) {  
+            if (customerItem.getEmail().equals(email)) {
+                return customerItem;  
+            } else {
+                System.out.println("Customer not found!");
+            }
+        }
+        return null;
+    }
 
-    /**
-     * Creates new form CustomerLogin
-     */
     public CustomerLogin() {
         initComponents();
     }
@@ -70,26 +108,26 @@ public class CustomerLogin extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        userNameInput = new javax.swing.JTextField();
-        passwordInput = new javax.swing.JPasswordField();
+        emailInputField = new javax.swing.JTextField();
+        passwordInputField = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        userNameInput.setText("username");
-        userNameInput.addActionListener(new java.awt.event.ActionListener() {
+        emailInputField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                userNameInputActionPerformed(evt);
+                emailInputFieldActionPerformed(evt);
             }
         });
 
-        passwordInput.setText("jPasswordField1");
-        passwordInput.addActionListener(new java.awt.event.ActionListener() {
+        passwordInputField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passwordInputActionPerformed(evt);
+                passwordInputFieldActionPerformed(evt);
             }
         });
 
@@ -102,32 +140,45 @@ public class CustomerLogin extends javax.swing.JFrame {
 
         jLabel1.setText("CUSTOMER LOGIN");
 
+        jLabel2.setText("email");
+
+        jLabel3.setText("password");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(137, 137, 137)
+                .addGap(83, 83, 83)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(userNameInput)
-                        .addComponent(passwordInput)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(164, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(emailInputField)
+                            .addComponent(passwordInputField)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(158, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(53, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(61, 61, 61)
                 .addComponent(jLabel1)
                 .addGap(35, 35, 35)
-                .addComponent(userNameInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(emailInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addGap(18, 18, 18)
-                .addComponent(passwordInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(passwordInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addGap(34, 34, 34)
                 .addComponent(jButton1)
-                .addGap(77, 77, 77))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -144,32 +195,33 @@ public class CustomerLogin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void userNameInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userNameInputActionPerformed
+    private void emailInputFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailInputFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_userNameInputActionPerformed
+    }//GEN-LAST:event_emailInputFieldActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String UsernameInput= userNameInput.getText();
-        String PasswordInput= passwordInput.getText();
+        String emailInput= emailInputField.getText();
+        String passwordInput= passwordInputField.getText();
 
-        if (checkLogin(UsernameInput, PasswordInput)) {
-            if(isValidEmail(UsernameInput)){
-            JOptionPane.showMessageDialog(this,"Login Successful!");
-            new MainMenu().setVisible(true);
-            this.dispose();
+        if (checkLogin(emailInput, passwordInput)) {
+            if (isValidEmail(emailInput)) {
+                JOptionPane.showMessageDialog(this,"Login Successful!");
+                
+                List<Customer> customerList = readCustomersFromFile();
+                Customer loggedCustomer = findCustomerByEmail(customerList, emailInput);
+                new MainMenu(loggedCustomer).setVisible(true);
+                this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Email Format For Username.");
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this,"Login Unsuccessful. Please re-enter your username and password.");
         }
-        
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void passwordInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordInputActionPerformed
+    private void passwordInputFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordInputFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_passwordInputActionPerformed
+    }//GEN-LAST:event_passwordInputFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -194,10 +246,12 @@ public class CustomerLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField emailInputField;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField passwordInput;
-    private javax.swing.JTextField userNameInput;
+    private javax.swing.JPasswordField passwordInputField;
     // End of variables declaration//GEN-END:variables
 }

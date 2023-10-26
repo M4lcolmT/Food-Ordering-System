@@ -21,35 +21,35 @@ import textFiles.TextFilePaths;
 public class VendorLogin extends javax.swing.JFrame {
     TextFilePaths path=new TextFilePaths();
     String vendorTextFilePath=path.getVendorTextFile();
-    public boolean checkLogin(String usernameInput, String passwordInput){
-        
-
-    String username;
-    String password;
     
-    try (var br = new BufferedReader(new FileReader(vendorTextFilePath))) {
-          String line;
-          while ((line = br.readLine()) != null) {
-            String[] parts = line.split(";");
-            username = parts[3];
-            password = parts[4];
+    public boolean checkLogin(String usernameInput, String passwordInput){
+        String username;
+        String password;
 
-            if (usernameInput.trim().equals(username) && passwordInput.trim().equals(password)) {
-              return true;
+        try (var br = new BufferedReader(new FileReader(vendorTextFilePath))) {
+              String line;
+              while ((line = br.readLine()) != null) {
+                String[] parts = line.split(";");
+                username = parts[3];
+                password = parts[4];
+
+                if (usernameInput.trim().equals(username) && passwordInput.trim().equals(password)) {
+                  return true;
+                }
+              }
+            } catch (IOException e) {
+              System.out.println("Error reading file: " + e.getMessage());
             }
-          }
-        } catch (IOException e) {
-          System.out.println("Error reading file: " + e.getMessage());
+            return false;
         }
-        return false;
-    }
-private boolean isValidEmail(String email) {
-    // Regular expression for email validation
-    String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
-    Pattern pattern = Pattern.compile(emailRegex);
+    
+    private boolean isValidEmail(String email) {
+        // Regular expression for email validation
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(emailRegex);
 
-    return pattern.matcher(email).matches();
-}
+        return pattern.matcher(email).matches();
+    }
     /**
      * Creates new form VendorLogin
      */
@@ -150,13 +150,13 @@ private boolean isValidEmail(String email) {
 
         if (checkLogin(UsernameInput, PasswordInput)) {
             if(isValidEmail(UsernameInput)){
-            JOptionPane.showMessageDialog(this,"Login Successful!");
-            new FoodItemMenu().setVisible(true);
-            this.dispose();
+                JOptionPane.showMessageDialog(this,"Login Successful!");
+                new FoodItemMenu().setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid Email Format For Username.");
+            }
         } else {
-            JOptionPane.showMessageDialog(this, "Invalid Email Format For Username.");
-        }
-        }else{
             JOptionPane.showMessageDialog(this,"Login Unsuccessful. Please re-enter your username and password.");
         }
         

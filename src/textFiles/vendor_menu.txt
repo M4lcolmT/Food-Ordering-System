@@ -1,0 +1,18 @@
+1;Cheese Burger;Burgers;12.50;Beef patty with pickles and American cheese
+1;Big Mac;Burgers;18.00;Two beef patties, lettuce, cheese, onions, and special sauce on a sesame seed bun
+1;McChicken;Burgers;14.00;Breaded chicken patty, lettuce, and mayonnaise in a bun
+1;Filet-O-Fish;Burgers;15.00;Breaded fish patty with tartar sauce and a slice of American cheese
+1;McMuffin;Breakfast;10.00;Egg, cheese, and Canadian bacon on an English muffin
+1;Hotcakes;Breakfast;12.00;Pancakes served with butter and maple syrup
+1;Hash Browns;Breakfast;8.00;Crispy fried potato hash browns
+1;French Fries;Sides;9.00;Golden crispy French fries
+1;Chicken McNuggets;Sides;15.00;Breaded chicken nuggets with a variety of dipping sauces
+1;Fruit Bag;Sides;7.50;Fresh fruit slices in a convenient bag
+1;Milkshake;Desserts;14.00;Creamy milkshake available in various flavors
+2;Soy Chicken;Sides;17.50;Soy sauce KFC fried chicken
+1;Apple Pie;Desserts;6.50;Warm apple pie with a flaky crust
+1;Sundae;Desserts;9.50;Vanilla ice cream with your choice of toppings
+1;McFlurry;Desserts;12.50;Soft-serve ice cream blended with candies and cookies
+1;Salad;Salads;13.50;Fresh salad with lettuce, tomatoes, and your choice of dressing
+2;Fried Chicken;Sides;17.50;Special formula KFC fried chicken\
+3;Chicken Joy;Sides;9.00;Yummy chicken

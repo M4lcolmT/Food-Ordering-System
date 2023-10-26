@@ -4,6 +4,7 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.Location;
 import food.ordering.system.VendorGUI.Vendor;
 
 /**
@@ -11,18 +12,37 @@ import food.ordering.system.VendorGUI.Vendor;
  * @author LENOVO
  */
 public class VendorPanel extends javax.swing.JPanel {
-
-    /**
-     * Creates new form VendorPanel
-     * @param vendor
-     */
-    public VendorPanel(Vendor vendor) {
+    private Vendor vendor;
+    private Customer customer;
+    
+    public VendorPanel(Vendor vendor, Customer customer) {
         initComponents();
+        this.vendor = vendor;
+        this.customer = customer;
+        
         vendorName.setText(vendor.getName());
-        vendorRating.setText(Integer.toString((int) vendor.getRating()));
+        vendorRating.setText(Double.toString((double) vendor.getRating()));
         vendorCategory.setText(vendor.getCategory());
         vendorAddress.setText(vendor.getAddress());
+        
+        calculateDistance(customer.getAddress().trim().toLowerCase(), vendor.getAddress().trim().toLowerCase());
     }
+    
+    public void calculateDistance(String customerAddress, String vendorAddress) {
+        Location customerLocation = Location.locationMap.get(customerAddress);
+        Location vendorLocation = Location.locationMap.get(vendorAddress);
+
+        if (customerLocation != null && vendorLocation != null) {
+            double vendorDistance = Location.calculateDistance(customerLocation,vendorLocation);
+
+            distance.setText(Double.toString((double)vendorDistance)+"km");
+        } else {
+            System.out.println("Unknown location");
+        }
+    }
+
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,7 +57,7 @@ public class VendorPanel extends javax.swing.JPanel {
         vendorName = new javax.swing.JLabel();
         vendorRating = new javax.swing.JLabel();
         vendorCategory = new javax.swing.JLabel();
-        vendorDistance = new javax.swing.JLabel();
+        distance = new javax.swing.JLabel();
         vendorAddress = new javax.swing.JLabel();
         orderButton = new javax.swing.JButton();
 
@@ -54,7 +74,7 @@ public class VendorPanel extends javax.swing.JPanel {
 
         vendorCategory.setText("Category");
 
-        vendorDistance.setText("Distance from user");
+        distance.setText("Distance from user");
 
         vendorAddress.setText("Location");
 
@@ -79,14 +99,14 @@ public class VendorPanel extends javax.swing.JPanel {
                             .addComponent(vendorName)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(vendorAddress)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(vendorDistance)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(vendorCategory)
+                                    .addComponent(distance))))
+                        .addContainerGap(261, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(vendorRating)
-                        .addGap(18, 18, 18)
-                        .addComponent(vendorCategory)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 224, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(orderButton)
                         .addGap(22, 22, 22))))
         );
@@ -108,7 +128,7 @@ public class VendorPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(vendorAddress)
-                            .addComponent(vendorDistance))))
+                            .addComponent(distance))))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
 
@@ -127,16 +147,17 @@ public class VendorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void orderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orderButtonActionPerformed
-        System.out.println("Order button pressed!");
+        Menu vendorMenu = new Menu(vendor);
+        vendorMenu.setVisible(true);
     }//GEN-LAST:event_orderButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel distance;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton orderButton;
     private javax.swing.JLabel vendorAddress;
     private javax.swing.JLabel vendorCategory;
-    private javax.swing.JLabel vendorDistance;
     private javax.swing.JLabel vendorImage;
     private javax.swing.JLabel vendorName;
     private javax.swing.JLabel vendorRating;

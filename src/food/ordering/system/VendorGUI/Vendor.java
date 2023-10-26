@@ -10,10 +10,15 @@ import food.ordering.system.User;
  * @author LENOVO
  */
 public class Vendor extends User{
-
+    private static int nextVendorID = 1;
+    private int vendorID;
+    private double rating;
+    private String category;
+    private String address;
+    
     public Vendor(int vendorID, String name, String phoneNumber, String email, String password, double rating, String category, String address) {
         super(name, phoneNumber, email, password);
-        this.vendorID = generateVendorID();
+        this.vendorID = nextVendorID++;
         this.rating = rating;
         this.category = category;
         this.address = address;
@@ -21,10 +26,6 @@ public class Vendor extends User{
 
     public int getVendorID() {
         return vendorID;
-    }
-
-    private int generateVendorID() {
-        return vendorID++; 
     }
     
     public double getRating() {
@@ -50,9 +51,4 @@ public class Vendor extends User{
     public void setAddress(String address) {
         this.address = address;
     }
-    
-    private static int vendorID = 1;
-    private double rating;
-    private String category;
-    private String address;
 }
