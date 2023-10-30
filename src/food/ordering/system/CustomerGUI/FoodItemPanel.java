@@ -12,27 +12,26 @@ import java.util.List;
  * @author LENOVO
  */
 public class FoodItemPanel extends javax.swing.JPanel {
-    FoodItem foodItem;
+    private FoodItem foodItem;
     private List<FoodItem> basket;
     private Menu menu;
+    private int quantity = calculateQuantity(basket, foodItem);
+
         
-    public FoodItemPanel(FoodItem foodItem, List<FoodItem> basket, Menu menu) {
+    public FoodItemPanel(FoodItem foodItem, List<FoodItem> basket, Menu menu, int quantity) {
         initComponents();
         this.foodItem = foodItem;
         this.basket = basket;
         this.menu = menu;
+        this.quantity = quantity;
         
         itemName.setText(foodItem.getItemName());
         itemDescription.setText(foodItem.getItemDescription());
         itemPrice.setText("RM"+Double.toString((double)foodItem.getItemPrice()));
-        for (FoodItem item : basket) {
-            System.out.println("name: "+foodItem.getItemName());
-        }
         updateQuantityLabel();
     }
     
     private void updateQuantityLabel() {
-        int quantity = calculateQuantity(basket, foodItem);
         quantityCount.setText(Integer.toString(quantity));
     }
     
@@ -136,6 +135,7 @@ public class FoodItemPanel extends javax.swing.JPanel {
         BasketManager.getInstance().addToBasket(foodItem);
         menu.updateItemCount();
         menu.updateTotalPrice(foodItem);
+        updateQuantityLabel();
     }//GEN-LAST:event_addItemButtonActionPerformed
 
 
@@ -145,6 +145,6 @@ public class FoodItemPanel extends javax.swing.JPanel {
     private javax.swing.JLabel itemName;
     private javax.swing.JLabel itemPrice;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel quantityCount;
+    public javax.swing.JLabel quantityCount;
     // End of variables declaration//GEN-END:variables
 }

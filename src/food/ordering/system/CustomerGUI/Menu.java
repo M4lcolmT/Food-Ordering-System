@@ -25,7 +25,9 @@ public class Menu extends javax.swing.JFrame {
     private Customer customer;
     private List<FoodItem> menu = new ArrayList<>();
     private static List<FoodItem> basket = new ArrayList<>();
+    private FoodItem foodItem;
     private static double totalPrice = 0.0;
+    private int quantity = calculateQuantity(basket,item);
 
     DecimalFormat df = new DecimalFormat("#.#");
 
@@ -46,8 +48,8 @@ public class Menu extends javax.swing.JFrame {
     
     public void populateInnerPanel(List<FoodItem> menu) {
         innerScrollPanel.removeAll();
-        for (FoodItem foodItem : menu) {
-            FoodItemPanel foodItemPanel = new FoodItemPanel(foodItem, basket, this);
+        for (FoodItem item : menu) {
+            FoodItemPanel foodItemPanel = new FoodItemPanel(item, basket, this);
             innerScrollPanel.add(foodItemPanel);
         }
         // Repaint and revalidate innerPanel to reflect the changes
@@ -71,7 +73,7 @@ public class Menu extends javax.swing.JFrame {
                         Double itemPrice = Double.valueOf(parts[4]);
                         String itemDescription = parts[5];
 
-                        FoodItem foodItem = new FoodItem(vendorID, itemID, itemName, itemCategory, itemPrice, itemDescription);
+                        foodItem = new FoodItem(vendorID, itemID, itemName, itemCategory, itemPrice, itemDescription);
                         menu.add(foodItem);
                     }
                 } else {
@@ -95,6 +97,16 @@ public class Menu extends javax.swing.JFrame {
         double itemPrice = foodItem.getItemPrice();
         totalPrice = totalPrice + itemPrice;
         totalPriceLabel.setText(Double.toString(totalPrice));
+    }
+    
+    private int calculateQuantity(List<FoodItem> items, FoodItem targetItem) {
+        int count = 0;
+        for (FoodItem item : items) {
+            if (item.getItemID() == targetItem.getItemID()) {
+                count++;
+            }
+        }
+        return count;
     }
     
     @SuppressWarnings("unchecked")

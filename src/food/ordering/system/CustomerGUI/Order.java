@@ -6,6 +6,7 @@ package food.ordering.system.CustomerGUI;
 
 import food.ordering.system.VendorGUI.FoodItem;
 import food.ordering.system.VendorGUI.Vendor;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -19,11 +20,10 @@ public class Order {
     private Vendor vendor;
     private List<FoodItem> orderBasket;
     private double totalPrice;
-
-    
     private boolean runnerAvailability;
     private int runnerID;
     private OrderStatus status;
+    private LocalDateTime orderTime;
     
     public enum OrderStatus {
         PENDING,
@@ -43,6 +43,7 @@ public class Order {
         this.status = status;
         this.runnerAvailability = false;
         this.runnerID = runnerID;
+        this.orderTime = LocalDateTime.now();
     }
 
     public static int getNextOrderID() {
@@ -89,8 +90,17 @@ public class Order {
         return runnerID;
     }
     
+    public LocalDateTime getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(LocalDateTime orderTime) {
+        this.orderTime = orderTime;
+    }
+    
     @Override
     public String toString() {
-        return "Order{" + "orderID=" + orderID + ", customer=" + customer + ", vendor=" + vendor + ", orderBasket=" + orderBasket + ", totalPrice=" + totalPrice + ", runnerAvailability=" + runnerAvailability + ", runnerID=" + runnerID + ", status=" + status + '}';
+        return "Order{" + "orderID=" + orderID + ", customer=" + customer + ", vendor=" + vendor + ", orderBasket=" + orderBasket + ", totalPrice=" + totalPrice + ", runnerAvailability=" + runnerAvailability + ", runnerID=" + runnerID + ", status=" + status + ", orderTime=" + orderTime + '}';
     }
+    
 }
