@@ -13,6 +13,8 @@ public class TextFilePaths {
     public final String vendorTextFile = "src/textFiles/vendor.txt";
     public final String vendorMenuTextFile = "src/textFiles/vendor_menu.txt";
     public final String orderTextFile = "src/textFiles/orders.txt";
+    public final String adminTextFile = "src/textFiles/admin.txt";
+    public final String runnerTextFile = "src/textFiles/runner.txt";
 
     public String getCustomerTextFile() {
         return customerTextFile;
@@ -28,5 +30,13 @@ public class TextFilePaths {
     
     public String getOrderTextFile() {
         return orderTextFile;
+    }
+    
+    public String getAdminTextFile() {
+        return adminTextFile;
+    }
+    
+    public String getRunnerTextFile() {
+        return runnerTextFile;
     }
 }

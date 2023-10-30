@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JOptionPane;
+import textFiles.TextFilePaths;
 
 /**
  *
@@ -108,8 +109,9 @@ public class RunnerLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_usernameInputActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        File file = new File(path);
-        try (BufferedReader br = new BufferedReader(new FileReader(file))){
+        TextFilePaths path=new TextFilePaths();
+        String runnerTextFilePath=path.getRunnerTextFile();
+        try (var br = new BufferedReader(new FileReader(runnerTextFilePath))){
             boolean success = false;
             String line;
             while ((line=br.readLine())!=null){
