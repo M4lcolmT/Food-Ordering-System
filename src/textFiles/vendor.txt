@@ -1,10 +1,10 @@
-1;McDonalds;0128883332;mcD@gmail.com;mcd123;4.5;Fast Food;Shah Alam
-2;KFC;0111122098;kfc@gmail.com;kfc231;3.2;Fast Food;Subang Jaya
-3;Jollibee;0111166098;jollibee@gmail.com;j123;4.8;Fast Food;Cyberjaya
-4;The Steakhouse;0131122098;steakhouse@gmail.com;steak456;4.7;Western;Petaling Jaya
-5;Sushi Saito;0131122098;saito@gmail.com;sushi789;4.9;Japanese;Klang
-6;Bulgogi Brothers;0123922098;bulgogi@gmail.com;bulgogi321;4.2;Korean;Cyberjaya
-7;Burger King;011488333;burgerking@gmail.com;burger123;3.9;Fast Food;Ampang
-8;One ton mee;0161629098;pandaexpress@gmail.com;panda789;4.3;Chinese;Kajang
-9;Pizza Hut;012889433;pizzahut@gmail.com;pizza123;4.0;Fast Food;Seri Kembangan
-10;Old Town White Coffee;0131822098;oldtown@gmail.com;oldtown123;3.5;Non-Halal;Hulu Langat
+1;McDonalds;0128883332;mcD@gmail.com;mcd123;4.5;Fast Food;Bukit Jalil
+2;KFC;0111122098;kfc@gmail.com;kfc231;3.2;Fast Food;Bukit Jalil
+3;Jollibee;0111166098;jollibee@gmail.com;j123;4.8;Fast Food;Bukit Jalil
+4;The Steakhouse;0131122098;steakhouse@gmail.com;steak456;4.7;Western;Bukit Jalil
+5;Sushi Saito;0131122098;saito@gmail.com;sushi789;4.9;Japanese;Bukit Jalil
+6;Bulgogi Brothers;0123922098;bulgogi@gmail.com;bulgogi321;4.2;Korean;Bukit Jalil
+7;Burger King;011488333;burgerking@gmail.com;burger123;3.9;Fast Food;Bukit Jalil
+8;One ton mee;0161629098;pandaexpress@gmail.com;panda789;4.3;Chinese;Bukit Jalil
+9;Pizza Hut;012889433;pizzahut@gmail.com;pizza123;4.0;Western;Bukit Jalil
+10;Old Town White Coffee;0131822098;oldtown@gmail.com;oldtown123;3.5;Non-Halal;Bukit Jalil

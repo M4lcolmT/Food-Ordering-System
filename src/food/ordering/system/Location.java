@@ -23,6 +23,7 @@ public class Location {
     public static final Location cyberjaya = new Location(2.9251, 101.6414);
     public static final Location seriKembangan = new Location(3.0132, 101.7091);
     public static final Location huluLangat = new Location(3.2229, 101.8230);
+    public static final Location bukitJalil = new Location(3.0584, 101.6867);
     
     private static final int earthRadius = 6371;
     private double latitude;
@@ -41,6 +42,7 @@ public class Location {
         locationMap.put("cyberjaya", cyberjaya);
         locationMap.put("seri kembangan", seriKembangan);
         locationMap.put("hulu langat", huluLangat);
+        locationMap.put("bukit jalil", bukitJalil);
     }
 
     

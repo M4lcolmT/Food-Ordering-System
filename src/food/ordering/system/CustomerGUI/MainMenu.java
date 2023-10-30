@@ -14,6 +14,9 @@ public class MainMenu extends javax.swing.JFrame {
     public MainMenu(Customer customer) {
         initComponents();
         this.customer = customer;
+        
+        orderNotificationPanel.setVisible(false);
+
     }
 
     /**
@@ -29,6 +32,10 @@ public class MainMenu extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        orderNotificationPanel = new javax.swing.JPanel();
+        orderStatusLabel = new javax.swing.JLabel();
+        orderETA = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -46,28 +53,76 @@ public class MainMenu extends javax.swing.JFrame {
 
         jButton3.setText("Notifications");
 
+        orderStatusLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        orderStatusLabel.setText("Order is on the way!");
+
+        orderETA.setText("Estimated time for arrival: 5mins");
+
+        jButton4.setText("View");
+        jButton4.setPreferredSize(new java.awt.Dimension(72, 30));
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout orderNotificationPanelLayout = new javax.swing.GroupLayout(orderNotificationPanel);
+        orderNotificationPanel.setLayout(orderNotificationPanelLayout);
+        orderNotificationPanelLayout.setHorizontalGroup(
+            orderNotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(orderNotificationPanelLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(orderNotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(orderETA)
+                    .addComponent(orderStatusLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 378, Short.MAX_VALUE)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
+        );
+        orderNotificationPanelLayout.setVerticalGroup(
+            orderNotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(orderNotificationPanelLayout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(orderNotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(orderNotificationPanelLayout.createSequentialGroup()
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(orderNotificationPanelLayout.createSequentialGroup()
+                        .addComponent(orderStatusLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(orderETA)
+                        .addGap(15, 15, 15))))
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(106, 106, 106)
-                .addComponent(jButton1)
-                .addGap(75, 75, 75)
-                .addComponent(jButton2)
-                .addGap(72, 72, 72)
-                .addComponent(jButton3)
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(orderNotificationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(145, 145, 145)
+                        .addComponent(jButton1)
+                        .addGap(75, 75, 75)
+                        .addComponent(jButton2)
+                        .addGap(72, 72, 72)
+                        .addComponent(jButton3)))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(202, Short.MAX_VALUE)
+                .addContainerGap(175, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
                     .addComponent(jButton3))
-                .addGap(175, 175, 175))
+                .addGap(111, 111, 111)
+                .addComponent(orderNotificationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -89,10 +144,18 @@ public class MainMenu extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel orderETA;
+    public javax.swing.JPanel orderNotificationPanel;
+    public javax.swing.JLabel orderStatusLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,7 +5,7 @@
 package food.ordering.system.CustomerGUI;
 
 import food.ordering.system.VendorGUI.FoodItem;
-import java.util.ArrayList;
+import food.ordering.system.VendorGUI.Vendor;
 import java.util.List;
 
 /**
@@ -15,27 +15,31 @@ import java.util.List;
 public class Order {
     private static int nextOrderID = 1;
     private int orderID;
-    private int customerID;
-    private int vendorID;
+    private Customer customer;
+    private Vendor vendor;
     private List<FoodItem> orderBasket;
+    private double totalPrice;
+
+    
     private boolean runnerAvailability;
     private int runnerID;
     private OrderStatus status;
     
     public enum OrderStatus {
-    PENDING,
-    CONFIRMED,
-    PREPARING,
-    OUT_FOR_DELIVERY,
-    DELIVERED,
-    CANCELED
+        PENDING,
+        CONFIRMED,
+        PREPARING,
+        OUT_FOR_DELIVERY,
+        DELIVERED,
+        CANCELED
     }
     
-    public Order(int orderID, int customerID, int vendorID, List<FoodItem> orderBasket, OrderStatus status, boolean runnerAvailability, int runnerID) {
+    public Order(int orderID, Customer customer, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, OrderStatus status, boolean runnerAvailability, int runnerID) {
         this.orderID = nextOrderID++;
-        this.customerID = customerID;
-        this.vendorID = vendorID;
-        this.orderBasket = new ArrayList<>();
+        this.customer = customer;
+        this.vendor = vendor;
+        this.orderBasket = orderBasket;
+        this.totalPrice = totalPrice;
         this.status = status;
         this.runnerAvailability = false;
         this.runnerID = runnerID;
@@ -48,33 +52,21 @@ public class Order {
     public int getOrderID() {
         return orderID;
     }
-
-    public void setOrderID(int orderID) {
-        this.orderID = orderID;
+    
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public int getCustomerID() {
-        return customerID;
-    }
-
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
-    }
-
-    public int getVendorID() {
-        return vendorID;
-    }
-
-    public void setVendorID(int vendorID) {
-        this.vendorID = vendorID;
+    public Vendor getVendor() {
+        return vendor;
     }
 
     public List<FoodItem> getOrderBasket() {
         return orderBasket;
     }
-
-    public void setOrderBasket(List<FoodItem> orderBasket) {
-        this.orderBasket = orderBasket;
+    
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
     public OrderStatus getStatus() {
@@ -96,8 +88,9 @@ public class Order {
     public int getRunnerID() {
         return runnerID;
     }
-
-    public void setRunnerID(int runnerID) {
-        this.runnerID = runnerID;
+    
+    @Override
+    public String toString() {
+        return "Order{" + "orderID=" + orderID + ", customer=" + customer + ", vendor=" + vendor + ", orderBasket=" + orderBasket + ", totalPrice=" + totalPrice + ", runnerAvailability=" + runnerAvailability + ", runnerID=" + runnerID + ", status=" + status + '}';
     }
 }

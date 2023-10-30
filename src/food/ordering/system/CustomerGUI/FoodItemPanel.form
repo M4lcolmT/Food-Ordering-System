@@ -58,13 +58,13 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <Component id="quantityCount" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="itemDescription" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="itemName" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="22" max="32767" attributes="0"/>
+                  <EmptySpace pref="32" max="32767" attributes="0"/>
                   <Component id="itemPrice" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="addItemButton" min="-2" max="-2" attributes="0"/>
@@ -79,7 +79,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="quantityCount" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="addItemButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="itemPrice" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -97,9 +97,9 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="jLabel1">
+        <Component class="javax.swing.JLabel" name="quantityCount">
           <Properties>
-            <Property name="text" type="java.lang.String" value="IMG"/>
+            <Property name="text" type="java.lang.String" value="x1"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="itemName">

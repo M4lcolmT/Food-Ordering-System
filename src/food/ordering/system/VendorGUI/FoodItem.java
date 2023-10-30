@@ -10,17 +10,24 @@ package food.ordering.system.VendorGUI;
  */
 public class FoodItem {
     private int vendorID;
+    private static int nextItemID = 1;
+    private int itemID;
     private String itemName;
     private String itemCategory;
     private double itemPrice;
     private String itemDescription;
     
-    public FoodItem(int vendorID, String itemName, String itemCategory, double itemPrice, String itemDescription) {
+    public FoodItem(int vendorID, int itemID, String itemName, String itemCategory, double itemPrice, String itemDescription) {
         this.vendorID = vendorID;
+        this.itemID = nextItemID++;
         this.itemName = itemName;
         this.itemCategory = itemCategory;
         this.itemPrice = itemPrice;
         this.itemDescription = itemDescription;
+    }
+
+    public int getItemID() {
+        return itemID;
     }
     
     public int getVendorID() {
@@ -57,5 +64,10 @@ public class FoodItem {
 
     public void setItemDescription(String itemDescription) {
         this.itemDescription = itemDescription;
+    }
+    
+    @Override
+    public String toString() {
+        return "FoodItem{" + "vendorID=" + vendorID + ", itemID=" + itemID + ", itemName=" + itemName + ", itemCategory=" + itemCategory + ", itemPrice=" + itemPrice + ", itemDescription=" + itemDescription + '}';
     }
 }

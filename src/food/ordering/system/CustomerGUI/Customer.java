@@ -13,23 +13,42 @@ import food.ordering.system.User;
 public class Customer extends User{
     private static int nextCustomerID = 1;
     private int customerID;
-    private String address;
-    
-    public Customer (int customerID, String name, String phoneNumber, String email, String password, String address){
+    private String city;
+    private String streetAddress;
+
+    public Customer (int customerID, String name, String phoneNumber, String email, String password, String streetAddress, String city){
         super(name, phoneNumber, email, password);
         this.customerID = nextCustomerID++;
-        this.address = address;
+        this.streetAddress = streetAddress;
+        this.city = city;
+    }
+    
+    public static int getNextCustomerID() {
+        return nextCustomerID;
+    }
+
+    public static void setNextCustomerID(int nextCustomerID) {
+        Customer.nextCustomerID = nextCustomerID;
     }
     
     public int getCustomerID() {
         return customerID;
     }
     
-    public String getAddress() {
-        return address;
+    public String getStreetAddress() {
+        return streetAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
     }
+    
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
 }

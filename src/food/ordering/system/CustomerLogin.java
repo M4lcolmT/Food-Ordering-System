@@ -26,24 +26,28 @@ public class CustomerLogin extends javax.swing.JFrame {
     private Customer customer;
     
     public List<Customer> readCustomersFromFile() {
+        return readCustomersFromFile(customerTextFilePath);
+    }
+    
+    public List<Customer> readCustomersFromFile(String filePath) {
         List<Customer> customers = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(customerTextFilePath))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 6) {
+                if (parts.length == 7) {
                     int customerId = Integer.parseInt(parts[0]);
                     String name = parts[1];
                     String phoneNumber = parts[2];
                     String email = parts[3];
                     String password = parts[4];
-                    String address = parts[5];
+                    String streetAddress = parts[5];
+                    String city = parts[6];
 
-                    Customer customerItem = new Customer(customerId, name, phoneNumber, email, password, address);
+                    Customer customerItem = new Customer(customerId, name, phoneNumber, email, password, streetAddress, city);
                     customers.add(customerItem);
                 } else {
-                    // Log that the line doesn't have the correct number of parts
                     System.out.println("Skipping a line with an incorrect number of parts");
                 }
             }
@@ -54,25 +58,14 @@ public class CustomerLogin extends javax.swing.JFrame {
         return customers;
     }
     
-    public boolean checkLogin(String emailInput, String passwordInput){
-        String username;
-        String password;
-
-        try (var br = new BufferedReader(new FileReader(customerTextFilePath))) {
-              String line;
-              while ((line = br.readLine()) != null) {
-                String[] parts = line.split(";");
-                username = parts[3];
-                password = parts[4];
-
-                if (emailInput.trim().equals(username) && passwordInput.trim().equals(password)) {
-                  return true;
-                }
-              }
-            } catch (IOException e) {
-              System.out.println("Error reading file: " + e.getMessage());
+    public boolean checkLogin(String emailInput, String passwordInput) {
+        List<Customer> customers = readCustomersFromFile(customerTextFilePath);
+        for (Customer cust : customers) {
+            if (emailInput.trim().equals(cust.getEmail()) && passwordInput.trim().equals(cust.getPassword())) {
+                return true;
             }
-            return false;
+        }
+        return false;
     }
     
     private boolean isValidEmail(String email) {
@@ -212,7 +205,7 @@ public class CustomerLogin extends javax.swing.JFrame {
                 new MainMenu(loggedCustomer).setVisible(true);
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Invalid Email Format For Username.");
+                JOptionPane.showMessageDialog(this, "Invalid Email Format.");
             }
         } else {
             JOptionPane.showMessageDialog(this,"Login Unsuccessful. Please re-enter your username and password.");

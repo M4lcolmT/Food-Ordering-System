@@ -5,7 +5,9 @@
 package food.ordering.system.CustomerGUI;
 
 import food.ordering.system.Location;
+import food.ordering.system.VendorGUI.FoodItem;
 import food.ordering.system.VendorGUI.Vendor;
+import java.util.List;
 
 /**
  *
@@ -25,10 +27,10 @@ public class VendorPanel extends javax.swing.JPanel {
         vendorCategory.setText(vendor.getCategory());
         vendorAddress.setText(vendor.getAddress());
         
-        calculateDistance(customer.getAddress().trim().toLowerCase(), vendor.getAddress().trim().toLowerCase());
+        calculateDistance(customer.getCity().trim().toLowerCase(), vendor.getAddress().trim().toLowerCase());
     }
     
-    public void calculateDistance(String customerAddress, String vendorAddress) {
+    private void calculateDistance(String customerAddress, String vendorAddress) {
         Location customerLocation = Location.locationMap.get(customerAddress);
         Location vendorLocation = Location.locationMap.get(vendorAddress);
 
@@ -41,8 +43,6 @@ public class VendorPanel extends javax.swing.JPanel {
         }
     }
 
-
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -147,7 +147,8 @@ public class VendorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void orderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orderButtonActionPerformed
-        Menu vendorMenu = new Menu(vendor);
+        List<FoodItem> basket = BasketManager.getInstance().getBasket();
+        Menu vendorMenu = new Menu(vendor, customer, basket);
         vendorMenu.setVisible(true);
     }//GEN-LAST:event_orderButtonActionPerformed
 
