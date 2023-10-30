@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JOptionPane;
+import textFiles.TextFilePaths;
 
 /**
  *
@@ -43,14 +44,11 @@ public class AdminLogin extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        usernameInput.setText("username");
         usernameInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 usernameInputActionPerformed(evt);
             }
         });
-
-        passwordInput.setText("jPasswordField1");
 
         jButton1.setText("Login");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -73,7 +71,7 @@ public class AdminLogin extends javax.swing.JFrame {
                         .addComponent(usernameInput)
                         .addComponent(passwordInput)
                         .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addContainerGap(188, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,8 +106,9 @@ public class AdminLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_usernameInputActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        File file = new File(path);
-        try (BufferedReader br = new BufferedReader(new FileReader(file))){
+        TextFilePaths path=new TextFilePaths();
+        String adminTextFilePath=path.getAdminTextFile();
+        try (var br = new BufferedReader(new FileReader(adminTextFilePath))){
             boolean success = false;
             String line;
             while ((line=br.readLine())!=null){
