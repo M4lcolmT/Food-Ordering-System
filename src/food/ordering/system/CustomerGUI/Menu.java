@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import textFiles.TextFilePaths;
@@ -27,7 +28,6 @@ public class Menu extends javax.swing.JFrame {
     private static List<FoodItem> basket = new ArrayList<>();
     private FoodItem foodItem;
     private static double totalPrice = 0.0;
-    private int quantity = calculateQuantity(basket,item);
 
     DecimalFormat df = new DecimalFormat("#.#");
 
@@ -44,17 +44,6 @@ public class Menu extends javax.swing.JFrame {
         vendorRating.setText(vendor.getRating()+" Ratings");
         readFoodItemsFromFile();
         populateInnerPanel(menu);
-    }
-    
-    public void populateInnerPanel(List<FoodItem> menu) {
-        innerScrollPanel.removeAll();
-        for (FoodItem item : menu) {
-            FoodItemPanel foodItemPanel = new FoodItemPanel(item, basket, this);
-            innerScrollPanel.add(foodItemPanel);
-        }
-        // Repaint and revalidate innerPanel to reflect the changes
-        innerScrollPanel.revalidate();
-        innerScrollPanel.repaint();
     }
     
     public List<FoodItem> readFoodItemsFromFile() {
@@ -88,6 +77,17 @@ public class Menu extends javax.swing.JFrame {
         return menu;
     }
     
+    public void populateInnerPanel(List<FoodItem> menu) {
+        innerScrollPanel.removeAll();
+        for (FoodItem item : menu) {
+            FoodItemPanel foodItemPanel = new FoodItemPanel(item, basket, this);
+            innerScrollPanel.add(foodItemPanel);
+        }
+        // Repaint and revalidate innerPanel to reflect the changes
+        innerScrollPanel.revalidate();
+        innerScrollPanel.repaint();
+    }
+    
     public void updateItemCount() {
         int itemCount = basket.size();
         basketItemCount.setText(itemCount + " items");
@@ -97,16 +97,6 @@ public class Menu extends javax.swing.JFrame {
         double itemPrice = foodItem.getItemPrice();
         totalPrice = totalPrice + itemPrice;
         totalPriceLabel.setText(Double.toString(totalPrice));
-    }
-    
-    private int calculateQuantity(List<FoodItem> items, FoodItem targetItem) {
-        int count = 0;
-        for (FoodItem item : items) {
-            if (item.getItemID() == targetItem.getItemID()) {
-                count++;
-            }
-        }
-        return count;
     }
     
     @SuppressWarnings("unchecked")
@@ -242,7 +232,7 @@ public class Menu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void confirmBasketMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmBasketMouseClicked
-        Order order = new Order(0, customer, vendor, basket, totalPrice, OrderStatus.PENDING, false, 0);
+        Order order = new Order(0, customer, vendor, basket, totalPrice, OrderStatus.PENDING, false, 0, LocalDateTime.now());
         OrderSummary orderSummary = new OrderSummary(order, basket);
         orderSummary.setVisible(true);
         this.dispose();

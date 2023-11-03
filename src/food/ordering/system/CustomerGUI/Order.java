@@ -8,13 +8,13 @@ import food.ordering.system.VendorGUI.FoodItem;
 import food.ordering.system.VendorGUI.Vendor;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  *
  * @author LENOVO
  */
 public class Order {
-    private static int nextOrderID = 1;
     private int orderID;
     private Customer customer;
     private Vendor vendor;
@@ -23,7 +23,7 @@ public class Order {
     private boolean runnerAvailability;
     private int runnerID;
     private OrderStatus status;
-    private LocalDateTime orderTime;
+    private LocalDateTime dateTime;
     
     public enum OrderStatus {
         PENDING,
@@ -34,8 +34,8 @@ public class Order {
         CANCELED
     }
     
-    public Order(int orderID, Customer customer, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, OrderStatus status, boolean runnerAvailability, int runnerID) {
-        this.orderID = nextOrderID++;
+    public Order(int orderID, Customer customer, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, OrderStatus status, boolean runnerAvailability, int runnerID, LocalDateTime dateTime) {
+        this.orderID = orderID;
         this.customer = customer;
         this.vendor = vendor;
         this.orderBasket = orderBasket;
@@ -43,13 +43,9 @@ public class Order {
         this.status = status;
         this.runnerAvailability = false;
         this.runnerID = runnerID;
-        this.orderTime = LocalDateTime.now();
+        this.dateTime = dateTime;
     }
-
-    public static int getNextOrderID() {
-        return nextOrderID;
-    }
-
+    
     public int getOrderID() {
         return orderID;
     }
@@ -90,17 +86,27 @@ public class Order {
         return runnerID;
     }
     
-    public LocalDateTime getOrderTime() {
-        return orderTime;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setOrderTime(LocalDateTime orderTime) {
-        this.orderTime = orderTime;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
     
     @Override
     public String toString() {
-        return "Order{" + "orderID=" + orderID + ", customer=" + customer + ", vendor=" + vendor + ", orderBasket=" + orderBasket + ", totalPrice=" + totalPrice + ", runnerAvailability=" + runnerAvailability + ", runnerID=" + runnerID + ", status=" + status + ", orderTime=" + orderTime + '}';
+        String delimiter = ";";
+        return orderID + delimiter + customer.getCustomerID() + delimiter + vendor.getVendorID() + delimiter + serializeOrderBasket() + delimiter + totalPrice + delimiter + status + delimiter + runnerAvailability + delimiter + runnerID +  delimiter + dateTime;
     }
-    
+
+    // Serialize the order basket to a string
+    private String serializeOrderBasket() {
+        // Convert the list of FoodItems to a string format, e.g., [item1, item2, item3]
+        StringJoiner joiner = new StringJoiner("|");
+        for (FoodItem item : orderBasket) {
+            joiner.add(item.toString());
+        }
+        return joiner.toString();
+    }
 }

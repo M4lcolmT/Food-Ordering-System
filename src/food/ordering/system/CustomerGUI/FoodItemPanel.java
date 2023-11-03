@@ -15,16 +15,14 @@ public class FoodItemPanel extends javax.swing.JPanel {
     private FoodItem foodItem;
     private List<FoodItem> basket;
     private Menu menu;
-    private int quantity = calculateQuantity(basket, foodItem);
 
         
-    public FoodItemPanel(FoodItem foodItem, List<FoodItem> basket, Menu menu, int quantity) {
+    public FoodItemPanel(FoodItem foodItem, List<FoodItem> basket, Menu menu) {
         initComponents();
         this.foodItem = foodItem;
         this.basket = basket;
         this.menu = menu;
-        this.quantity = quantity;
-        
+        quantityCount.setText("");
         itemName.setText(foodItem.getItemName());
         itemDescription.setText(foodItem.getItemDescription());
         itemPrice.setText("RM"+Double.toString((double)foodItem.getItemPrice()));
@@ -32,19 +30,10 @@ public class FoodItemPanel extends javax.swing.JPanel {
     }
     
     private void updateQuantityLabel() {
+        int quantity =  BasketManager.getInstance().calculateQuantity(foodItem);
         quantityCount.setText(Integer.toString(quantity));
     }
-    
-    private int calculateQuantity(List<FoodItem> items, FoodItem targetItem) {
-        int count = 0;
-        for (FoodItem item : items) {
-            if (item.getItemID() == targetItem.getItemID()) {
-                count++;
-            }
-        }
-        return count;
-    }
-    
+        
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

@@ -7,14 +7,10 @@ package food.ordering.system.CustomerGUI;
 import food.ordering.system.Location;
 import food.ordering.system.VendorGUI.Vendor;
 import food.ordering.system.VendorGUI.FoodItem;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import textFiles.TextFilePaths;
 
@@ -40,7 +36,6 @@ public class OrderSummary extends javax.swing.JFrame {
         initComponents();
         this.order = order;
         this.orderBasket = orderBasket;
-        
         
         Customer customer = order.getCustomer();
         Vendor vendor = order.getVendor();
@@ -125,8 +120,6 @@ public class OrderSummary extends javax.swing.JFrame {
         totalPrice = subtotal + tax + deliveryFee;
         return Double.parseDouble(df.format(totalPrice));
     }
-    
-    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -378,25 +371,19 @@ public class OrderSummary extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
-        int orderID = order.getOrderID();
         Customer customer = order.getCustomer();
         Vendor vendor = order.getVendor();
-        Order newOrder = new Order(orderID, customer, vendor, orderBasket, calculateTotal(), Order.OrderStatus.PENDING, false, 0);
-        try (PrintWriter pw = new PrintWriter(new FileWriter(orderTextFile, true))) 
-            {
-                pw.println(newOrder.toString());
-                JOptionPane.showMessageDialog(this, "New appointment added!");
-            } 
-        catch (IOException ex) 
-        {
-            JOptionPane.showMessageDialog(this, "Error!");
-        }
+        OrderManager orderManager = new OrderManager();
+        
+        customer.placeOrder(orderManager.getOrders(), vendor, orderBasket, Order.OrderStatus.PENDING);
+        customer.setOrders(orderManager.getOrders());
+        orderBasket.clear();
+        this.dispose();
         
         MainMenu mainMenu = new MainMenu(customer);
         mainMenu.orderNotificationPanel.setVisible(true);
         mainMenu.orderStatusLabel.setText("Your order is processing...");
         mainMenu.setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_confirmButtonActionPerformed
 
     private void backToMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backToMenuButtonActionPerformed
@@ -407,8 +394,6 @@ public class OrderSummary extends javax.swing.JFrame {
         menu.updateItemCount();
         double subtotalDecimal = Double.parseDouble(df.format(order.getTotalPrice()));
         menu.totalPriceLabel.setText(Double.toString(subtotalDecimal));
-        
-        
         
         menu.setVisible(true);
         this.dispose();

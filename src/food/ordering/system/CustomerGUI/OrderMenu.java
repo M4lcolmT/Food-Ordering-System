@@ -5,6 +5,7 @@
 package food.ordering.system.CustomerGUI;
 import food.ordering.system.VendorGUI.Vendor;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
@@ -31,7 +32,8 @@ public class OrderMenu extends javax.swing.JFrame {
     
     public List<Vendor> readVendorsFromFile() {
         vendors.clear();
-
+        
+        
         try (BufferedReader reader = new BufferedReader(new FileReader(vendorTextFilePath))) {
             String line;
             while ((line = reader.readLine()) != null) {

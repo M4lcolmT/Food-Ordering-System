@@ -38,5 +38,15 @@ public class BasketManager {
     public void removeFromBasket(FoodItem item) {
         basket.remove(item);
     }
+
+    public int calculateQuantity(FoodItem targetItem) {
+        int count = 0;
+        for (FoodItem item : basket) {
+            if (item.getItemID() == targetItem.getItemID()) {
+                count++;
+            }
+        }
+        return count;
+    }
 }
 

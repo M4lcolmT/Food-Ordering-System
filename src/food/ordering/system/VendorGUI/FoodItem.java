@@ -10,7 +10,6 @@ package food.ordering.system.VendorGUI;
  */
 public class FoodItem {
     private int vendorID;
-    private static int nextItemID = 1;
     private int itemID;
     private String itemName;
     private String itemCategory;
@@ -19,7 +18,7 @@ public class FoodItem {
     
     public FoodItem(int vendorID, int itemID, String itemName, String itemCategory, double itemPrice, String itemDescription) {
         this.vendorID = vendorID;
-        this.itemID = nextItemID++;
+        this.itemID = itemID;
         this.itemName = itemName;
         this.itemCategory = itemCategory;
         this.itemPrice = itemPrice;
@@ -68,6 +67,6 @@ public class FoodItem {
     
     @Override
     public String toString() {
-        return "FoodItem{" + "vendorID=" + vendorID + ", itemID=" + itemID + ", itemName=" + itemName + ", itemCategory=" + itemCategory + ", itemPrice=" + itemPrice + ", itemDescription=" + itemDescription + '}';
+        return vendorID + "=" + itemID + "=" + itemName + "=" + itemCategory + "=" + itemPrice + "=" + itemDescription;
     }
 }

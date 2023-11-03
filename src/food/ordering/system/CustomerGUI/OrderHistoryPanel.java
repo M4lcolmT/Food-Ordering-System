@@ -12,21 +12,19 @@ import food.ordering.system.VendorGUI.Vendor;
  */
 public class OrderHistoryPanel extends javax.swing.JPanel {
 
-    private Order orders;
+    private Order order;
     private Customer customer;
     
     
-    public OrderHistoryPanel(Order orders, Customer customer) {
+    public OrderHistoryPanel(Order order, Customer customer) {
         initComponents();
-        this.orders = orders;
+        this.order = order;
         this.customer = customer;
-        Vendor vendor = orders.getVendor();       
-        Customer ordercustomer = orders.getCustomer();
+        Vendor vendor = order.getVendor();       
         
-        if (ordercustomer.getCustomerID() == customer.getCustomerID()){
-            restoranField.setText(vendor.getName());
-            totalPrice.setText(Double.toString(orders.getTotalPrice()));
-        }
+        restoranField.setText(vendor.getName());
+        totalPrice.setText(Double.toString(order.getTotalPrice()));
+        
     }
 
     /**
@@ -40,16 +38,17 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         dateField = new javax.swing.JLabel();
-        timeField = new javax.swing.JLabel();
         restoranField = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         totalPrice = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
+        jPanel1.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel1.setPreferredSize(new java.awt.Dimension(583, 100));
+
         dateField.setText("Date");
 
-        timeField.setText("Time");
-
+        restoranField.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         restoranField.setText("Restauran Kam Lan");
 
         jLabel2.setText("Total:");
@@ -57,49 +56,45 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
         totalPrice.setText("RM69.69");
 
         jButton1.setText("Reorder");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dateField)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(totalPrice)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(timeField)
-                            .addComponent(restoranField))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 380, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(32, 32, 32))))
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(totalPrice)
+                        .addGap(18, 18, 18)
+                        .addComponent(dateField))
+                    .addComponent(restoranField))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 332, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(30, 30, 30))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(dateField)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(timeField)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(restoranField))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(jButton1)))
+                .addGap(28, 28, 28)
+                .addComponent(restoranField)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(totalPrice))
-                .addContainerGap(12, Short.MAX_VALUE))
+                    .addComponent(totalPrice)
+                    .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addContainerGap(30, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(37, 37, 37))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -116,6 +111,10 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel dateField;
@@ -123,7 +122,6 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel restoranField;
-    private javax.swing.JLabel timeField;
     private javax.swing.JLabel totalPrice;
     // End of variables declaration//GEN-END:variables
 }

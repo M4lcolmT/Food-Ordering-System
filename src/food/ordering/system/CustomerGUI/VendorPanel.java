@@ -22,7 +22,6 @@ public class VendorPanel extends javax.swing.JPanel {
         this.vendor = vendor;
         this.customer = customer;
         
-        vendor.getVendorID();
         vendorName.setText(vendor.getName());
         vendorRating.setText(Double.toString((double) vendor.getRating()));
         vendorCategory.setText(vendor.getCategory());

@@ -23,29 +23,24 @@ import textFiles.TextFilePaths;
 public class CustomerLogin extends javax.swing.JFrame {
     TextFilePaths path = new TextFilePaths();
     String customerTextFilePath = path.getCustomerTextFile();
-    private Customer customer;
     
-    public List<Customer> readCustomersFromFile() {
-        return readCustomersFromFile(customerTextFilePath);
-    }
+    List<Customer> customers = new ArrayList<>();
     
-    public List<Customer> readCustomersFromFile(String filePath) {
-        List<Customer> customers = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+    public List<Customer> readCustomers() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(customerTextFilePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
                 if (parts.length == 7) {
-                    int customerId = Integer.parseInt(parts[0]);
+                    int id = Integer.parseInt(parts[0]);
                     String name = parts[1];
                     String phoneNumber = parts[2];
                     String email = parts[3];
                     String password = parts[4];
                     String streetAddress = parts[5];
                     String city = parts[6];
-
-                    Customer customerItem = new Customer(customerId, name, phoneNumber, email, password, streetAddress, city);
+                    
+                    Customer customerItem = new Customer(id, name, phoneNumber, email, password, streetAddress, city);
                     customers.add(customerItem);
                 } else {
                     System.out.println("Skipping a line with an incorrect number of parts");
@@ -59,7 +54,6 @@ public class CustomerLogin extends javax.swing.JFrame {
     }
     
     public boolean checkLogin(String emailInput, String passwordInput) {
-        List<Customer> customers = readCustomersFromFile(customerTextFilePath);
         for (Customer cust : customers) {
             if (emailInput.trim().equals(cust.getEmail()) && passwordInput.trim().equals(cust.getPassword())) {
                 return true;
@@ -76,7 +70,7 @@ public class CustomerLogin extends javax.swing.JFrame {
         return pattern.matcher(email).matches();
     }
     
-    public Customer findCustomerByEmail(List<Customer> customers, String email) {
+    public Customer findCustomerByEmail(String email) {
         for (Customer customerItem : customers) {  
             if (customerItem.getEmail().equals(email)) {
                 return customerItem;  
@@ -86,9 +80,10 @@ public class CustomerLogin extends javax.swing.JFrame {
         }
         return null;
     }
-
+    
     public CustomerLogin() {
         initComponents();
+        readCustomers();
     }
 
     /**
@@ -103,7 +98,7 @@ public class CustomerLogin extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         emailInputField = new javax.swing.JTextField();
         passwordInputField = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
+        loginButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -124,10 +119,10 @@ public class CustomerLogin extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Login");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        loginButton.setText("Login");
+        loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                loginButtonActionPerformed(evt);
             }
         });
 
@@ -153,7 +148,7 @@ public class CustomerLogin extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(emailInputField)
                             .addComponent(passwordInputField)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(158, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -170,7 +165,7 @@ public class CustomerLogin extends javax.swing.JFrame {
                     .addComponent(passwordInputField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addGap(34, 34, 34)
-                .addComponent(jButton1)
+                .addComponent(loginButton)
                 .addContainerGap(69, Short.MAX_VALUE))
         );
 
@@ -192,25 +187,23 @@ public class CustomerLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_emailInputFieldActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         String emailInput= emailInputField.getText();
         String passwordInput= passwordInputField.getText();
 
         if (checkLogin(emailInput, passwordInput)) {
             if (isValidEmail(emailInput)) {
                 JOptionPane.showMessageDialog(this,"Login Successful!");
-                
-                List<Customer> customerList = readCustomersFromFile();
-                Customer loggedCustomer = findCustomerByEmail(customerList, emailInput);
+                Customer loggedCustomer = findCustomerByEmail(emailInput);
                 new MainMenu(loggedCustomer).setVisible(true);
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Invalid Email Format.");
+                JOptionPane.showMessageDialog(this,"Invalid email format.");
             }
         } else {
             JOptionPane.showMessageDialog(this,"Login Unsuccessful. Please re-enter your username and password.");
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_loginButtonActionPerformed
 
     private void passwordInputFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordInputFieldActionPerformed
         // TODO add your handling code here:
@@ -240,11 +233,11 @@ public class CustomerLogin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField emailInputField;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton loginButton;
     private javax.swing.JPasswordField passwordInputField;
     // End of variables declaration//GEN-END:variables
 }
