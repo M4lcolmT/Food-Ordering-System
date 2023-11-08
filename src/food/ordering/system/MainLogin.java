@@ -38,6 +38,11 @@ public class MainLogin extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         vendorLoginButton.setText("Vendor");
+        vendorLoginButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                vendorLoginButtonActionPerformed(evt);
+            }
+        });
 
         customerLoginButton.setText("Customer");
         customerLoginButton.addActionListener(new java.awt.event.ActionListener() {
@@ -111,8 +116,14 @@ public class MainLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_customerLoginButtonActionPerformed
 
     private void runnerLoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runnerLoginButtonActionPerformed
-        // TODO add your handling code here:
+        new RunnerLogin().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_runnerLoginButtonActionPerformed
+
+    private void vendorLoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vendorLoginButtonActionPerformed
+        new VendorLogin().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_vendorLoginButtonActionPerformed
 
     /**
      * @param args the command line arguments
