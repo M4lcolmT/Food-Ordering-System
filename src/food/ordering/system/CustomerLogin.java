@@ -54,8 +54,8 @@ public class CustomerLogin extends javax.swing.JFrame {
     }
     
     public boolean checkLogin(String emailInput, String passwordInput) {
-        for (Customer cust : customers) {
-            if (emailInput.trim().equals(cust.getEmail()) && passwordInput.trim().equals(cust.getPassword())) {
+        for (Customer customerItem : customers) {
+            if (emailInput.trim().equals(customerItem.getEmail()) && passwordInput.trim().equals(customerItem.getPassword())) {
                 return true;
             }
         }

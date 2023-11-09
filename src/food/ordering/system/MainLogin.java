@@ -59,6 +59,11 @@ public class MainLogin extends javax.swing.JFrame {
         });
 
         adminLoginButton.setText("Admin");
+        adminLoginButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adminLoginButtonActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("MAIN LOGIN");
 
@@ -124,6 +129,11 @@ public class MainLogin extends javax.swing.JFrame {
         new VendorLogin().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_vendorLoginButtonActionPerformed
+
+    private void adminLoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminLoginButtonActionPerformed
+        new AdminLogin().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_adminLoginButtonActionPerformed
 
     /**
      * @param args the command line arguments

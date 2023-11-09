@@ -4,13 +4,9 @@
  */
 package food.ordering.system;
 
-
-import food.ordering.system.CustomerGUI.Customer;
-import food.ordering.system.VendorGUI.FoodItemMenu;
 import food.ordering.system.VendorGUI.MainMenu;
 import food.ordering.system.VendorGUI.Vendor;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,8 +54,8 @@ public class VendorLogin extends javax.swing.JFrame {
     }
     
     public boolean checkLogin(String emailInput, String passwordInput) {
-        for (Vendor vendor : vendors) {
-            if (emailInput.trim().equals(vendor.getEmail()) && passwordInput.trim().equals(vendor.getPassword())) {
+        for (Vendor vendorItem : vendors) {
+            if (emailInput.trim().equals(vendorItem.getEmail()) && passwordInput.trim().equals(vendorItem.getPassword())) {
                 return true;
             }
         }

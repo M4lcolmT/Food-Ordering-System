@@ -13,8 +13,8 @@ public class TextFilePaths {
     public final String vendorTextFile = "src/textFiles/vendor.txt";
     public final String vendorMenuTextFile = "src/textFiles/vendor_menu.txt";
     public final String orderTextFile = "src/textFiles/orders.txt";
-    public final String adminTextFile = "src/textFiles/orders.txt";
-    public final String runnerTextFile = "src/textFiles/orders.txt";
+    public final String adminTextFile = "src/textFiles/admin.txt";
+    public final String runnerTextFile = "src/textFiles/runner.txt";
     public final String vendorReviewsTextFile = "src/textFiles/vendor_reviews.txt";
     public final String runnerReviewsTextFile = "src/textFiles/runner_reviews.txt";
 

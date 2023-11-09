@@ -1,1 +1,10 @@
-khoo,1234
+1;Khoo;013456987;khoo@gmail.com;k123;Petaling Jaya;VJC2908;Toyota Motorcycle
+2;Tan;012345678;tan@gmail.com;t456;Kuala Lumpur;ABC1234;Honda Scooter
+3;Lim;019876543;lim@gmail.com;l789;Shah Alam;XYZ5678;Yamaha Bike
+4;Wong;010987654;wong@gmail.com;w321;Subang Jaya;DEF4321;Suzuki Motorcycle
+5;Ng;018765432;ng@gmail.com;n654;Klang;GHI8765;Harley Davidson
+6;Lee;011234567;lee@gmail.com;l234;Ampang;JKL4321;Kawasaki Ninja
+7;Chong;017654321;chong@gmail.com;c987;Cheras;MNO8765;Ducati Monster
+8;Foo;016543210;foo@gmail.com;f654;Damansara;PQR5432;BMW Motorrad
+9;Lim;014321098;lim@gmail.com;l012;Kota Kinabalu;STU1098;Triumph Street
+10;Teh;015432109;teh@gmail.com;t543;Penang;VWX2109;KTM Duke
