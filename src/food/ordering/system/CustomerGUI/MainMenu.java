@@ -68,6 +68,11 @@ public class MainMenu extends javax.swing.JFrame {
         });
 
         topUpButton.setText("Top Up");
+        topUpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                topUpButtonActionPerformed(evt);
+            }
+        });
 
         notificationButton.setText("Notifications");
 
@@ -189,6 +194,12 @@ public class MainMenu extends javax.swing.JFrame {
             allOrders.clear();
         }
     }//GEN-LAST:event_orderHistoryButtonActionPerformed
+
+    private void topUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_topUpButtonActionPerformed
+        TopUpPage topUpPage = new TopUpPage(customer);
+        topUpPage.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_topUpButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton4;

@@ -17,7 +17,9 @@ public class TextFilePaths {
     public final String runnerTextFile = "src/textFiles/runner.txt";
     public final String vendorReviewsTextFile = "src/textFiles/vendor_reviews.txt";
     public final String runnerReviewsTextFile = "src/textFiles/runner_reviews.txt";
+    public final String topUpRequestsTextFile = "src/textFiles/top_up_requests.txt";
 
+    
     
     public String getCustomerTextFile() {
         return customerTextFile;
@@ -50,4 +52,9 @@ public class TextFilePaths {
     public String getRunnerTextFile() {
         return runnerTextFile;
     }
+    
+    public String getTopUpRequestsTextFile() {
+        return topUpRequestsTextFile;
+    }
+
 }

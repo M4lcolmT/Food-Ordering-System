@@ -56,6 +56,14 @@ public class Customer extends User{
         return maxID + 1;
     }
     
+    private double calculateTotalPrice(List<FoodItem> orderBasket) {
+        double totalPrice = 0.0;
+        for (FoodItem item : orderBasket) {
+            totalPrice += item.getItemPrice();
+        }
+        return totalPrice;
+    }
+    
     public void placeOrder(List<Order> orders, Vendor vendor, List<FoodItem> orderBasket, OrderStatus status) {
         double totalPrice = calculateTotalPrice(orderBasket);
         LocalDateTime originalDateTime = LocalDateTime.now();
@@ -68,14 +76,6 @@ public class Customer extends User{
         
         orders.add(newOrder);
         saveOrder(newOrder);
-    }
-
-    private double calculateTotalPrice(List<FoodItem> orderBasket) {
-        double totalPrice = 0.0;
-        for (FoodItem item : orderBasket) {
-            totalPrice += item.getItemPrice();
-        }
-        return totalPrice;
     }
 
     private boolean saveOrder(Order newOrder) {
