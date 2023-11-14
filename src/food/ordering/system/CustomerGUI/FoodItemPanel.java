@@ -22,6 +22,7 @@ public class FoodItemPanel extends javax.swing.JPanel {
         this.foodItem = foodItem;
         this.basket = basket;
         this.menu = menu;
+        
         quantityCount.setText("");
         itemName.setText(foodItem.getItemName());
         itemDescription.setText(foodItem.getItemDescription());

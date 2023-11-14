@@ -48,9 +48,7 @@ public class OrderHistory extends javax.swing.JFrame {
         jLabel1.setText("Order History");
 
         jscrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jscrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        innerScrollPanel.setPreferredSize(new java.awt.Dimension(0, 0));
         innerScrollPanel.setLayout(new javax.swing.BoxLayout(innerScrollPanel, javax.swing.BoxLayout.Y_AXIS));
         jscrollPane.setViewportView(innerScrollPanel);
 

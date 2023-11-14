@@ -27,7 +27,8 @@ public class Menu extends javax.swing.JFrame {
     private List<FoodItem> menu = new ArrayList<>();
     private static List<FoodItem> basket = new ArrayList<>();
     private FoodItem foodItem;
-    private static double totalPrice = 0.0;
+    public static double totalPrice = 0.0;
+    public static int basketCount = 0;
 
     DecimalFormat df = new DecimalFormat("#.#");
 
@@ -44,6 +45,10 @@ public class Menu extends javax.swing.JFrame {
         vendorRating.setText(vendor.getRating()+" Ratings");
         readFoodItemsFromFile();
         populateInnerPanel(menu);
+    }
+    
+    public String showName(){
+        return vendor.getName();
     }
     
     public List<FoodItem> readFoodItemsFromFile() {
@@ -89,14 +94,20 @@ public class Menu extends javax.swing.JFrame {
     }
     
     public void updateItemCount() {
-        int itemCount = basket.size();
-        basketItemCount.setText(itemCount + " items");
+        basketCount = basket.size();
+        System.out.println("Updated item count: "+basketCount);
+        basketItemCount.setText(basketCount + " items");
     }
     
     public void updateTotalPrice(FoodItem foodItem) {
         double itemPrice = foodItem.getItemPrice();
         totalPrice = totalPrice + itemPrice;
         totalPriceLabel.setText(Double.toString(totalPrice));
+    }
+    
+    // When customer reorder, to set the total price from the order chosen
+    public void setTotalPrice(double total) {
+        totalPrice = total;
     }
     
     @SuppressWarnings("unchecked")
@@ -234,13 +245,14 @@ public class Menu extends javax.swing.JFrame {
     private void confirmBasketMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmBasketMouseClicked
         Order order = new Order(0, customer, vendor, basket, totalPrice, OrderStatus.PENDING, false, 0, LocalDateTime.now());
         OrderSummary orderSummary = new OrderSummary(order, basket);
+        orderSummary.loadBasketItems(basket);
         orderSummary.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_confirmBasketMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel basketItemCount;
+    public javax.swing.JLabel basketItemCount;
     private javax.swing.JPanel confirmBasket;
     private javax.swing.JPanel innerScrollPanel;
     private javax.swing.JButton jButton1;

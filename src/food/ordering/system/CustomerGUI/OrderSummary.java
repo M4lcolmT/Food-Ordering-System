@@ -51,11 +51,9 @@ public class OrderSummary extends javax.swing.JFrame {
         deliveryFeeLabel.setText("RM"+Double.toString((double)calculateDeliveryFee()));
         totalPriceLabel.setText("RM"+Double.toString((double)calculateTotal()));
         
-        orderBasket = order.getOrderBasket();
-        loadBasketItems(orderBasket);
     }
     
-    private void loadBasketItems(List<FoodItem> items) {
+    public void loadBasketItems(List<FoodItem> items) {
         DefaultTableModel model = (DefaultTableModel) orderSummaryTable.getModel();
 
         if (items.isEmpty()) {
