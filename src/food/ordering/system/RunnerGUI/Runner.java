@@ -11,16 +11,15 @@ import food.ordering.system.User;
  * @author LENOVO
  */
 public class Runner extends User{
-
     private int runnerID;
-    private String address;
+    private String city;
     private String plateNumber;
     private String vehicleModel;
 
-    public Runner(int runnerID, String name, String phoneNumber, String email, String password, String address, String plateNumber, String vehicleModel) {
+    public Runner(int runnerID, String name, String phoneNumber, String email, String password, String city, String plateNumber, String vehicleModel) {
         super(name, phoneNumber, email, password);
         this.runnerID = runnerID;
-        this.address = address;
+        this.city = city;
         this.plateNumber = plateNumber;
         this.vehicleModel = vehicleModel;
     }
@@ -33,12 +32,12 @@ public class Runner extends User{
         this.runnerID = runnerID;
     }
 
-    public String getAddress() {
-        return address;
+    public String getCity() {
+        return city;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setCity(String city) {
+        this.city = city;
     }
     
     public String getPlateNumber() {

@@ -102,7 +102,7 @@ public class OrderHistory extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        MainMenu mainMenu = new MainMenu(customer);
+        CustomerMainMenu mainMenu = new CustomerMainMenu(customer);
         mainMenu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_backButtonActionPerformed

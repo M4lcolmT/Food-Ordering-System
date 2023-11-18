@@ -4,6 +4,8 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.CustomerLogin;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -12,16 +14,16 @@ import javax.swing.JOptionPane;
  *
  * @author LENOVO
  */
-public class MainMenu extends javax.swing.JFrame {
+public class CustomerMainMenu extends javax.swing.JFrame {
     private Customer customer;
     private List<Order> allOrders = new ArrayList<>();
 
     
-    public MainMenu(Customer customer) {
+    public CustomerMainMenu(Customer customer) {
         initComponents();
         this.customer = customer;
         
-        OrderManager orderManager = new OrderManager();
+        ReadFiles orderManager = new ReadFiles();
         allOrders = orderManager.getOrders();
         orderNotificationPanel.setVisible(false);
     }
@@ -54,6 +56,9 @@ public class MainMenu extends javax.swing.JFrame {
         orderETA = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         orderHistoryButton = new javax.swing.JButton();
+        profileButton = new javax.swing.JButton();
+        logOutButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -124,6 +129,23 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
 
+        profileButton.setText("Profile");
+        profileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                profileButtonActionPerformed(evt);
+            }
+        });
+
+        logOutButton.setText("Log Out");
+        logOutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logOutButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setText("Customer Main Menu");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -134,26 +156,39 @@ public class MainMenu extends javax.swing.JFrame {
                         .addGap(21, 21, 21)
                         .addComponent(orderNotificationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(145, 145, 145)
-                        .addComponent(orderFoodButton)
-                        .addGap(36, 36, 36)
-                        .addComponent(topUpButton)
-                        .addGap(34, 34, 34)
-                        .addComponent(notificationButton)
-                        .addGap(34, 34, 34)
-                        .addComponent(orderHistoryButton)))
+                        .addGap(242, 242, 242)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(orderFoodButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(topUpButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(orderHistoryButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                            .addComponent(notificationButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(logOutButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(23, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(profileButton)
+                .addGap(67, 67, 67))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(175, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(orderFoodButton)
-                    .addComponent(topUpButton)
-                    .addComponent(notificationButton)
-                    .addComponent(orderHistoryButton))
-                .addGap(111, 111, 111)
+                .addGap(26, 26, 26)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(profileButton))
+                .addGap(45, 45, 45)
+                .addComponent(orderFoodButton)
+                .addGap(18, 18, 18)
+                .addComponent(topUpButton)
+                .addGap(18, 18, 18)
+                .addComponent(notificationButton)
+                .addGap(18, 18, 18)
+                .addComponent(orderHistoryButton)
+                .addGap(18, 18, 18)
+                .addComponent(logOutButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(orderNotificationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
@@ -201,15 +236,34 @@ public class MainMenu extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_topUpButtonActionPerformed
 
+    private void profileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileButtonActionPerformed
+        CustomerUserProfile profile = new CustomerUserProfile(customer);
+        profile.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_profileButtonActionPerformed
+
+    private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
+        int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to log out", "Log Out Confirmation", JOptionPane.YES_NO_OPTION);        
+
+        if (confirmationResult == JOptionPane.YES_OPTION) {
+            CustomerLogin page = new CustomerLogin();
+            page.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_logOutButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton logOutButton;
     private javax.swing.JButton notificationButton;
     private javax.swing.JLabel orderETA;
     private javax.swing.JButton orderFoodButton;
     private javax.swing.JButton orderHistoryButton;
     public javax.swing.JPanel orderNotificationPanel;
     public javax.swing.JLabel orderStatusLabel;
+    private javax.swing.JButton profileButton;
     private javax.swing.JButton topUpButton;
     // End of variables declaration//GEN-END:variables
 }

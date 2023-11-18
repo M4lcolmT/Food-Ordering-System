@@ -4,6 +4,7 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.VendorGUI.FoodItem;
 import food.ordering.system.VendorGUI.Vendor;
 import java.time.LocalDateTime;
@@ -35,7 +36,7 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
     }
     
     private Order findOrder() {
-        OrderManager orderManager = new OrderManager();
+        ReadFiles orderManager = new ReadFiles();
         List<Order> orders = orderManager.getOrders();
         
         for (Order orderItem : orders) {  
@@ -135,6 +136,7 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
         
         Menu menu = new Menu(vendor, customer, basket);
         menu.setTotalPrice(specificOrder.getTotalPrice());
+        menu.setBasket(basket);
         menu.updateItemCount();
         menu.totalPriceLabel.setText(Double.toString(specificOrder.getTotalPrice()));
         menu.setVisible(true);

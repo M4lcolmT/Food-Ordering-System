@@ -4,54 +4,25 @@
  */
 package food.ordering.system;
 
+import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.RunnerGUI.Runner;
 import food.ordering.system.RunnerGUI.RunnerMainMenu;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
-import textFiles.TextFilePaths;
 
 /**
  *
  * @author LENOVO
  */
 public class RunnerLogin extends javax.swing.JFrame {
-
-    TextFilePaths path = new TextFilePaths();
-    String runnerTextFilePath = path.getRunnerTextFile();
-    
     List<Runner> runners = new ArrayList<>();
     
-    public List<Runner> readRunners() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(runnerTextFilePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(";");
-                if (parts.length == 8) {
-                    int id = Integer.parseInt(parts[0]);
-                    String name = parts[1];
-                    String phoneNumber = parts[2];
-                    String email = parts[3];
-                    String password = parts[4];
-                    String address = parts[5];
-                    String plateNo = parts[6];
-                    String vehicleModel = parts[7];
-                    
-                    Runner runnerItem = new Runner(id, name, phoneNumber, email, password, address, plateNo, vehicleModel);
-                    runners.add(runnerItem);
-                } else {
-                    System.out.println("Skipping a line with an incorrect number of parts");
-                }
-            }
-        } catch (IOException e) {
-            // Handle the exception, e.g., log or display an error message
-            e.printStackTrace();
-        }
-        return runners;
+    public RunnerLogin() {
+        initComponents();
+        ReadFiles reader = new ReadFiles();
+        runners = reader.readRunners();
     }
     
     public boolean checkLogin(String emailInput, String passwordInput) {
@@ -81,12 +52,6 @@ public class RunnerLogin extends javax.swing.JFrame {
         }
         return null;
     }
-    
-    public RunnerLogin() {
-        initComponents();
-        readRunners();
-    }
-
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

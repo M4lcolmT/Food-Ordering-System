@@ -4,6 +4,7 @@
  */
 package food.ordering.system.AdminGUI;
 
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 
 /**
@@ -19,8 +20,10 @@ public class TopUpRequests {
     private YearMonth cardExpiryDate;
     private int cvv;
     private String remarks;
+    private LocalDateTime dateTime;
+
     
-    public TopUpRequests(int requestID, int customerID, int amount, String bankType, long cardNumber, YearMonth cardExpiryDate, int cvv, String remarks) {
+    public TopUpRequests(int requestID, int customerID, int amount, String bankType, long cardNumber, YearMonth cardExpiryDate, int cvv, String remarks, LocalDateTime dateTime) {
         this.requestID = requestID;
         this.customerID = customerID;
         this.amount = amount;
@@ -29,6 +32,7 @@ public class TopUpRequests {
         this.cardExpiryDate = cardExpiryDate;
         this.cvv = cvv;
         this.remarks = remarks;
+        this.dateTime = dateTime;
     }
     
     public int getRequestID() {
@@ -63,12 +67,21 @@ public class TopUpRequests {
         return remarks;
     }
     
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+    
     @Override
     public String toString(){
         String delimiter = ";";
         String formattedExpiryDate = cardExpiryDate.format(java.time.format.DateTimeFormatter.ofPattern("MM/yy"));
         
-        return requestID + delimiter + customerID + delimiter + amount + delimiter + bankType + delimiter + cardNumber + delimiter + formattedExpiryDate + delimiter + cvv + delimiter + remarks;
+        return requestID + delimiter + customerID + delimiter + amount + delimiter + bankType + delimiter + cardNumber + delimiter + 
+                formattedExpiryDate + delimiter + cvv + delimiter + remarks + delimiter + dateTime;
     }
     
     

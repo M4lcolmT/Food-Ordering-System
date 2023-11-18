@@ -9,7 +9,11 @@ package food.ordering.system;
  * @author LENOVO
  */
 public class User {
-
+    private String name;
+    private String phoneNumber;
+    private String email;
+    private String password;
+    
     public User(String name, String phoneNumber, String email, String password) {
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -48,9 +52,10 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    private String name;
-    private String phoneNumber;
-    private String email;
-    private String password;
+
+    @Override
+    public String toString() {
+        String delimiter = ";";
+        return name + delimiter + phoneNumber + delimiter + email + delimiter + password;
+    }
 }

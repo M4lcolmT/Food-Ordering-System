@@ -6,49 +6,24 @@ package food.ordering.system;
 
 import food.ordering.system.AdminGUI.Admin;
 import food.ordering.system.AdminGUI.AdminMainMenu;
-import food.ordering.system.CustomerGUI.MainMenu;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import food.ordering.system.AdminGUI.ReadFiles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
-import textFiles.TextFilePaths;
 
 /**
  *
  * @author LENOVO
  */
 public class AdminLogin extends javax.swing.JFrame {
-    TextFilePaths path = new TextFilePaths();
-    String adminTextFilePath = path.getAdminTextFile();
-    
     List<Admin> admins = new ArrayList<>();
+
     
-    public List<Admin> readAdmins() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(adminTextFilePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(";");
-                if (parts.length == 5) {
-                    int id = Integer.parseInt(parts[0]);
-                    String name = parts[1];
-                    String phoneNumber = parts[2];
-                    String email = parts[3];
-                    String password = parts[4];
-                    
-                    Admin adminItem = new Admin(id, name, phoneNumber, email, password);
-                    admins.add(adminItem);
-                } else {
-                    System.out.println("Skipping a line with an incorrect number of parts");
-                }
-            }
-        } catch (IOException e) {
-            // Handle the exception, e.g., log or display an error message
-            e.printStackTrace();
-        }
-        return admins;
+    public AdminLogin() {
+        initComponents();
+        ReadFiles reader = new ReadFiles();
+        admins = reader.readAdmins();
     }
     
     public boolean checkLogin(String emailInput, String passwordInput) {
@@ -78,12 +53,6 @@ public class AdminLogin extends javax.swing.JFrame {
         }
         return null;
     }
-    
-    public AdminLogin() {
-        initComponents();
-        readAdmins();
-    }
-
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

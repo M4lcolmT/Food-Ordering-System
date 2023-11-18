@@ -4,13 +4,16 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.Location;
 import food.ordering.system.VendorGUI.Vendor;
 import food.ordering.system.VendorGUI.FoodItem;
 import java.text.DecimalFormat;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import textFiles.TextFilePaths;
 
@@ -36,10 +39,11 @@ public class OrderSummary extends javax.swing.JFrame {
         initComponents();
         this.order = order;
         this.orderBasket = orderBasket;
+        loadBasketItems(orderBasket);
         
         Customer customer = order.getCustomer();
         Vendor vendor = order.getVendor();
-        calculateDistance(customer.getCity().trim().toLowerCase(), vendor.getAddress().trim().toLowerCase());
+        calculateDistance(customer.getCity().trim().toLowerCase(), vendor.getCity().trim().toLowerCase());
         
         nameLabel.setText(customer.getName());
         phoneNumberLabel.setText(customer.getPhoneNumber());
@@ -118,7 +122,7 @@ public class OrderSummary extends javax.swing.JFrame {
         totalPrice = subtotal + tax + deliveryFee;
         return Double.parseDouble(df.format(totalPrice));
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -137,6 +141,7 @@ public class OrderSummary extends javax.swing.JFrame {
         totalPriceLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         orderSummaryTable = new javax.swing.JTable();
+        updateItemCount = new javax.swing.JButton();
         confirmButton = new javax.swing.JButton();
         backToMenuButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
@@ -195,15 +200,24 @@ public class OrderSummary extends javax.swing.JFrame {
             orderSummaryTable.getColumnModel().getColumn(2).setPreferredWidth(10);
         }
 
+        updateItemCount.setText("Edit Item Count");
+        updateItemCount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateItemCountActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(updateItemCount)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -226,22 +240,27 @@ public class OrderSummary extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(subtotalLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(taxLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(deliveryFeeLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(totalPriceLabel))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(subtotalLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(taxLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(deliveryFeeLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(totalPriceLabel)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(updateItemCount)))
                 .addContainerGap(10, Short.MAX_VALUE))
         );
 
@@ -369,31 +388,108 @@ public class OrderSummary extends javax.swing.JFrame {
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
         Customer customer = order.getCustomer();
         Vendor vendor = order.getVendor();
-        OrderManager orderManager = new OrderManager();
+        ReadFiles orderManager = new ReadFiles();
+        
+        Menu menu = new Menu(vendor, customer, orderBasket);
+        menu.resetTotalPrice();
         
         customer.placeOrder(orderManager.getOrders(), vendor, orderBasket, Order.OrderStatus.PENDING);
         customer.setOrders(orderManager.getOrders());
         orderBasket.clear();
         this.dispose();
         
-        MainMenu mainMenu = new MainMenu(customer);
+        CustomerMainMenu mainMenu = new CustomerMainMenu(customer);
         mainMenu.orderNotificationPanel.setVisible(true);
         mainMenu.orderStatusLabel.setText("Your order is processing...");
         mainMenu.setVisible(true);
     }//GEN-LAST:event_confirmButtonActionPerformed
 
     private void backToMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backToMenuButtonActionPerformed
+        loadBasketItems(orderBasket);
         Customer customer = order.getCustomer();
         Vendor vendor = order.getVendor();
-
-        Menu menu = new Menu(vendor, customer, order.getOrderBasket());
-        menu.updateItemCount();
-        double subtotalDecimal = Double.parseDouble(df.format(order.getTotalPrice()));
-        menu.totalPriceLabel.setText(Double.toString(subtotalDecimal));
         
+        Menu menu = new Menu(vendor, customer, orderBasket);
+        menu.updateItemCount();
+        double subtotalDecimal = Double.parseDouble(df.format(subtotal));
+        menu.totalPriceLabel.setText(Double.toString(subtotalDecimal));
+        menu.setTotalPrice(subtotal);
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_backToMenuButtonActionPerformed
+
+    private void updateItemCountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateItemCountActionPerformed
+        int selectedRowIndex = orderSummaryTable.getSelectedRow();
+
+        if (selectedRowIndex != -1) {
+            DefaultTableModel model = (DefaultTableModel) orderSummaryTable.getModel();
+            Integer currentValue = (Integer) model.getValueAt(selectedRowIndex, 0);
+            String itemName = (String) model.getValueAt(selectedRowIndex, 1);
+
+            // Input validation loop
+            Integer newValue = null;
+            boolean validInput = false;
+
+            while (!validInput) {
+                try {
+                    Object result = JOptionPane.showInputDialog(this, "Edit Item Count:", "Edit", JOptionPane.PLAIN_MESSAGE, null, null, currentValue);
+
+                    if (result == null) {
+                        // User canceled the input
+                        return;
+                    }
+
+                    // Attempt to parse the input as an integer
+                    newValue = Integer.valueOf(result.toString());
+
+                    // Input is valid if no exception is thrown
+                    validInput = true;
+                } catch (NumberFormatException e) {
+                    // Input is not a valid integer
+                    JOptionPane.showMessageDialog(this, "Please enter a valid integer.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            // Update the model with the new value
+            if (newValue != null) {
+                model.setValueAt(newValue, selectedRowIndex, 0);
+
+                // Update the orderBasket based on the new value
+                Iterator<FoodItem> iterator = orderBasket.iterator();
+
+                while (iterator.hasNext()) {
+                    FoodItem item = iterator.next();
+
+                    // Check if the item name matches
+                    if (itemName.equals(item.getItemName())) {
+                        int quantityDifference = newValue - currentValue;
+
+                        if (quantityDifference > 0) {
+                            // If the new quantity is greater, add items to the orderBasket
+                            for (int i = 0; i < quantityDifference; i++) {
+                                orderBasket.add(item);
+                            }
+                            subtotal = subtotal + quantityDifference * item.getItemPrice();
+                            subtotalLabel.setText("RM"+Double.toString((double)subtotal));
+                            totalPriceLabel.setText("RM"+Double.toString((double)calculateTotal()));
+                        } else if (quantityDifference < 0) {
+                            // If the new quantity is less, remove items from the orderBasket
+                            for (int i = 0; i < -quantityDifference; i++) {
+                                iterator.remove();
+                            }
+                            subtotal = subtotal - (-quantityDifference) * item.getItemPrice();
+                            subtotalLabel.setText("RM"+Double.toString((double)subtotal));
+                            totalPriceLabel.setText("RM"+Double.toString((double)calculateTotal()));
+                        }
+                        break;
+                    }
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a row to edit.", "No Row Selected", JOptionPane.WARNING_MESSAGE);
+        }
+
+    }//GEN-LAST:event_updateItemCountActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea addressLabel;
@@ -420,5 +516,6 @@ public class OrderSummary extends javax.swing.JFrame {
     private javax.swing.JLabel subtotalLabel;
     private javax.swing.JLabel taxLabel;
     private javax.swing.JLabel totalPriceLabel;
+    private javax.swing.JButton updateItemCount;
     // End of variables declaration//GEN-END:variables
 }

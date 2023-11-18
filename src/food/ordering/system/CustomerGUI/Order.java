@@ -66,6 +66,10 @@ public class Order {
         return totalPrice;
     }
 
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     public OrderStatus getStatus() {
         return status;
     }

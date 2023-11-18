@@ -10,9 +10,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import textFiles.TextFilePaths;
 
@@ -24,19 +26,31 @@ public class TopUpPage extends javax.swing.JFrame {
     
     private Customer customer;
     private int topUpAmount = 0;
+    List<TopUpRequests> requests = new ArrayList<>();
+    private LocalDateTime dateTime;
+    
     TextFilePaths path = new TextFilePaths();
     String topUpRequestsTextFilePath = path.getTopUpRequestsTextFile();
-    List<TopUpRequests> requests = new ArrayList<>();
+    
+    public TopUpPage(Customer customer) {
+        initComponents();
+        this.customer = customer;     
+        readTopUpRequests();
+        
+        LocalDateTime originalDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        String formattedDateTimeStr = originalDateTime.format(formatter);
+        dateTime = LocalDateTime.parse(formattedDateTimeStr, formatter);
+    }
     
     private int setAmount (int amount) {
         topUpAmount = amount;
         return topUpAmount;
     }
     
-    public TopUpPage(Customer customer) {
-        initComponents();
-        this.customer = customer;     
-        readTopUpRequests();
+    private LocalDateTime parseDateTime(String data) {
+        LocalDateTime formattedDateTime = LocalDateTime.parse(data, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"));
+        return formattedDateTime;
     }
     
     public List<TopUpRequests> readTopUpRequests() {
@@ -53,8 +67,9 @@ public class TopUpPage extends javax.swing.JFrame {
                     YearMonth monthYear = YearMonth.parse(parts[5], java.time.format.DateTimeFormatter.ofPattern("MM/yy"));
                     int cvv = Integer.parseInt(parts[6]);
                     String remarks = parts[7];
+                    LocalDateTime dateTime = parseDateTime(parts[8]);
                     
-                    TopUpRequests requestItem = new TopUpRequests(requestID, customerID, amount, bankType, cardNumber, monthYear, cvv, remarks);
+                    TopUpRequests requestItem = new TopUpRequests(requestID, customerID, amount, bankType, cardNumber, monthYear, cvv, remarks, dateTime);
                     requests.add(requestItem);
                 } else {
                     System.out.println("Skipping a line with an incorrect number of parts");
@@ -80,8 +95,9 @@ public class TopUpPage extends javax.swing.JFrame {
     
     private boolean saveRequest(int amount, String bankType, long cardNumber, YearMonth monthYear, int cvv, String remarks) {
         int requestID = checkMaxID(requests);
+        
         TopUpRequests newRequest = new TopUpRequests(requestID, customer.getCustomerID(),
-        amount, bankType, cardNumber, monthYear, cvv, remarks);
+        amount, bankType, cardNumber, monthYear, cvv, remarks, dateTime);
         
         try (PrintWriter pw = new PrintWriter(new FileWriter(topUpRequestsTextFilePath, true))) {
             pw.println(newRequest.toString());
@@ -391,8 +407,8 @@ public class TopUpPage extends javax.swing.JFrame {
         if (confirmationResult == JOptionPane.YES_OPTION) {
             if (saveRequest(topUpAmount, bankType, cardNumber, monthYear, cvv, remarksText)) {
                 JOptionPane.showMessageDialog(this, "Successfully sent top-up request to admin!");
-                MainMenu mainMenu = new MainMenu(customer);
-                mainMenu.setVisible(true);
+                TransactionSummary message = new TransactionSummary(customer, topUpAmount, remarksText, dateTime);
+                message.setVisible(true);
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to send top-up request to admin, please revalidate your inputs", "Validation Error", JOptionPane.ERROR_MESSAGE);
@@ -424,7 +440,7 @@ public class TopUpPage extends javax.swing.JFrame {
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         JOptionPane.showMessageDialog(this, "Top-up request cancelled", "Top Up Cancelled", JOptionPane.INFORMATION_MESSAGE);
-        MainMenu mainMenu = new MainMenu(customer);
+        CustomerMainMenu mainMenu = new CustomerMainMenu(customer);
         mainMenu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed

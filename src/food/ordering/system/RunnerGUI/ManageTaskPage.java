@@ -69,7 +69,7 @@ public class ManageTaskPage extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Food Item Menu");
+        jLabel1.setText("Task List");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -85,7 +85,7 @@ public class ManageTaskPage extends javax.swing.JFrame {
                         .addGap(85, 85, 85)
                         .addComponent(jButton6))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(301, 301, 301)
+                        .addGap(313, 313, 313)
                         .addComponent(jLabel1)))
                 .addContainerGap(186, Short.MAX_VALUE))
         );

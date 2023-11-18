@@ -124,7 +124,7 @@ public class FoodItemPanel extends javax.swing.JPanel {
     private void addItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addItemButtonActionPerformed
         BasketManager.getInstance().addToBasket(foodItem);
         menu.updateItemCount();
-        menu.updateTotalPrice(foodItem);
+        menu.increaseTotalPrice(foodItem);
         updateQuantityLabel();
     }//GEN-LAST:event_addItemButtonActionPerformed
 

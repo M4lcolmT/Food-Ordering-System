@@ -3,9 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package food.ordering.system.CustomerGUI;
+import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.VendorGUI.Vendor;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
@@ -17,51 +17,18 @@ import textFiles.TextFilePaths;
  */
 public class OrderMenu extends javax.swing.JFrame {
     private Customer customer;
-    TextFilePaths path = new TextFilePaths();
-    String vendorTextFilePath = path.getVendorTextFile();
     List<Vendor> vendors = new ArrayList<>();
     
     public OrderMenu(Customer customer) {
         initComponents();
         this.customer = customer;
         
-        readVendorsFromFile();
+        ReadFiles reader = new ReadFiles();
+        vendors = reader.readVendors();
         populateVendorInnerPanel(vendors);
     }
     
-    
-    public List<Vendor> readVendorsFromFile() {
-        vendors.clear();
-        
-        
-        try (BufferedReader reader = new BufferedReader(new FileReader(vendorTextFilePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(";");
-                if (parts.length == 8) {
-                    int id = Integer.parseInt(parts[0]);
-                    String name = parts[1];
-                    String phoneNumber = parts[2];
-                    String email = parts[3];
-                    String password = parts[4];
-                    double rating = Double.parseDouble(parts[5]);
-                    String category = parts[6];
-                    String address = parts[7];
-
-                    Vendor vendor = new Vendor(id, name, phoneNumber, email, password, rating, category, address);
-                    vendors.add(vendor);
-                } else {
-                    System.out.println("Incomplete vendor data!");
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return vendors;
-    }
-   
-    public void populateVendorInnerPanel(List<Vendor> vendors) {
+    private void populateVendorInnerPanel(List<Vendor> vendors) {
         innerScrollPanel.removeAll();
 
         for (Vendor vendor : vendors) {

@@ -56,6 +56,7 @@ public class Customer extends User{
         return maxID + 1;
     }
     
+    // Calculate the total price from all the item in the basket.
     private double calculateTotalPrice(List<FoodItem> orderBasket) {
         double totalPrice = 0.0;
         for (FoodItem item : orderBasket) {
@@ -64,6 +65,7 @@ public class Customer extends User{
         return totalPrice;
     }
     
+    // Create a new order instance
     public void placeOrder(List<Order> orders, Vendor vendor, List<FoodItem> orderBasket, OrderStatus status) {
         double totalPrice = calculateTotalPrice(orderBasket);
         LocalDateTime originalDateTime = LocalDateTime.now();
@@ -77,7 +79,8 @@ public class Customer extends User{
         orders.add(newOrder);
         saveOrder(newOrder);
     }
-
+    
+    // Save order into text file
     private boolean saveOrder(Order newOrder) {
         boolean success = false;
         try (PrintWriter pw = new PrintWriter(new FileWriter(orderTextFilePath, true))) {
@@ -107,5 +110,11 @@ public class Customer extends User{
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    @Override
+    public String toString() {
+        String delimiter = ";";
+        return customerID + delimiter + super.toString() + streetAddress + delimiter + city;
     }
 }

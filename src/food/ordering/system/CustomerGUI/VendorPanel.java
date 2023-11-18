@@ -25,9 +25,9 @@ public class VendorPanel extends javax.swing.JPanel {
         vendorName.setText(vendor.getName());
         vendorRating.setText(Double.toString((double) vendor.getRating()));
         vendorCategory.setText(vendor.getCategory());
-        vendorAddress.setText(vendor.getAddress());
+        vendorAddress.setText(vendor.getCity());
         
-        calculateDistance(customer.getCity().trim().toLowerCase(), vendor.getAddress().trim().toLowerCase());
+        calculateDistance(customer.getCity().trim().toLowerCase(), vendor.getCity().trim().toLowerCase());
     }
     
     private void calculateDistance(String customerAddress, String vendorAddress) {

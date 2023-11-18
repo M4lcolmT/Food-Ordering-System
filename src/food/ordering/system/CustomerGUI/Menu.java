@@ -58,7 +58,7 @@ public class Menu extends javax.swing.JFrame {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 6) {
+                if (parts.length == 7) {
                     int vendorID = Integer.parseInt(parts[0]);
                     if (vendorID == vendor.getVendorID()) {
                         int itemID = Integer.parseInt(parts[1]);
@@ -66,8 +66,9 @@ public class Menu extends javax.swing.JFrame {
                         String itemCategory = parts[3];
                         Double itemPrice = Double.valueOf(parts[4]);
                         String itemDescription = parts[5];
+                        Double itemCost = Double.valueOf(parts[6]);
 
-                        foodItem = new FoodItem(vendorID, itemID, itemName, itemCategory, itemPrice, itemDescription);
+                        foodItem = new FoodItem(vendorID, itemID, itemName, itemCategory, itemPrice, itemDescription, itemCost);
                         menu.add(foodItem);
                     }
                 } else {
@@ -93,21 +94,35 @@ public class Menu extends javax.swing.JFrame {
         innerScrollPanel.repaint();
     }
     
+    public void setBasket(List<FoodItem> bask) {
+        basket = bask;
+    }
+    
     public void updateItemCount() {
         basketCount = basket.size();
         System.out.println("Updated item count: "+basketCount);
         basketItemCount.setText(basketCount + " items");
     }
     
-    public void updateTotalPrice(FoodItem foodItem) {
+    public void increaseTotalPrice(FoodItem foodItem) {
         double itemPrice = foodItem.getItemPrice();
         totalPrice = totalPrice + itemPrice;
+        totalPriceLabel.setText(Double.toString(totalPrice));
+    }
+    
+    public void decreaseTotalPrice(FoodItem foodItem) {
+        double itemPrice = foodItem.getItemPrice();
+        totalPrice = totalPrice - itemPrice;
         totalPriceLabel.setText(Double.toString(totalPrice));
     }
     
     // When customer reorder, to set the total price from the order chosen
     public void setTotalPrice(double total) {
         totalPrice = total;
+    }
+    
+    public void resetTotalPrice() {
+        totalPrice = 0;
     }
     
     @SuppressWarnings("unchecked")
@@ -245,7 +260,6 @@ public class Menu extends javax.swing.JFrame {
     private void confirmBasketMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmBasketMouseClicked
         Order order = new Order(0, customer, vendor, basket, totalPrice, OrderStatus.PENDING, false, 0, LocalDateTime.now());
         OrderSummary orderSummary = new OrderSummary(order, basket);
-        orderSummary.loadBasketItems(basket);
         orderSummary.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_confirmBasketMouseClicked
@@ -254,7 +268,7 @@ public class Menu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JLabel basketItemCount;
     private javax.swing.JPanel confirmBasket;
-    private javax.swing.JPanel innerScrollPanel;
+    public javax.swing.JPanel innerScrollPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -4,6 +4,9 @@
  */
 package food.ordering.system.VendorGUI;
 
+import java.util.Objects;
+import textFiles.TextFilePaths;
+
 /**
  *
  * @author LENOVO
@@ -15,14 +18,19 @@ public class FoodItem {
     private String itemCategory;
     private double itemPrice;
     private String itemDescription;
+    private double itemCost;
     
-    public FoodItem(int vendorID, int itemID, String itemName, String itemCategory, double itemPrice, String itemDescription) {
+    TextFilePaths path = new TextFilePaths();
+    String vendorMenuTextFilePath = path.getVendorMenuTextFile();
+    
+    public FoodItem(int vendorID, int itemID, String itemName, String itemCategory, double itemPrice, String itemDescription, double itemCost) {
         this.vendorID = vendorID;
         this.itemID = itemID;
         this.itemName = itemName;
         this.itemCategory = itemCategory;
         this.itemPrice = itemPrice;
         this.itemDescription = itemDescription;
+        this.itemCost = itemCost;
     }
 
     public int getItemID() {
@@ -64,9 +72,34 @@ public class FoodItem {
     public void setItemDescription(String itemDescription) {
         this.itemDescription = itemDescription;
     }
+
+    public double getItemCost() {
+        return itemCost;
+    }
+
+    public void setItemCost(double itemCost) {
+        this.itemCost = itemCost;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        FoodItem foodItem = (FoodItem) obj;
+        return Objects.equals(itemName, foodItem.itemName) && Double.compare(foodItem.itemPrice, itemPrice) == 0;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemName, itemPrice);
+    }
     
     @Override
     public String toString() {
-        return vendorID + "=" + itemID + "=" + itemName + "=" + itemCategory + "=" + itemPrice + "=" + itemDescription;
+        return vendorID + "=" + itemID + "=" + itemName + "=" + itemCategory + "=" + itemPrice + "=" + itemDescription + "=" + itemCost;
     }
 }
