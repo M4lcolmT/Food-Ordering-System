@@ -85,7 +85,7 @@ public class GenerateReceipts extends javax.swing.JFrame {
 
         jLabel12.setText("jLabel12");
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Done");
 
         jButton2.setText("Back to Main Menu");
 
@@ -132,7 +132,7 @@ public class GenerateReceipts extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(24, 24, 24)
                                 .addComponent(jButton2)))
-                        .addGap(0, 206, Short.MAX_VALUE)))
+                        .addGap(0, 224, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -170,7 +170,7 @@ public class GenerateReceipts extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jLabel12))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(55, 55, 55)
                 .addComponent(jButton2))

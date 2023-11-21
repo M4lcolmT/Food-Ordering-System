@@ -60,6 +60,11 @@ public class RunnerMainMenu extends javax.swing.JFrame {
         });
 
         jButton5.setText("Task History");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         profileButton.setText("Profile");
         profileButton.addActionListener(new java.awt.event.ActionListener() {
@@ -152,6 +157,10 @@ public class RunnerMainMenu extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_logOutButtonActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

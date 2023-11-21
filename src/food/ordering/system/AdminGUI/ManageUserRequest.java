@@ -5,8 +5,6 @@
 package food.ordering.system.AdminGUI;
 
 import food.ordering.system.CustomerGUI.CustomerRequest;
-import food.ordering.system.CustomerGUI.Order;
-import food.ordering.system.CustomerGUI.OrderHistoryPanel;
 import food.ordering.system.RunnerGUI.RunnerRequest;
 import food.ordering.system.VendorGUI.VendorRequest;
 import java.util.ArrayList;

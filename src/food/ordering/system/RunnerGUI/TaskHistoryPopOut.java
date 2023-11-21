@@ -52,7 +52,7 @@ public class TaskHistoryPopOut extends javax.swing.JFrame {
 
         jLabel10.setText("Time:");
 
-        jLabel11.setText("Restaurant:");
+        jLabel11.setText("Vendor:");
 
         jLabel12.setText("Address:");
 

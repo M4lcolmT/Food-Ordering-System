@@ -47,7 +47,7 @@ public class OrderSummary extends javax.swing.JFrame {
         
         nameLabel.setText(customer.getName());
         phoneNumberLabel.setText(customer.getPhoneNumber());
-        addressLabel.setText(customer.getStreetAddress());
+        addressBox.setText(customer.getStreetAddress());
         
         subtotal = order.getTotalPrice();
         subtotalLabel.setText("RM"+Double.toString((double)subtotal));
@@ -151,7 +151,7 @@ public class OrderSummary extends javax.swing.JFrame {
         nameLabel = new javax.swing.JLabel();
         phoneNumberLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        addressLabel = new javax.swing.JTextArea();
+        addressBox = new javax.swing.JTextArea();
 
         jTextField1.setText("jTextField1");
 
@@ -291,12 +291,12 @@ public class OrderSummary extends javax.swing.JFrame {
 
         phoneNumberLabel.setText("01111222223");
 
-        addressLabel.setEditable(false);
-        addressLabel.setColumns(1);
-        addressLabel.setLineWrap(true);
-        addressLabel.setRows(1);
-        addressLabel.setBorder(null);
-        jScrollPane2.setViewportView(addressLabel);
+        addressBox.setEditable(false);
+        addressBox.setColumns(1);
+        addressBox.setLineWrap(true);
+        addressBox.setRows(1);
+        addressBox.setBorder(null);
+        jScrollPane2.setViewportView(addressBox);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -492,7 +492,7 @@ public class OrderSummary extends javax.swing.JFrame {
     }//GEN-LAST:event_updateItemCountActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea addressLabel;
+    private javax.swing.JTextArea addressBox;
     private javax.swing.JButton backToMenuButton;
     private javax.swing.JButton confirmButton;
     private javax.swing.JLabel deliveryFeeLabel;
