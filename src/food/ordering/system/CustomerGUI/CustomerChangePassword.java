@@ -28,7 +28,7 @@ public class CustomerChangePassword extends javax.swing.JFrame {
         this.customer = customer;
         
         ReadFiles reader = new ReadFiles();
-        requestIDs = reader.processAllUserRequestID(userRequestTextFile);
+        requestIDs = reader.readUserRequestID(userRequestTextFile);
     }
 
     private boolean isEmpty(String s) {

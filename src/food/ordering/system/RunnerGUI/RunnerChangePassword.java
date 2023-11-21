@@ -28,7 +28,7 @@ public class RunnerChangePassword extends javax.swing.JFrame {
         this.runner = runner;
         
         ReadFiles reader = new ReadFiles();
-        requestIDs = reader.processAllUserRequestID(userRequestTextFile);
+        requestIDs = reader.readUserRequestID(userRequestTextFile);
     }
 
     private boolean isEmpty(String s) {

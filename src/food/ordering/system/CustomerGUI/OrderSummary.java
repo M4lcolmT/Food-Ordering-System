@@ -388,7 +388,7 @@ public class OrderSummary extends javax.swing.JFrame {
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
         Customer customer = order.getCustomer();
         Vendor vendor = order.getVendor();
-        ReadFiles orderManager = new ReadFiles();
+        OrderManager orderManager = new OrderManager();
         
         Menu menu = new Menu(vendor, customer, orderBasket);
         menu.resetTotalPrice();

@@ -45,7 +45,7 @@ public class VendorOrderHistory extends javax.swing.JFrame {
                         String formattedDate = dateTime.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
                         String formattedTime = dateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
 
-                        Object[] rowData = { formattedDate, formattedTime, orderID, content, rating};
+                        Object[] rowData = {formattedDate, formattedTime, orderID, content, rating};
                         model.addRow(rowData);
                     } else {
                         System.out.println("Skipping unmatched vendor ID orders.");

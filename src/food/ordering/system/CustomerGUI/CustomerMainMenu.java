@@ -23,7 +23,7 @@ public class CustomerMainMenu extends javax.swing.JFrame {
         initComponents();
         this.customer = customer;
         
-        ReadFiles orderManager = new ReadFiles();
+        OrderManager orderManager = new OrderManager();
         allOrders = orderManager.getOrders();
         orderNotificationPanel.setVisible(false);
     }

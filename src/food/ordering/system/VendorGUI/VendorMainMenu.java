@@ -40,6 +40,11 @@ public class VendorMainMenu extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(700, 400));
 
         foodMenuButton.setText("Menu");
+        foodMenuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                foodMenuButtonActionPerformed(evt);
+            }
+        });
 
         revenueDashboardButton.setText("Revenue Dashboard");
         revenueDashboardButton.addActionListener(new java.awt.event.ActionListener() {
@@ -155,6 +160,12 @@ public class VendorMainMenu extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_logOutButtonActionPerformed
+
+    private void foodMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_foodMenuButtonActionPerformed
+        FoodItemMenu page = new FoodItemMenu(vendor);
+        page.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_foodMenuButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton foodMenuButton;

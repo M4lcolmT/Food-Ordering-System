@@ -32,7 +32,7 @@ public class ManageUserRequest extends javax.swing.JFrame {
         
         //Load all the request and add into the main request list
         ReadFiles reader = new ReadFiles();
-        reader.processUserFile(userRequestFilePath, customerRequests, vendorRequests, runnerRequests);
+        reader.readUserRequests(userRequestFilePath, customerRequests, vendorRequests, runnerRequests);
         allRequests.addAll(customerRequests);
         allRequests.addAll(vendorRequests);
         allRequests.addAll(runnerRequests);

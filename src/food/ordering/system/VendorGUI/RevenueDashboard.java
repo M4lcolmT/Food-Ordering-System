@@ -6,6 +6,7 @@ package food.ordering.system.VendorGUI;
 
 import food.ordering.system.CustomerGUI.Order;
 import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.CustomerGUI.OrderManager;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class RevenueDashboard extends javax.swing.JFrame {
         calculateCost();
     }
     
-    ReadFiles orderManager = new ReadFiles();
+    OrderManager orderManager = new OrderManager();
     List<Order> allOrders = orderManager.getOrders();
     
     private void getVendorOrders() {

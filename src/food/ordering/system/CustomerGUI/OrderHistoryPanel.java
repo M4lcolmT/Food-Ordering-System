@@ -36,7 +36,7 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
     }
     
     private Order findOrder() {
-        ReadFiles orderManager = new ReadFiles();
+        OrderManager orderManager = new OrderManager();
         List<Order> orders = orderManager.getOrders();
         
         for (Order orderItem : orders) {  

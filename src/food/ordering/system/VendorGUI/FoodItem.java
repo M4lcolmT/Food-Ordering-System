@@ -20,9 +20,6 @@ public class FoodItem {
     private String itemDescription;
     private double itemCost;
     
-    TextFilePaths path = new TextFilePaths();
-    String vendorMenuTextFilePath = path.getVendorMenuTextFile();
-    
     public FoodItem(int vendorID, int itemID, String itemName, String itemCategory, double itemPrice, String itemDescription, double itemCost) {
         this.vendorID = vendorID;
         this.itemID = itemID;
@@ -39,6 +36,10 @@ public class FoodItem {
     
     public int getVendorID() {
         return vendorID;
+    }
+    
+    public void setVendorID(int vendorID) {
+        this.vendorID = vendorID;
     }
     
     public String getItemName() {

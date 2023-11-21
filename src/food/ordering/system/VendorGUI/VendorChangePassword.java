@@ -28,7 +28,7 @@ public class VendorChangePassword extends javax.swing.JFrame {
         this.vendor = vendor;
         
         ReadFiles reader = new ReadFiles();
-        requestIDs = reader.processAllUserRequestID(userRequestTextFile);
+        requestIDs = reader.readUserRequestID(userRequestTextFile);
     }
 
     private boolean isEmpty(String s) {
