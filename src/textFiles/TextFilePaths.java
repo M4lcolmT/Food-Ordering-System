@@ -19,6 +19,7 @@ public class TextFilePaths {
     public final String runnerReviewsTextFile = "src/textFiles/runner_reviews.txt";
     public final String topUpRequestsTextFile = "src/textFiles/top_up_requests.txt";
     public final String userCRUDrequestTextFile = "src/textFiles/user_crud_requests.txt";
+    public final String notificationsTextFile = "src/textFiles/notifications.txt";
     
     public String getCustomerTextFile() {
         return customerTextFile;
@@ -58,5 +59,9 @@ public class TextFilePaths {
 
     public String getUserCRUDrequestTextFile() {
         return userCRUDrequestTextFile;
+    }
+    
+    public String getNotificationsTextFile() {
+        return notificationsTextFile;
     }
 }

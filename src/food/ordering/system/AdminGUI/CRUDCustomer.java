@@ -14,7 +14,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class CRUDCustomer extends javax.swing.JFrame {
     private Admin admin;
-    List<Customer> customers;
+    private List<Customer> customers;
+    private List<Integer> notificationIDs;
     
     public CRUDCustomer(Admin admin) {
         initComponents();
@@ -22,6 +23,7 @@ public class CRUDCustomer extends javax.swing.JFrame {
         
         ReadFiles reader = new ReadFiles();
         customers = reader.readCustomers();
+        notificationIDs = reader.readNotificationID();
         loadCustomers();
     }
 
@@ -43,9 +45,9 @@ public class CRUDCustomer extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
+        editButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -71,11 +73,16 @@ public class CRUDCustomer extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Manage Customer Details");
 
-        jButton1.setText("Add");
+        addButton.setText("Add");
 
-        jButton2.setText("Edit");
+        editButton.setText("Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Delete");
+        deleteButton.setText("Delete");
 
         jLabel2.setText("Name:");
 
@@ -172,11 +179,11 @@ public class CRUDCustomer extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(addButton)
                         .addGap(51, 51, 51)
-                        .addComponent(jButton2)
+                        .addComponent(editButton)
                         .addGap(59, 59, 59)
-                        .addComponent(jButton3))
+                        .addComponent(deleteButton))
                     .addComponent(jLabel1)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE))
@@ -191,9 +198,9 @@ public class CRUDCustomer extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(addButton)
+                    .addComponent(editButton)
+                    .addComponent(deleteButton))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(9, Short.MAX_VALUE))
@@ -213,11 +220,16 @@ public class CRUDCustomer extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        // Once user is edited, sent notification to customer
+        Notification notif = new Notification();
+    }//GEN-LAST:event_editButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
     private javax.swing.JTable customerTable;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JButton editButton;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;

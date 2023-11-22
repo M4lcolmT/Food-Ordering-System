@@ -11,13 +11,13 @@ package food.ordering.system.AdminGUI;
 public class UserRequest {
     private int userRequestID;
     private int userID;
+    private UserType userType;
+    private RequestType requestType;
     private String name;
     private String phoneNumber;
     private String email;
     private String password;
     private String address;
-    private UserType userType;
-    private RequestType requestType;
     
     public enum UserType{
         CUSTOMER,

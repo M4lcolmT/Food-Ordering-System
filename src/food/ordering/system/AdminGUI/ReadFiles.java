@@ -1,14 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package food.ordering.system.AdminGUI;
 
 import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.CustomerGUI.CustomerRequest;
 import food.ordering.system.RunnerGUI.Runner;
 import food.ordering.system.RunnerGUI.RunnerRequest;
-import food.ordering.system.VendorGUI.FoodItem;
 import food.ordering.system.VendorGUI.Vendor;
 import food.ordering.system.VendorGUI.VendorRequest;
 import java.io.BufferedReader;
@@ -28,6 +23,8 @@ public class ReadFiles {
     String vendorTextFilePath = filePaths.getVendorTextFile();
     String runnerTextFilePath = filePaths.getRunnerTextFile();
     String adminTextFilePath = filePaths.getAdminTextFile();
+    String userRequestsTextFilePath = filePaths.getUserCRUDrequestTextFile();
+    String notificationFilePath = filePaths.getNotificationsTextFile();
     
     //Read customers from file
     public List<Customer> readCustomers() {
@@ -150,16 +147,17 @@ public class ReadFiles {
             e.printStackTrace();
         }
         return admins;
-    }
+    } 
     
-    public List<Integer> readUserRequestID(String filePath) {
+    // User request ID list
+    public List<Integer> readUserRequestID() {
         List<Integer> userRequestIDs = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(userRequestsTextFilePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length > 0) { // Check if there's at least one item in the line
+                if (parts.length > 0) { 
                     int userRequestID = Integer.parseInt(parts[0]);
                     userRequestIDs.add(userRequestID);
                 } else {
@@ -174,8 +172,8 @@ public class ReadFiles {
     } 
     
     //Reading the user request file
-    public void readUserRequests(String filePath, List<CustomerRequest> customerRequests, List<VendorRequest> vendorRequests, List<RunnerRequest> runnerRequests) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+    public void readUserRequests(List<CustomerRequest> customerRequests, List<VendorRequest> vendorRequests, List<RunnerRequest> runnerRequests) {
+        try (BufferedReader br = new BufferedReader(new FileReader(userRequestsTextFilePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
@@ -246,5 +244,27 @@ public class ReadFiles {
         String plateNumber = parts[9];
         String model = parts[10];
         return new RunnerRequest(requestID, userID, userType, requestType, name, phoneNumber, email, password, address, plateNumber, model);
+    }
+    
+    // Notification ID list
+    public List<Integer> readNotificationID() {
+        List<Integer> notificationIDs = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(notificationFilePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(";");
+                if (parts.length > 0) { 
+                    int notifID = Integer.parseInt(parts[0]);
+                    notificationIDs.add(notifID);
+                } else {
+                    System.out.println("Skipping invalid line: " + line);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return notificationIDs;
     }
 }

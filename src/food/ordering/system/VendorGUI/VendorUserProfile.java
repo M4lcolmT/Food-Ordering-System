@@ -1,4 +1,4 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
@@ -32,7 +32,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
         nameField.setText(vendor.getName());
         emailField.setText(vendor.getEmail());
         phoneNumberField.setText(vendor.getPhoneNumber());
-        descriptionField.setText(vendor.getCity());
+        
         String operationHours = vendor.getOperationHours();
         String[] hourParts = operationHours.split("-");
         for (int i = 0; i < startHourComboBox.getItemCount(); i++) {
@@ -47,6 +47,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
                 break;
             }
         }
+        
         String operationDays = vendor.getOperationDays();
         String[] dayParts = operationDays.split("-");
         for (int i = 0; i < startDayComboBox.getItemCount(); i++) {
