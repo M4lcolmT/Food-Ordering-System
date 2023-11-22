@@ -64,7 +64,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
         }
         
         ReadFiles reader = new ReadFiles();
-        requestIDs = reader.readUserRequestID(userRequestTextFile);
+        requestIDs = reader.readUserRequestID();
     }
     
     private boolean isEmpty(String s) {

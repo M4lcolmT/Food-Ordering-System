@@ -34,7 +34,7 @@ public class CustomerUserProfile extends javax.swing.JFrame {
         streetAddressField.setText(customer.getStreetAddress());
         
         ReadFiles reader = new ReadFiles();
-        requestIDs = reader.readUserRequestID(userRequestTextFile);
+        requestIDs = reader.readUserRequestID();
     }
     
     private boolean isEmpty(String s) {
