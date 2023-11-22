@@ -25,7 +25,7 @@ public class Menu extends javax.swing.JFrame {
     private Vendor vendor;
     private Customer customer;
     private List<FoodItem> menu = new ArrayList<>();
-    private static List<FoodItem> basket = new ArrayList<>();
+    private List<FoodItem> basket = new ArrayList<>();
     private FoodItem foodItem;
     public static double totalPrice = 0.0;
     public static int basketCount = 0;

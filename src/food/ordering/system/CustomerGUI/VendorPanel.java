@@ -7,6 +7,7 @@ package food.ordering.system.CustomerGUI;
 import food.ordering.system.Location;
 import food.ordering.system.VendorGUI.FoodItem;
 import food.ordering.system.VendorGUI.Vendor;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -147,7 +148,7 @@ public class VendorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void orderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orderButtonActionPerformed
-        List<FoodItem> basket = BasketManager.getInstance().getBasket();
+        List<FoodItem> basket = new ArrayList<>();
         Menu vendorMenu = new Menu(vendor, customer, basket);
         vendorMenu.setVisible(true);
     }//GEN-LAST:event_orderButtonActionPerformed

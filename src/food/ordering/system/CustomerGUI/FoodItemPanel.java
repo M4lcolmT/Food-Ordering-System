@@ -30,8 +30,19 @@ public class FoodItemPanel extends javax.swing.JPanel {
         updateQuantityLabel();
     }
     
+    private int calculateQuantity(FoodItem targetItem) {
+        int count = 0;
+        for (FoodItem item : basket) {
+            if (item.getItemID() == targetItem.getItemID()) {
+                count++;
+            }
+        }
+        return count;
+    }
+        
+    
     private void updateQuantityLabel() {
-        int quantity =  BasketManager.getInstance().calculateQuantity(foodItem);
+        int quantity = calculateQuantity(foodItem);
         quantityCount.setText(Integer.toString(quantity));
     }
         
@@ -122,7 +133,7 @@ public class FoodItemPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addItemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addItemButtonActionPerformed
-        BasketManager.getInstance().addToBasket(foodItem);
+        basket.add(foodItem);
         menu.updateItemCount();
         menu.increaseTotalPrice(foodItem);
         updateQuantityLabel();
