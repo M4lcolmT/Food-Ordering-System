@@ -43,10 +43,9 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
             if (orderItem.getOrderID() == order.getOrderID()) {
                 System.out.println(orderItem.getOrderID());
                 return orderItem;  
-            } else {
-                System.out.println("Order not found!");
-            }
+            } 
         }
+        System.out.println("Order not found!");
         return null;
     }
 
@@ -131,18 +130,20 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
 
     private void reorderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reorderButtonActionPerformed
         Order specificOrder = findOrder();
-        Vendor vendor = specificOrder.getVendor(); 
-        List<FoodItem> basket = specificOrder.getOrderBasket();
+    
+        if (specificOrder != null) {
+            Vendor vendor = specificOrder.getVendor(); 
+            List<FoodItem> basket = specificOrder.getOrderBasket();
+            Menu menu = new Menu(vendor, customer, basket);
+            menu.setTotalPrice(specificOrder.getTotalPrice());
+            menu.setBasket(basket);
+            menu.updateItemCount();
+            menu.totalPriceLabel.setText(Double.toString(specificOrder.getTotalPrice()));
+            menu.setVisible(true);
         
-        Menu menu = new Menu(vendor, customer, basket);
-        menu.setTotalPrice(specificOrder.getTotalPrice());
-        menu.setBasket(basket);
-        menu.updateItemCount();
-        menu.totalPriceLabel.setText(Double.toString(specificOrder.getTotalPrice()));
-        menu.setVisible(true);
-        
-        OrderSummary summary = new OrderSummary(specificOrder, basket);
-        summary.loadBasketItems(basket);
+            OrderSummary summary = new OrderSummary(specificOrder, basket);
+            summary.loadBasketItems(basket);
+        }
     }//GEN-LAST:event_reorderButtonActionPerformed
 
 

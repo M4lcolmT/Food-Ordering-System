@@ -57,7 +57,7 @@ public class Menu extends javax.swing.JFrame {
         try (BufferedReader reader = new BufferedReader(new FileReader(vendorMenuFilePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(";");
+                String[] parts = line.split("=");
                 if (parts.length == 7) {
                     int vendorID = Integer.parseInt(parts[0]);
                     if (vendorID == vendor.getVendorID()) {

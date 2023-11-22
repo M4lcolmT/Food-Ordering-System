@@ -65,7 +65,7 @@ public class OrderManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 8) {
+                if (parts.length == 11) {
                     int id = Integer.parseInt(parts[0]);
                     if (orderVendorID == id) {
                         String name = parts[1];
