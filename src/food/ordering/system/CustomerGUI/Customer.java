@@ -11,6 +11,9 @@ import food.ordering.system.VendorGUI.Vendor;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -83,10 +86,37 @@ public class Customer extends User{
     // Save order into text file
     private boolean saveOrder(Order newOrder) {
         boolean success = false;
-        try (PrintWriter pw = new PrintWriter(new FileWriter(orderTextFilePath, true))) {
-            pw.println(newOrder.toString());
+        try {
+        // Read the existing content of the customer file
+            List<String> lines = Files.readAllLines(Paths.get(filePaths.getCustomerTextFile()), StandardCharsets.UTF_8);
+            
+        // Update the customer's address and city in the lines
+            for (int i = 0; i < lines.size(); i++) {
+                String[] parts = lines.get(i).split(";");
+                int customerId = Integer.parseInt(parts[0].trim());
+
+                if (customerId == this.getCustomerID()) {
+                // Update the address and city
+                    parts[5] = newOrder.getCustomer().getStreetAddress();
+                    parts[6] = newOrder.getCustomer().getCity();
+
+                // Join the updated parts back into a line
+                    lines.set(i, String.join(";", parts));
+                    break;
+                }
+            }
+
+        // Write the updated content back to the customer file
+            Files.write(Paths.get(filePaths.getCustomerTextFile()), lines, StandardCharsets.UTF_8);
+            List<String> orderLines = Files.readAllLines(Paths.get(orderTextFilePath), StandardCharsets.UTF_8);
+            orderLines.add(newOrder.toString());
+            Files.write(Paths.get(orderTextFilePath), orderLines, StandardCharsets.UTF_8);
+
+        // Continue with the rest of your saveOrder logic...
+
             success = true;
         } catch (IOException ex) {
+            ex.printStackTrace();
             success = false;
         }
         return success;

@@ -49,6 +49,9 @@ public class OrderSummary extends javax.swing.JFrame {
         phoneNumberLabel.setText(customer.getPhoneNumber());
         addressBox.setText(customer.getStreetAddress());
         
+        String customerCity = customer.getCity();
+        comboBox.setSelectedItem(customerCity);
+        
         subtotal = order.getTotalPrice();
         subtotalLabel.setText("RM"+Double.toString((double)subtotal));
         taxLabel.setText("RM"+Double.toString((double)calculateTax()));
@@ -396,18 +399,20 @@ public class OrderSummary extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
-        String streetAddress = addressBox.getText();
-        Customer customer = order.getCustomer();
-        customer.setStreetAddress(streetAddress);
-        Vendor vendor = order.getVendor();
-        OrderManager orderManager = new OrderManager();
-        String city = String.valueOf(comboBox.getSelectedItem());
+        String newstreetAddress = addressBox.getText();
+        String newCity = String.valueOf(comboBox.getSelectedItem());
         
-        if (city.equals("City")){
+        if (comboBox.equals("City")){
             JOptionPane.showMessageDialog(this, "Please select a city", "Invalid Input", JOptionPane.ERROR_MESSAGE);
             return;
         } 
-        customer.setCity(city);
+        
+        Customer customer = order.getCustomer();
+        Vendor vendor = order.getVendor();
+        OrderManager orderManager = new OrderManager();
+        
+        customer.setStreetAddress(newstreetAddress);
+        customer.setCity(newCity);
         
         Menu menu = new Menu(vendor, customer, orderBasket);
         menu.resetTotalPrice();
@@ -422,8 +427,6 @@ public class OrderSummary extends javax.swing.JFrame {
         mainMenu.orderStatusLabel.setText("Your order is processing...");
         mainMenu.setVisible(true);
         
-        System.out.println(city);
-        System.out.println(streetAddress);
     }//GEN-LAST:event_confirmButtonActionPerformed
 
     private void backToMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backToMenuButtonActionPerformed
