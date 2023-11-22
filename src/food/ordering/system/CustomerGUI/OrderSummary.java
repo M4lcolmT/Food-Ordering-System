@@ -150,8 +150,8 @@ public class OrderSummary extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         nameLabel = new javax.swing.JLabel();
         phoneNumberLabel = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        addressBox = new javax.swing.JTextArea();
+        addressBox = new javax.swing.JTextField();
+        comboBox = new javax.swing.JComboBox<>();
 
         jTextField1.setText("jTextField1");
 
@@ -291,26 +291,34 @@ public class OrderSummary extends javax.swing.JFrame {
 
         phoneNumberLabel.setText("01111222223");
 
-        addressBox.setEditable(false);
-        addressBox.setColumns(1);
-        addressBox.setLineWrap(true);
-        addressBox.setRows(1);
-        addressBox.setBorder(null);
-        jScrollPane2.setViewportView(addressBox);
+        addressBox.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        addressBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addressBoxActionPerformed(evt);
+            }
+        });
+
+        comboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "City", "Shah Alam", "Petaling Jaya", "Subang Jaya", "Klang", "Puchong", "Ampang", "Kajang", "Cyberjaya", "Seri Kembangan", "Hulu Langat", "Bukit Jalil" }));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(phoneNumberLabel)
-                    .addComponent(nameLabel)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(phoneNumberLabel)
+                            .addComponent(nameLabel)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(addressBox, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                            .addComponent(comboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -326,9 +334,11 @@ public class OrderSummary extends javax.swing.JFrame {
                 .addComponent(phoneNumberLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(addressBox, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -366,7 +376,7 @@ public class OrderSummary extends javax.swing.JFrame {
                         .addGap(12, 12, 12)
                         .addComponent(confirmButton))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -386,9 +396,18 @@ public class OrderSummary extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
+        String streetAddress = addressBox.getText();
         Customer customer = order.getCustomer();
+        customer.setStreetAddress(streetAddress);
         Vendor vendor = order.getVendor();
         OrderManager orderManager = new OrderManager();
+        String city = String.valueOf(comboBox.getSelectedItem());
+        
+        if (city.equals("City")){
+            JOptionPane.showMessageDialog(this, "Please select a city", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            return;
+        } 
+        customer.setCity(city);
         
         Menu menu = new Menu(vendor, customer, orderBasket);
         menu.resetTotalPrice();
@@ -402,6 +421,9 @@ public class OrderSummary extends javax.swing.JFrame {
         mainMenu.orderNotificationPanel.setVisible(true);
         mainMenu.orderStatusLabel.setText("Your order is processing...");
         mainMenu.setVisible(true);
+        
+        System.out.println(city);
+        System.out.println(streetAddress);
     }//GEN-LAST:event_confirmButtonActionPerformed
 
     private void backToMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backToMenuButtonActionPerformed
@@ -491,9 +513,14 @@ public class OrderSummary extends javax.swing.JFrame {
 
     }//GEN-LAST:event_updateItemCountActionPerformed
 
+    private void addressBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addressBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addressBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea addressBox;
+    private javax.swing.JTextField addressBox;
     private javax.swing.JButton backToMenuButton;
+    private javax.swing.JComboBox<String> comboBox;
     private javax.swing.JButton confirmButton;
     private javax.swing.JLabel deliveryFeeLabel;
     private javax.swing.JLabel jLabel1;
@@ -508,7 +535,6 @@ public class OrderSummary extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTable orderSummaryTable;
