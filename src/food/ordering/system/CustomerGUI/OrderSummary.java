@@ -127,7 +127,7 @@ public class OrderSummary extends javax.swing.JFrame {
     }
     
     private void updateDeliveryFee() {
-        calculateDistance(customer.getCity(), vendor.getCity());
+        calculateDistance(customer.getCity().trim().toLowerCase(), vendor.getCity().trim().toLowerCase());
         deliveryFee = calculateDeliveryFee();
         deliveryFeeLabel.setText("RM" + Double.toString(deliveryFee));
         totalPriceLabel.setText("RM" + Double.toString(calculateTotal()));
