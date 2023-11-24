@@ -7,4 +7,4 @@
 7;false;Chong;0170654321;chong@gmail.com;c987;Cheras;MNO8765;Ducati Monster
 8;false;Foo;0165432210;foo@gmail.com;f654;Damansara;PQR5432;BMW Motorrad
 9;false;Lim;0143211098;lim@gmail.com;l012;Kota Kinabalu;STU1098;Triumph Street
-10;false;Teh;0154362109;teh@gmail.com;t543;Penang;VWX2109;KTM Duke
+10;true;Teh;0154362109;teh@gmail.com;t543;Penang;VWX2109;KTM Duke

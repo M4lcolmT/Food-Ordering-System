@@ -11,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -135,7 +137,7 @@ public class OrderManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 10) {
+                if (parts.length == 11) {
                     int id = Integer.parseInt(parts[0]);
                     OrderType orderType = OrderType.valueOf(parts[1].toUpperCase());
                     Customer orderCustomer = parseOrderCustomer(Integer.parseInt(parts[2]));
@@ -146,8 +148,9 @@ public class OrderManager {
                     boolean orderRunnerAvailability = Boolean.parseBoolean(parts[7]);
                     int orderRunnerID = Integer.parseInt(parts[8]);
                     LocalDateTime orderDateTime = parseDateTime(parts[9]);
+                    double deliveryFee = Double.parseDouble(parts[10]);
 
-                    Order newOrder = new Order(id, orderType, orderCustomer, orderVendor, basket, orderTotalPrice, orderStatus, orderRunnerAvailability, orderRunnerID,  orderDateTime);
+                    Order newOrder = new Order(id, orderType, orderCustomer, orderVendor, basket, orderTotalPrice, orderStatus, orderRunnerAvailability, orderRunnerID,  orderDateTime, deliveryFee);
                     orders.add(newOrder);
                 } else {
                     System.out.println("Skipping a line with an incorrect number of parts: " + line);
@@ -161,4 +164,24 @@ public class OrderManager {
         System.out.println("orders: "+orders.size());
         return orders;
     }
+    
+    public void saveUpdatedCustomerInfo(Customer customer) {
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(customerTextFilePath));
+            for (int i = 0; i < lines.size(); i++) {
+                String[] parts = lines.get(i).split(";");
+                int id = Integer.parseInt(parts[0]);
+                if (id == customer.getCustomerID()) {
+                    // Update the address and city for the matching customer
+                    lines.set(i, customer.getCustomerID() + ";" + customer.getName() + ";" + customer.getPhoneNumber() + ";" + customer.getEmail() + ";" + customer.getPassword() + ";" + customer.getStreetAddress() + ";" + customer.getCity());
+                    break;
+                }
+            }
+            Files.write(Paths.get(customerTextFilePath), lines);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+

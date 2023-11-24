@@ -54,14 +54,14 @@ public class Customer extends User{
     }
     
     // Create a new order instance
-    public void placeOrder(OrderType orderType, List<Order> orders, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, OrderStatus status, boolean runnerAvailability, int runnerID) {
+    public void placeOrder(OrderType orderType, List<Order> orders, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, OrderStatus status, boolean runnerAvailability, int runnerID, double deliveryFee) {
         LocalDateTime originalDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
         String formattedDateTimeStr = originalDateTime.format(formatter);
         LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTimeStr, formatter);
         
         int newOrderID = checkMaxID(orders);
-        Order newOrder = new Order(newOrderID, orderType, this, vendor, orderBasket, totalPrice, status, runnerAvailability, runnerID, parsedDateTime);
+        Order newOrder = new Order(newOrderID, orderType, this, vendor, orderBasket, totalPrice, status, runnerAvailability, runnerID, parsedDateTime, deliveryFee);
 
         orders.add(newOrder);
         saveOrder(newOrder);

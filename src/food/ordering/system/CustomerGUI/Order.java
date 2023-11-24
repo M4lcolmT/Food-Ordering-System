@@ -32,6 +32,7 @@ public class Order {
     private int runnerID;
     private OrderStatus status;
     private LocalDateTime dateTime;
+    private double deliveryFee;
     
     TextFilePaths path = new TextFilePaths();
     String orderTextFilePath = path.getOrderTextFile();
@@ -52,7 +53,7 @@ public class Order {
         CANCELLED
     }
     
-    public Order(int orderID, OrderType orderType, Customer customer, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, OrderStatus status, boolean runnerAvailability, int runnerID, LocalDateTime dateTime) {
+    public Order(int orderID, OrderType orderType, Customer customer, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, OrderStatus status, boolean runnerAvailability, int runnerID, LocalDateTime dateTime, double deliveryFee) {
         this.orderID = orderID;
         this.orderType = orderType;
         this.customer = customer;
@@ -63,6 +64,7 @@ public class Order {
         this.runnerAvailability = runnerAvailability;
         this.runnerID = runnerID;
         this.dateTime = dateTime;
+        this.deliveryFee = deliveryFee;
     }
     
     public int getOrderID() {
@@ -125,6 +127,14 @@ public class Order {
         this.dateTime = dateTime;
     }
     
+    public double getDeliveryFee() {
+        return deliveryFee;
+    }
+
+    public void setDeliveryFee(double deliveryFee) {
+        this.deliveryFee = deliveryFee;
+    }
+    
     public void updateOrderStatus(Order specificOrder, List<Order> orders, OrderStatus orderStatus) {
         int orderid = specificOrder.getOrderID();
         for (Order item : orders) {
@@ -156,7 +166,7 @@ public class Order {
     @Override
     public String toString() {
         String delimiter = ";";
-        return orderID + delimiter + orderType + delimiter + customer.getCustomerID() + delimiter + vendor.getVendorID() + delimiter + serializeOrderBasket() + delimiter + totalPrice + delimiter + status + delimiter + runnerAvailability + delimiter + runnerID +  delimiter + dateTime;
+        return orderID + delimiter + orderType + delimiter + customer.getCustomerID() + delimiter + vendor.getVendorID() + delimiter + serializeOrderBasket() + delimiter + totalPrice + delimiter + status + delimiter + runnerAvailability + delimiter + runnerID + delimiter + dateTime + delimiter + deliveryFee;
     }
 
     // Serialize the order basket to a string

@@ -10,6 +10,9 @@ import food.ordering.system.Location;
 import food.ordering.system.RunnerGUI.Runner;
 import food.ordering.system.VendorGUI.Vendor;
 import food.ordering.system.VendorGUI.FoodItem;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,6 +28,7 @@ import textFiles.TextFilePaths;
  */
 public class OrderSummary extends javax.swing.JFrame {
     private Order order;
+    private Vendor vendor;
     private Customer customer;
     private Runner availableRunner;
     private double subtotal;
@@ -49,7 +53,7 @@ public class OrderSummary extends javax.swing.JFrame {
         loadBasketItems(orderBasket);
         
         customer = order.getCustomer();
-        Vendor vendor = order.getVendor();
+        vendor = order.getVendor();
         calculateDistance(customer.getCity().trim().toLowerCase(), vendor.getCity().trim().toLowerCase());
         
         nameLabel.setText(customer.getName());
@@ -122,6 +126,13 @@ public class OrderSummary extends javax.swing.JFrame {
         }
     }
     
+    private void updateDeliveryFee() {
+        calculateDistance(customer.getCity(), vendor.getCity());
+        deliveryFee = calculateDeliveryFee();
+        deliveryFeeLabel.setText("RM" + Double.toString(deliveryFee));
+        totalPriceLabel.setText("RM" + Double.toString(calculateTotal()));
+    }
+    
     private double calculateDeliveryFee(){
         if (distance >= 3.0 && distance <= 10.0) {
             deliveryFee = 2.5;
@@ -163,11 +174,11 @@ public class OrderSummary extends javax.swing.JFrame {
             deliveryFee = 0;
             customer.placeOrder(newOrderType, orderManager.getOrders(), vendor, orderBasket, 
                     calculateTotal(), Order.OrderStatus.PENDING, false, 
-                    0);
+                    0, deliveryFee);
         } else {
             customer.placeOrder(newOrderType, orderManager.getOrders(), vendor, orderBasket, 
                     calculateTotal(), Order.OrderStatus.PENDING, availableRunner.isRunnerAvailability(), 
-                    availableRunner.getRunnerID());
+                    availableRunner.getRunnerID(), deliveryFee);
             // Change runner availability to false once an order is assigned to him
             availableRunner.updateRunnerStatus(availableRunner, runners, true);
         }
@@ -357,6 +368,11 @@ public class OrderSummary extends javax.swing.JFrame {
         });
 
         cityComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "City", "Shah Alam", "Petaling Jaya", "Subang Jaya", "Klang", "Puchong", "Ampang", "Kajang", "Cyberjaya", "Seri Kembangan", "Hulu Langat", "Bukit Jalil" }));
+        cityComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cityComboBoxItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -444,7 +460,7 @@ public class OrderSummary extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -467,7 +483,8 @@ public class OrderSummary extends javax.swing.JFrame {
         Object[] options = {"Take Away", "Dine In", "Cancel Order"};
         String newstreetAddress = addressBox.getText();
         String newCity = String.valueOf(cityComboBox.getSelectedItem());
-        
+        OrderManager ordermanager = new OrderManager();
+                
         if (newCity.equals("City")){
             JOptionPane.showMessageDialog(this, "Please select a city", "Invalid Input", JOptionPane.ERROR_MESSAGE);
             return;
@@ -475,6 +492,7 @@ public class OrderSummary extends javax.swing.JFrame {
         
         customer.setStreetAddress(newstreetAddress);
         customer.setCity(newCity);
+        ordermanager.saveUpdatedCustomerInfo(customer);
         
         if (checkRunner() != null) {
             newOrderType = OrderType.DELIVERY;
@@ -508,7 +526,7 @@ public class OrderSummary extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_confirmButtonActionPerformed
-
+  
     private void backToMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backToMenuButtonActionPerformed
         loadBasketItems(orderBasket);
         Customer customer = order.getCustomer();
@@ -610,6 +628,17 @@ public class OrderSummary extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_cancelButtonActionPerformed
 
+    private void cityComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cityComboBoxItemStateChanged
+        OrderManager ordermanager = new OrderManager();
+        String newCity = String.valueOf(cityComboBox.getSelectedItem());
+        if (!newCity.equals("City")) {
+            customer.setCity(newCity);
+            ordermanager.saveUpdatedCustomerInfo(customer);
+            updateDeliveryFee();
+        }
+    }//GEN-LAST:event_cityComboBoxItemStateChanged
+
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField addressBox;
     private javax.swing.JButton backToMenuButton;
