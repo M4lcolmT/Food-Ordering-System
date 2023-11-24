@@ -5,15 +5,13 @@
 package food.ordering.system.CustomerGUI;
 
 import food.ordering.system.CustomerGUI.Order.OrderStatus;
+import food.ordering.system.CustomerGUI.Order.OrderType;
 import food.ordering.system.User;
 import food.ordering.system.VendorGUI.FoodItem;
 import food.ordering.system.VendorGUI.Vendor;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -40,10 +38,6 @@ public class Customer extends User{
         this.city = city;
     }
     
-    public void setOrders(List<Order> allOrders) {
-        this.orders =  allOrders;
-    }
-    
     public List<Order> getOrders() {
         return orders;
     }
@@ -59,67 +53,27 @@ public class Customer extends User{
         return maxID + 1;
     }
     
-    // Calculate the total price from all the item in the basket.
-    private double calculateTotalPrice(List<FoodItem> orderBasket) {
-        double totalPrice = 0.0;
-        for (FoodItem item : orderBasket) {
-            totalPrice += item.getItemPrice();
-        }
-        return totalPrice;
-    }
-    
     // Create a new order instance
-    public void placeOrder(List<Order> orders, Vendor vendor, List<FoodItem> orderBasket, OrderStatus status) {
-        double totalPrice = calculateTotalPrice(orderBasket);
+    public void placeOrder(OrderType orderType, List<Order> orders, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, OrderStatus status, boolean runnerAvailability, int runnerID) {
         LocalDateTime originalDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
         String formattedDateTimeStr = originalDateTime.format(formatter);
         LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTimeStr, formatter);
         
         int newOrderID = checkMaxID(orders);
-        Order newOrder = new Order(newOrderID, this, vendor, orderBasket, totalPrice, status, false, 0, parsedDateTime);
-        
+        Order newOrder = new Order(newOrderID, orderType, this, vendor, orderBasket, totalPrice, status, runnerAvailability, runnerID, parsedDateTime);
+
         orders.add(newOrder);
         saveOrder(newOrder);
     }
     
     // Save order into text file
-    private boolean saveOrder(Order newOrder) {
-        boolean success = false;
-        try {
-        // Read the existing content of the customer file
-            List<String> lines = Files.readAllLines(Paths.get(filePaths.getCustomerTextFile()), StandardCharsets.UTF_8);
-            
-        // Update the customer's address and city in the lines
-            for (int i = 0; i < lines.size(); i++) {
-                String[] parts = lines.get(i).split(";");
-                int customerId = Integer.parseInt(parts[0].trim());
-
-                if (customerId == this.getCustomerID()) {
-                // Update the address and city
-                    parts[5] = newOrder.getCustomer().getStreetAddress();
-                    parts[6] = newOrder.getCustomer().getCity();
-
-                // Join the updated parts back into a line
-                    lines.set(i, String.join(";", parts));
-                    break;
-                }
-            }
-
-        // Write the updated content back to the customer file
-            Files.write(Paths.get(filePaths.getCustomerTextFile()), lines, StandardCharsets.UTF_8);
-            List<String> orderLines = Files.readAllLines(Paths.get(orderTextFilePath), StandardCharsets.UTF_8);
-            orderLines.add(newOrder.toString());
-            Files.write(Paths.get(orderTextFilePath), orderLines, StandardCharsets.UTF_8);
-
-        // Continue with the rest of your saveOrder logic...
-
-            success = true;
+    private void saveOrder(Order newOrder) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(orderTextFilePath, true))) {
+            pw.println(newOrder.toString());
         } catch (IOException ex) {
-            ex.printStackTrace();
-            success = false;
+            System.out.println("Failed to save!");
         }
-        return success;
     }
 
     public int getCustomerID() {
@@ -145,6 +99,6 @@ public class Customer extends User{
     @Override
     public String toString() {
         String delimiter = ";";
-        return customerID + delimiter + super.toString() + streetAddress + delimiter + city;
+        return customerID + delimiter + super.toString() + delimiter + streetAddress + delimiter + city;
     }
 }

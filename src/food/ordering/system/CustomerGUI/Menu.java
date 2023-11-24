@@ -45,6 +45,7 @@ public class Menu extends javax.swing.JFrame {
         vendorRating.setText(vendor.getRating()+" Ratings");
         readFoodItemsFromFile();
         populateInnerPanel(menu);
+        checkEmptyBasket();
     }
     
     public String showName(){
@@ -96,6 +97,15 @@ public class Menu extends javax.swing.JFrame {
     
     public void setBasket(List<FoodItem> bask) {
         basket = bask;
+    }
+    
+    public void checkEmptyBasket() {
+        basketCount = basket.size();
+        if (basketCount != 0) {
+            confirmBasket.setVisible(true);
+        } else {
+            confirmBasket.setVisible(false);
+        }
     }
     
     public void updateItemCount() {
@@ -258,7 +268,7 @@ public class Menu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void confirmBasketMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmBasketMouseClicked
-        Order order = new Order(0, customer, vendor, basket, totalPrice, OrderStatus.PENDING, false, 0, LocalDateTime.now());
+        Order order = new Order(0, Order.OrderType.DELIVERY, customer, vendor, basket, totalPrice, OrderStatus.PENDING, false, 0, LocalDateTime.now());
         OrderSummary orderSummary = new OrderSummary(order, basket);
         orderSummary.setVisible(true);
         this.dispose();

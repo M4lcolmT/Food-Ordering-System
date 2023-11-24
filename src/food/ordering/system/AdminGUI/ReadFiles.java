@@ -98,17 +98,18 @@ public class ReadFiles {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 8) {
+                if (parts.length == 9) {
                     int id = Integer.parseInt(parts[0]);
-                    String name = parts[1];
-                    String phoneNumber = parts[2];
-                    String email = parts[3];
-                    String password = parts[4];
-                    String address = parts[5];
-                    String plateNo = parts[6];
-                    String vehicleModel = parts[7];
+                    boolean availability = Boolean.parseBoolean(parts[1]); 
+                    String name = parts[2];
+                    String phoneNumber = parts[3];
+                    String email = parts[4];
+                    String password = parts[5];
+                    String address = parts[6];
+                    String plateNo = parts[7];
+                    String vehicleModel = parts[8];
                     
-                    Runner runnerItem = new Runner(id, name, phoneNumber, email, password, address, plateNo, vehicleModel);
+                    Runner runnerItem = new Runner(id, availability, name, phoneNumber, email, password, address, plateNo, vehicleModel);
                     runners.add(runnerItem);
                 } else {
                     System.out.println("Skipping a line with an incorrect number of parts");

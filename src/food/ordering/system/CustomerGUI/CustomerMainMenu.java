@@ -4,7 +4,6 @@
  */
 package food.ordering.system.CustomerGUI;
 
-import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.CustomerLogin;
 import java.util.ArrayList;
 import java.util.List;

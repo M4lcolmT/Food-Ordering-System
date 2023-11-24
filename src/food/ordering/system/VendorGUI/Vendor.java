@@ -68,7 +68,7 @@ public class Vendor extends User{
     public String getOperationHours() {
         return operationHours;
     }
-
+    
     public void setOperationHours(String operationHours) {
         this.operationHours = operationHours;
     }
@@ -79,5 +79,11 @@ public class Vendor extends User{
 
     public void setOperationDays(String operationDays) {
         this.operationDays = operationDays;
+    }
+    
+    @Override
+    public String toString() {
+        String delimiter = ";";
+        return vendorID + delimiter + super.toString() + delimiter + rating + delimiter + category + delimiter + city + delimiter + description + delimiter + operationHours + delimiter + operationDays;
     }
 }

@@ -115,7 +115,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
                 writer.println(foodItem.toString());
             }
         } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
+            e.printStackTrace(); 
         }
     }
     

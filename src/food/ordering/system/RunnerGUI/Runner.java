@@ -5,6 +5,14 @@
 package food.ordering.system.RunnerGUI;
 
 import food.ordering.system.User;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import textFiles.TextFilePaths;
 
 /**
  *
@@ -12,13 +20,18 @@ import food.ordering.system.User;
  */
 public class Runner extends User{
     private int runnerID;
+    private boolean runnerAvailability;
     private String city;
     private String plateNumber;
     private String vehicleModel;
+    
+    TextFilePaths path = new TextFilePaths();
+    String runnerTextFilePath = path.getRunnerTextFile();
 
-    public Runner(int runnerID, String name, String phoneNumber, String email, String password, String city, String plateNumber, String vehicleModel) {
+    public Runner(int runnerID, boolean runnerAvailability, String name, String phoneNumber, String email, String password, String city, String plateNumber, String vehicleModel) {
         super(name, phoneNumber, email, password);
         this.runnerID = runnerID;
+        this.runnerAvailability = runnerAvailability;
         this.city = city;
         this.plateNumber = plateNumber;
         this.vehicleModel = vehicleModel;
@@ -32,6 +45,14 @@ public class Runner extends User{
         this.runnerID = runnerID;
     }
 
+    public boolean isRunnerAvailability() {
+        return runnerAvailability;
+    }
+
+    public void setRunnerAvailability(boolean runnerAvailability) {
+        this.runnerAvailability = runnerAvailability;
+    }
+    
     public String getCity() {
         return city;
     }
@@ -54,5 +75,40 @@ public class Runner extends User{
 
     public void setVehicleModel(String vehicleModel) {
         this.vehicleModel = vehicleModel;
+    }
+    
+    public void updateRunnerStatus(Runner availableRunner, List<Runner> runners, boolean availability) {
+        int runnerId = availableRunner.getRunnerID();
+
+        for (Runner runner : runners) {
+            if (runnerId == runner.getRunnerID()) {
+                // Update the runner availability directly
+                runner.setRunnerAvailability(availability);
+            }
+        }
+
+        // Filter and sort the data
+        List<Runner> filteredItems = runners.stream()
+                .collect(Collectors.toList());
+
+        // Sort the filtered items by ID
+        Collections.sort(filteredItems, Comparator.comparingInt(Runner::getRunnerID));
+
+        // Update the file with the new runner status
+        try (PrintWriter writer = new PrintWriter(new FileWriter(runnerTextFilePath))) {
+            // Write each runner item to the file
+            for (Runner runnerItem : filteredItems) {
+                writer.println(runnerItem.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    @Override
+    public String toString() {
+        String delimiter = ";";
+        return runnerID + delimiter + runnerAvailability + delimiter + super.toString() + delimiter + city + delimiter + plateNumber + delimiter + vehicleModel;
     }
 }

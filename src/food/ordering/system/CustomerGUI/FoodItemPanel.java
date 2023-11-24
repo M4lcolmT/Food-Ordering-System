@@ -136,6 +136,7 @@ public class FoodItemPanel extends javax.swing.JPanel {
         basket.add(foodItem);
         menu.updateItemCount();
         menu.increaseTotalPrice(foodItem);
+        menu.checkEmptyBasket();
         updateQuantityLabel();
     }//GEN-LAST:event_addItemButtonActionPerformed
 

@@ -5,7 +5,9 @@
 package food.ordering.system.CustomerGUI;
 
 import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.CustomerGUI.Order.OrderType;
 import food.ordering.system.Location;
+import food.ordering.system.RunnerGUI.Runner;
 import food.ordering.system.VendorGUI.Vendor;
 import food.ordering.system.VendorGUI.FoodItem;
 import java.text.DecimalFormat;
@@ -23,12 +25,17 @@ import textFiles.TextFilePaths;
  */
 public class OrderSummary extends javax.swing.JFrame {
     private Order order;
+    private Customer customer;
+    private Runner availableRunner;
     private double subtotal;
     private double tax;
     private double distance;
     private double deliveryFee;
     private double totalPrice;
     private List<FoodItem> orderBasket;
+    private List<Runner> runners;
+    private OrderType newOrderType;
+
     
     DecimalFormat df = new DecimalFormat("#.#");
     
@@ -41,16 +48,20 @@ public class OrderSummary extends javax.swing.JFrame {
         this.orderBasket = orderBasket;
         loadBasketItems(orderBasket);
         
-        Customer customer = order.getCustomer();
+        customer = order.getCustomer();
         Vendor vendor = order.getVendor();
         calculateDistance(customer.getCity().trim().toLowerCase(), vendor.getCity().trim().toLowerCase());
         
         nameLabel.setText(customer.getName());
         phoneNumberLabel.setText(customer.getPhoneNumber());
         addressBox.setText(customer.getStreetAddress());
-        
-        String customerCity = customer.getCity();
-        comboBox.setSelectedItem(customerCity);
+        String customerCity = customer.getCity().trim().toLowerCase();
+        for (int i = 0; i < cityComboBox.getItemCount(); i++) {
+            if (customerCity.equals(cityComboBox.getItemAt(i).trim().toLowerCase())) {
+                cityComboBox.setSelectedIndex(i);
+                break;
+            }
+        }
         
         subtotal = order.getTotalPrice();
         subtotalLabel.setText("RM"+Double.toString((double)subtotal));
@@ -58,6 +69,9 @@ public class OrderSummary extends javax.swing.JFrame {
         deliveryFeeLabel.setText("RM"+Double.toString((double)calculateDeliveryFee()));
         totalPriceLabel.setText("RM"+Double.toString((double)calculateTotal()));
         
+        ReadFiles reader = new ReadFiles();
+        runners = reader.readRunners();
+        availableRunner = checkRunner();
     }
     
     public void loadBasketItems(List<FoodItem> items) {
@@ -125,7 +139,47 @@ public class OrderSummary extends javax.swing.JFrame {
         totalPrice = subtotal + tax + deliveryFee;
         return Double.parseDouble(df.format(totalPrice));
     }
+    
+    //Check runner avaliability
+    private Runner checkRunner() {
+        for (Runner item : runners) {
+            if (item.isRunnerAvailability() == true) {
+                System.out.println("id:"+item.getRunnerID());
+                return item;
+            }
+        }
+        return null;
+    }
 
+    private void placeOrder() {
+        Vendor vendor = order.getVendor();
+        OrderManager orderManager = new OrderManager();
+        
+        Menu menu = new Menu(vendor, customer, orderBasket);
+        menu.resetTotalPrice();
+        
+        if (availableRunner == null) {
+            // No delivery fees and recalculate total price
+            deliveryFee = 0;
+            customer.placeOrder(newOrderType, orderManager.getOrders(), vendor, orderBasket, 
+                    calculateTotal(), Order.OrderStatus.PENDING, false, 
+                    0);
+        } else {
+            customer.placeOrder(newOrderType, orderManager.getOrders(), vendor, orderBasket, 
+                    calculateTotal(), Order.OrderStatus.PENDING, availableRunner.isRunnerAvailability(), 
+                    availableRunner.getRunnerID());
+            // Change runner availability to false once an order is assigned to him
+            availableRunner.updateRunnerStatus(availableRunner, runners, true);
+        }
+        orderBasket.clear();
+        this.dispose();
+        
+        CustomerMainMenu mainMenu = new CustomerMainMenu(customer);
+        mainMenu.orderNotificationPanel.setVisible(true);
+        mainMenu.orderStatusLabel.setText("Your order is processing...");
+        mainMenu.setVisible(true);
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -154,7 +208,8 @@ public class OrderSummary extends javax.swing.JFrame {
         nameLabel = new javax.swing.JLabel();
         phoneNumberLabel = new javax.swing.JLabel();
         addressBox = new javax.swing.JTextField();
-        comboBox = new javax.swing.JComboBox<>();
+        cityComboBox = new javax.swing.JComboBox<>();
+        cancelButton = new javax.swing.JButton();
 
         jTextField1.setText("jTextField1");
 
@@ -301,7 +356,7 @@ public class OrderSummary extends javax.swing.JFrame {
             }
         });
 
-        comboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "City", "Shah Alam", "Petaling Jaya", "Subang Jaya", "Klang", "Puchong", "Ampang", "Kajang", "Cyberjaya", "Seri Kembangan", "Hulu Langat", "Bukit Jalil" }));
+        cityComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "City", "Shah Alam", "Petaling Jaya", "Subang Jaya", "Klang", "Puchong", "Ampang", "Kajang", "Cyberjaya", "Seri Kembangan", "Hulu Langat", "Bukit Jalil" }));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -321,7 +376,7 @@ public class OrderSummary extends javax.swing.JFrame {
                         .addGap(13, 13, 13)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(addressBox, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-                            .addComponent(comboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(cityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -340,9 +395,16 @@ public class OrderSummary extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(addressBox, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(16, Short.MAX_VALUE))
         );
+
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -362,7 +424,8 @@ public class OrderSummary extends javax.swing.JFrame {
                                 .addGap(47, 47, 47)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(backToMenuButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(confirmButton, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))))))
+                                    .addComponent(confirmButton, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                                    .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -374,12 +437,14 @@ public class OrderSummary extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(backToMenuButton)
                         .addGap(12, 12, 12)
-                        .addComponent(confirmButton))
+                        .addComponent(backToMenuButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(confirmButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -399,34 +464,49 @@ public class OrderSummary extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
+        Object[] options = {"Take Away", "Dine In", "Cancel Order"};
         String newstreetAddress = addressBox.getText();
-        String newCity = String.valueOf(comboBox.getSelectedItem());
+        String newCity = String.valueOf(cityComboBox.getSelectedItem());
         
-        if (comboBox.equals("City")){
+        if (newCity.equals("City")){
             JOptionPane.showMessageDialog(this, "Please select a city", "Invalid Input", JOptionPane.ERROR_MESSAGE);
             return;
         } 
         
-        Customer customer = order.getCustomer();
-        Vendor vendor = order.getVendor();
-        OrderManager orderManager = new OrderManager();
-        
         customer.setStreetAddress(newstreetAddress);
         customer.setCity(newCity);
         
-        Menu menu = new Menu(vendor, customer, orderBasket);
-        menu.resetTotalPrice();
-        
-        customer.placeOrder(orderManager.getOrders(), vendor, orderBasket, Order.OrderStatus.PENDING);
-        customer.setOrders(orderManager.getOrders());
-        orderBasket.clear();
-        this.dispose();
-        
-        CustomerMainMenu mainMenu = new CustomerMainMenu(customer);
-        mainMenu.orderNotificationPanel.setVisible(true);
-        mainMenu.orderStatusLabel.setText("Your order is processing...");
-        mainMenu.setVisible(true);
-        
+        if (checkRunner() != null) {
+            newOrderType = OrderType.DELIVERY;
+            placeOrder();
+        } else {
+            int result = JOptionPane.showOptionDialog(this, "There is no available runners. Would you like to dine in or take away instead?", "No runners", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+            switch (result) {
+                case JOptionPane.YES_OPTION:
+                    // User clicked on "Take Away"
+                    newOrderType = OrderType.TAKEAWAY;
+                    placeOrder();
+                    System.out.println("Take Away.");
+                    break;
+                case JOptionPane.NO_OPTION:
+                    // User clicked on "Dine In"
+                    newOrderType = OrderType.DINEIN;
+                    placeOrder();
+                    System.out.println("Dine In.");
+                    break;
+                case JOptionPane.CLOSED_OPTION:
+                    // User click the x button to close the dialog
+                    break;
+                default:
+                    // User selected "Cancel Order"
+                    newOrderType = OrderType.DELIVERY; // Pass in placeholder/Temp since cannot be null
+                    CustomerMainMenu page = new CustomerMainMenu(customer);
+                    page.setVisible(true);
+                    this.dispose();
+                    System.out.println("Order Cancelled.");
+                    break;
+            }
+        }
     }//GEN-LAST:event_confirmButtonActionPerformed
 
     private void backToMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backToMenuButtonActionPerformed
@@ -520,10 +600,21 @@ public class OrderSummary extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_addressBoxActionPerformed
 
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to cancel order?", "Cancel Confirmation", JOptionPane.YES_NO_OPTION);        
+
+        if (confirmationResult == JOptionPane.YES_OPTION) {
+            CustomerMainMenu page = new CustomerMainMenu(customer);
+            page.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField addressBox;
     private javax.swing.JButton backToMenuButton;
-    private javax.swing.JComboBox<String> comboBox;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JComboBox<String> cityComboBox;
     private javax.swing.JButton confirmButton;
     private javax.swing.JLabel deliveryFeeLabel;
     private javax.swing.JLabel jLabel1;

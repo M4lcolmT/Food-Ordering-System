@@ -6,9 +6,16 @@ package food.ordering.system.CustomerGUI;
 
 import food.ordering.system.VendorGUI.FoodItem;
 import food.ordering.system.VendorGUI.Vendor;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
+import textFiles.TextFilePaths;
 
 /**
  *
@@ -16,6 +23,7 @@ import java.util.StringJoiner;
  */
 public class Order {
     private int orderID;
+    private OrderType orderType;
     private Customer customer;
     private Vendor vendor;
     private List<FoodItem> orderBasket;
@@ -25,29 +33,48 @@ public class Order {
     private OrderStatus status;
     private LocalDateTime dateTime;
     
+    TextFilePaths path = new TextFilePaths();
+    String orderTextFilePath = path.getOrderTextFile();
+    
+    public enum OrderType  {
+        DELIVERY,
+        TAKEAWAY,
+        DINEIN
+    }
+    
     public enum OrderStatus {
         PENDING,
         CONFIRMED,
         PREPARING,
+        READY_FOR_PICKUP,
         OUT_FOR_DELIVERY,
         DELIVERED,
-        CANCELED
+        CANCELLED
     }
     
-    public Order(int orderID, Customer customer, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, OrderStatus status, boolean runnerAvailability, int runnerID, LocalDateTime dateTime) {
+    public Order(int orderID, OrderType orderType, Customer customer, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, OrderStatus status, boolean runnerAvailability, int runnerID, LocalDateTime dateTime) {
         this.orderID = orderID;
+        this.orderType = orderType;
         this.customer = customer;
         this.vendor = vendor;
         this.orderBasket = orderBasket;
         this.totalPrice = totalPrice;
         this.status = status;
-        this.runnerAvailability = false;
+        this.runnerAvailability = runnerAvailability;
         this.runnerID = runnerID;
         this.dateTime = dateTime;
     }
     
     public int getOrderID() {
         return orderID;
+    }
+
+    public OrderType getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(OrderType orderType) {
+        this.orderType = orderType;
     }
     
     public Customer getCustomer() {
@@ -98,12 +125,38 @@ public class Order {
         this.dateTime = dateTime;
     }
     
-    
+    public void updateOrderStatus(Order specificOrder, List<Order> orders, OrderStatus orderStatus) {
+        int orderid = specificOrder.getOrderID();
+        for (Order item : orders) {
+            if (orderid == item.getOrderID()) {
+                // Update the order status
+                item.setStatus(orderStatus);
+            }
+        }
+
+        // Filter and sort the data
+        List<Order> filteredItems = orders.stream()
+                .collect(Collectors.toList());
+
+        // Sort the filtered items by ID
+        Collections.sort(filteredItems, Comparator.comparingInt(Order::getOrderID));
+
+        // Update the file with the new order status
+        try (PrintWriter writer = new PrintWriter(new FileWriter(orderTextFilePath))) {
+            // Write each food item to the file
+            for (Order orderItem : filteredItems) {
+                writer.println(orderItem.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     
     @Override
     public String toString() {
         String delimiter = ";";
-        return orderID + delimiter + customer.getCustomerID() + delimiter + vendor.getVendorID() + delimiter + serializeOrderBasket() + delimiter + totalPrice + delimiter + status + delimiter + runnerAvailability + delimiter + runnerID +  delimiter + dateTime;
+        return orderID + delimiter + orderType + delimiter + customer.getCustomerID() + delimiter + vendor.getVendorID() + delimiter + serializeOrderBasket() + delimiter + totalPrice + delimiter + status + delimiter + runnerAvailability + delimiter + runnerID +  delimiter + dateTime;
     }
 
     // Serialize the order basket to a string

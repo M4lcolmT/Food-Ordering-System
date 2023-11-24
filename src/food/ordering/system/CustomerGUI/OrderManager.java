@@ -4,6 +4,7 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.CustomerGUI.Order.OrderType;
 import food.ordering.system.VendorGUI.FoodItem;
 import food.ordering.system.VendorGUI.Vendor;
 import java.io.BufferedReader;
@@ -134,18 +135,19 @@ public class OrderManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 9) {
+                if (parts.length == 10) {
                     int id = Integer.parseInt(parts[0]);
-                    Customer orderCustomer = parseOrderCustomer(Integer.parseInt(parts[1]));
-                    Vendor orderVendor = parseOrderVendor(Integer.parseInt(parts[2]));
-                    List<FoodItem> basket = parseOrderBasket(parts[3]);
-                    double orderTotalPrice = Double.parseDouble(parts[4]);
-                    Order.OrderStatus orderStatus = Order.OrderStatus.valueOf(parts[5]);
-                    boolean orderRunnerAvailability = Boolean.parseBoolean(parts[6]);
-                    int orderRunnerID = Integer.parseInt(parts[7]);
-                    LocalDateTime orderDateTime = parseDateTime(parts[8]);
+                    OrderType orderType = OrderType.valueOf(parts[1].toUpperCase());
+                    Customer orderCustomer = parseOrderCustomer(Integer.parseInt(parts[2]));
+                    Vendor orderVendor = parseOrderVendor(Integer.parseInt(parts[3]));
+                    List<FoodItem> basket = parseOrderBasket(parts[4]);
+                    double orderTotalPrice = Double.parseDouble(parts[5]);
+                    Order.OrderStatus orderStatus = Order.OrderStatus.valueOf(parts[6]);
+                    boolean orderRunnerAvailability = Boolean.parseBoolean(parts[7]);
+                    int orderRunnerID = Integer.parseInt(parts[8]);
+                    LocalDateTime orderDateTime = parseDateTime(parts[9]);
 
-                    Order newOrder = new Order(id, orderCustomer, orderVendor, basket, orderTotalPrice, orderStatus, orderRunnerAvailability, orderRunnerID,  orderDateTime);
+                    Order newOrder = new Order(id, orderType, orderCustomer, orderVendor, basket, orderTotalPrice, orderStatus, orderRunnerAvailability, orderRunnerID,  orderDateTime);
                     orders.add(newOrder);
                 } else {
                     System.out.println("Skipping a line with an incorrect number of parts: " + line);

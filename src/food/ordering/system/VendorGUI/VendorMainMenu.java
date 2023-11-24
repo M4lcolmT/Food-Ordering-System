@@ -4,8 +4,12 @@
  */
 package food.ordering.system.VendorGUI;
 
+import food.ordering.system.CustomerGUI.Order;
+import food.ordering.system.CustomerGUI.OrderManager;
 import food.ordering.system.CustomerLogin;
 import food.ordering.system.VendorLogin;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 
@@ -15,10 +19,25 @@ import javax.swing.JOptionPane;
  */
 public class VendorMainMenu extends javax.swing.JFrame {
     private Vendor vendor;
+    private List<Order> allOrders;
 
     public VendorMainMenu(Vendor vendor) {
         initComponents();
         this.vendor = vendor;
+        
+        OrderManager manager = new OrderManager();
+        allOrders = manager.getOrders();
+    }
+    
+    private List<Order> getVendorOrders() {
+        List<Order> vendorOrders = new ArrayList<>();
+        
+        for (Order item : allOrders) {
+            if (item.getVendor().getVendorID() == vendor.getVendorID()) {
+                vendorOrders.add(item);
+            }
+        }
+        return vendorOrders;
     }
     
     @SuppressWarnings("unchecked")
@@ -33,6 +52,7 @@ public class VendorMainMenu extends javax.swing.JFrame {
         profileButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         logOutButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,6 +99,13 @@ public class VendorMainMenu extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("View Orders");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -90,13 +117,14 @@ public class VendorMainMenu extends javax.swing.JFrame {
                 .addComponent(profileButton)
                 .addGap(85, 85, 85))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(246, 246, 246)
+                .addGap(245, 245, 245)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(notificationsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(revenueDashboardButton, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                    .addComponent(revenueDashboardButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(orderHistoryButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(foodMenuButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -106,8 +134,10 @@ public class VendorMainMenu extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(profileButton))
-                .addGap(46, 46, 46)
+                .addGap(26, 26, 26)
                 .addComponent(foodMenuButton)
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
                 .addGap(18, 18, 18)
                 .addComponent(notificationsButton)
                 .addGap(18, 18, 18)
@@ -116,7 +146,7 @@ public class VendorMainMenu extends javax.swing.JFrame {
                 .addComponent(orderHistoryButton)
                 .addGap(18, 18, 18)
                 .addComponent(logOutButton)
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -167,8 +197,22 @@ public class VendorMainMenu extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_foodMenuButtonActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        List<Order> vendorOrders = getVendorOrders();
+        
+        if (vendorOrders.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "You have no orders.");
+        } else {
+            ViewOrders page = new ViewOrders(vendor, vendorOrders);
+            page.setVisible(true);
+            this.dispose();
+            allOrders.clear();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton foodMenuButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton logOutButton;
