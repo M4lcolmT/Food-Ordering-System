@@ -8,9 +8,10 @@ import food.ordering.system.CustomerGUI.Customer;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collections;
+import java.security.SecureRandom;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +27,11 @@ public class CRUDCustomer extends javax.swing.JFrame {
     private int selectedRow = -1; // Instance variable to store the selected row
     private boolean editMode = false;
     private List<Integer> notificationIDs;
+    
+    private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
+    private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String DIGITS = "0123456789";
+    private static final String SPECIAL_CHARACTERS = "!@#$%^&*()-_+=<>?";
     
     TextFilePaths path = new TextFilePaths();
     String customerTextFile = path.getCustomerTextFile();
@@ -92,8 +98,25 @@ public class CRUDCustomer extends javax.swing.JFrame {
         }
     }
     
+    private boolean isEmpty(String str) {
+        return str.trim().isEmpty();
+    }
     
-    
+    // Password generator
+    public static String generatePassword(int length) {
+        StringBuilder password = new StringBuilder();
+        Random random = new SecureRandom();
+
+        String allCharacters = LOWERCASE + UPPERCASE + DIGITS + SPECIAL_CHARACTERS;
+
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(allCharacters.length());
+            char randomChar = allCharacters.charAt(randomIndex);
+            password.append(randomChar);
+        }
+
+        return password.toString();
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -114,10 +137,10 @@ public class CRUDCustomer extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
+        generatePasswordButton = new javax.swing.JButton();
         passwordField = new javax.swing.JTextField();
-        cityField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
+        cityComboBox = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         customerTable = new javax.swing.JTable();
 
@@ -160,9 +183,16 @@ public class CRUDCustomer extends javax.swing.JFrame {
 
         jLabel11.setText("Password:");
 
-        jButton4.setText("generate");
+        generatePasswordButton.setText("generate");
+        generatePasswordButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generatePasswordButtonActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("City:");
+
+        cityComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select City", "Shah Alam", "Petaling Jaya", "Subang Jaya", "Klang", "Puchong", "Ampang", "Kajang", "Cyberjaya", "Seri Kembangan", "Hulu Langat", "Bukit Jalil" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -181,7 +211,7 @@ public class CRUDCustomer extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 78, Short.MAX_VALUE)))
+                        .addComponent(generatePasswordButton, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel4)
@@ -191,7 +221,7 @@ public class CRUDCustomer extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(addressField)
                     .addComponent(emailField, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-                    .addComponent(cityField))
+                    .addComponent(cityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -219,10 +249,10 @@ public class CRUDCustomer extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel6)
-                        .addComponent(cityField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(generatePasswordButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel11)))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
@@ -269,7 +299,7 @@ public class CRUDCustomer extends javax.swing.JFrame {
                     .addComponent(deleteButton))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -306,8 +336,13 @@ public class CRUDCustomer extends javax.swing.JFrame {
                 emailField.setText(email);
                 passwordField.setText(password);
                 addressField.setText(address);
-                cityField.setText(city);
-
+                String customerCity = city.trim().toLowerCase();
+                for (int i = 0; i < cityComboBox.getItemCount(); i++) {
+                    if (customerCity.equals(cityComboBox.getItemAt(i).trim().toLowerCase())) {
+                        cityComboBox.setSelectedIndex(i);
+                        break;
+                    }
+                }
                 editMode = true; // Switch to edit mode
             } else {
                 JOptionPane.showMessageDialog(this, "Please select a food item to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
@@ -321,7 +356,7 @@ public class CRUDCustomer extends javax.swing.JFrame {
                 String newEmail = emailField.getText();
                 String newPassword = passwordField.getText();
                 String newAddress = addressField.getText();
-                String newCity = cityField.getText();
+                String newCity = String.valueOf(cityComboBox.getSelectedItem());
 
                 // Check if changes have been made
                 if (!newName.equals(model.getValueAt(selectedRow, 1)) ||
@@ -356,7 +391,7 @@ public class CRUDCustomer extends javax.swing.JFrame {
                     emailField.setText("");
                     passwordField.setText("");
                     addressField.setText("");
-                    cityField.setText("");
+                    cityComboBox.setSelectedIndex(0);
                     editMode = false; // Switch back to view mode
                 } else {
                     // No changes were made
@@ -377,8 +412,14 @@ public class CRUDCustomer extends javax.swing.JFrame {
         String email = emailField.getText();
         String password = passwordField.getText();
         String address = addressField.getText();
-        String city = cityField.getText();
-        
+        String city = String.valueOf(cityComboBox.getSelectedItem());
+
+        // Validate input fields
+        if (isEmpty(name) || isEmpty(phoneNumber) || isEmpty(email) || isEmpty(password) || isEmpty(address) || city.equals("Select City")) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+            return; 
+        }
+
         Customer item = new Customer(customerID, name, phoneNumber, email, password, address, city);
         customers.add(item);
         writeToFile();
@@ -392,8 +433,7 @@ public class CRUDCustomer extends javax.swing.JFrame {
         emailField.setText("");
         passwordField.setText("");
         addressField.setText("");
-        cityField.setText("");
-                                            
+        cityComboBox.setSelectedIndex(0);
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
@@ -415,15 +455,21 @@ public class CRUDCustomer extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
+    private void generatePasswordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatePasswordButtonActionPerformed
+        int passwordLength = 9;
+        String generatedPassword = generatePassword(passwordLength);
+        passwordField.setText(generatedPassword);
+    }//GEN-LAST:event_generatePasswordButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JTextField addressField;
-    private javax.swing.JTextField cityField;
+    private javax.swing.JComboBox<String> cityComboBox;
     private javax.swing.JTable customerTable;
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton editButton;
     private javax.swing.JTextField emailField;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton generatePasswordButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;

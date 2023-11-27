@@ -30,7 +30,7 @@ public class TransactionNotification extends javax.swing.JPanel {
         request = findTopUpRequest();
         
         statusLabel.setText(request.getTransactionStatus().name().toLowerCase()+"!");
-        LocalDateTime dateTime = request.getDateTime();
+        LocalDateTime dateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm");
         String formattedDateTime = dateTime.format(formatter);
         dateTimeLabel.setText(formattedDateTime);
@@ -72,6 +72,7 @@ public class TransactionNotification extends javax.swing.JPanel {
             }
         });
 
+        statusLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         statusLabel.setText("-");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);

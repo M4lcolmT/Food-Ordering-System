@@ -4,40 +4,50 @@
  */
 package food.ordering.system.AdminGUI;
 
-import food.ordering.system.CustomerGUI.Customer;
+import food.ordering.system.CustomerGUI.CustomerRequest;
 import food.ordering.system.CustomerGUI.Order;
 import food.ordering.system.CustomerGUI.OrderManager;
+import food.ordering.system.RunnerGUI.RunnerRequest;
+import food.ordering.system.VendorGUI.VendorRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import textFiles.TextFilePaths;
 
 /**
  *
  * @author LENOVO
  */
-public class OrderNotification extends javax.swing.JPanel {
-    private int orderID;
-    private List<Order> orders;
-    private Order order;
+public class UserProfileNotification extends javax.swing.JPanel {
+    private int userProfileRequestID;
+    private UserRequest userRequest;
+    private List<CustomerRequest> customerRequests = new ArrayList<>();
+    private List<VendorRequest> vendorRequests = new ArrayList<>();
+    private List<RunnerRequest> runnerRequests = new ArrayList<>();
     
-    public OrderNotification(int orderID) {
+    public UserProfileNotification(int userProfileRequestID) {
         initComponents();
-        this.orderID = orderID;
+        this.userProfileRequestID = userProfileRequestID;
         
-        OrderManager manager = new OrderManager();
-        orders = manager.getOrders();
-        order = findOrder();
+        ReadFiles reader = new ReadFiles();
+        reader.readUserRequests(customerRequests, vendorRequests, runnerRequests);
+        userRequest = findUserRequest();
         
-        statusLabel.setText(order.getStatus().name().toLowerCase()+"!");
+        if (userRequest.getRequestType().name().equals("CHANGEPASSWORD")) {
+            updateLabel.setText("Your password is changed!");
+        } else if (userRequest.getRequestType().name().equals("UPDATEPROFILE")){
+            updateLabel.setText("Your profile is updated!");
+        }
         LocalDateTime dateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm");
         String formattedDateTime = dateTime.format(formatter);
         dateTimeLabel.setText(formattedDateTime);
     }
     
-    private Order findOrder() {
-        for (Order item : orders) {
-            if (item.getOrderID() == orderID) {
+    private UserRequest findUserRequest() {
+        for (UserRequest item : customerRequests) {
+            if (item.getUserRequestID() == userProfileRequestID) {
                 return item;
             }
         }
@@ -49,18 +59,15 @@ public class OrderNotification extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        updateLabel = new javax.swing.JLabel();
         dateTimeLabel = new javax.swing.JLabel();
-        statusLabel = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(153, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("Your order is");
+        updateLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        updateLabel.setText("Your profile is updated!");
 
         dateTimeLabel.setText("Date & Time");
-
-        statusLabel.setText("-");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -69,20 +76,15 @@ public class OrderNotification extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(updateLabel)
                     .addComponent(dateTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(345, Short.MAX_VALUE))
+                .addContainerGap(376, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(statusLabel))
+                .addComponent(updateLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(dateTimeLabel)
                 .addContainerGap(29, Short.MAX_VALUE))
@@ -103,8 +105,7 @@ public class OrderNotification extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel dateTimeLabel;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel statusLabel;
+    private javax.swing.JLabel updateLabel;
     // End of variables declaration//GEN-END:variables
 }

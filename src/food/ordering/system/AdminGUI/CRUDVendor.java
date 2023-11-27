@@ -5,12 +5,15 @@
 package food.ordering.system.AdminGUI;
 
 
+import static food.ordering.system.AdminGUI.CRUDCustomer.generatePassword;
 import food.ordering.system.VendorGUI.Vendor;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.SecureRandom;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +29,11 @@ public class CRUDVendor extends javax.swing.JFrame {
     private int selectedRow = -1; // Instance variable to store the selected row
     private boolean editMode = false;
     private List<Integer> notificationIDs;
+    
+    private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
+    private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String DIGITS = "0123456789";
+    private static final String SPECIAL_CHARACTERS = "!@#$%^&*()-_+=<>?";
     
     TextFilePaths path = new TextFilePaths();
     String vendorTextFile = path.getVendorTextFile();
@@ -91,6 +99,26 @@ public class CRUDVendor extends javax.swing.JFrame {
         }
     }
     
+    private boolean isEmpty(String str) {
+        return str.trim().isEmpty();
+    }
+    
+    // Password generator
+    public static String generatePassword(int length) {
+        StringBuilder password = new StringBuilder();
+        Random random = new SecureRandom();
+
+        String allCharacters = LOWERCASE + UPPERCASE + DIGITS + SPECIAL_CHARACTERS;
+
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(allCharacters.length());
+            char randomChar = allCharacters.charAt(randomIndex);
+            password.append(randomChar);
+        }
+
+        return password.toString();
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -119,7 +147,7 @@ public class CRUDVendor extends javax.swing.JFrame {
         startDayComboBox = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
         passwordField = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
+        generatePasswordButton = new javax.swing.JButton();
         categoryComboBox = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -195,9 +223,14 @@ public class CRUDVendor extends javax.swing.JFrame {
 
         jLabel11.setText("Password:");
 
-        jButton4.setText("generate");
+        generatePasswordButton.setText("generate");
+        generatePasswordButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generatePasswordButtonActionPerformed(evt);
+            }
+        });
 
-        categoryComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Non-Halal", "Western", "Japanese", "Korean","Fast Food" }));
+        categoryComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Category", "Non-Halal", "Fast Food", "Western", "Korean", "Chinese", "Malay" }));
 
         jLabel5.setText("Category:");
 
@@ -220,7 +253,7 @@ public class CRUDVendor extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4)))
+                        .addComponent(generatePasswordButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -238,15 +271,15 @@ public class CRUDVendor extends javax.swing.JFrame {
                                     .addComponent(jLabel8))
                                 .addGroup(jPanel2Layout.createSequentialGroup()
                                     .addGap(1, 1, 1)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addComponent(startDayComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(jLabel10)))))
+                                    .addComponent(startDayComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jLabel10)))
                             .addGap(12, 12, 12)
                             .addComponent(endHourComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(descriptionField))
+                        .addComponent(descriptionField)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addGap(1, 1, 1)
+                            .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGap(156, 156, 156)
                         .addComponent(endDayComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -291,7 +324,7 @@ public class CRUDVendor extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4)
+                    .addComponent(generatePasswordButton)
                     .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addContainerGap(14, Short.MAX_VALUE))
@@ -349,7 +382,7 @@ public class CRUDVendor extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 706, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -497,6 +530,11 @@ public class CRUDVendor extends javax.swing.JFrame {
         String endDay = String.valueOf(endDayComboBox.getSelectedItem());
         String newOperationDays = startDay+"-"+endDay;
         
+        // Validate input fields
+        if (isEmpty(name) || isEmpty(phoneNumber) || isEmpty(email) || isEmpty(password) || category.equals("Select Category")) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+            return; 
+        }
         
         Vendor item = new Vendor(vendorID, name, phoneNumber, email, password, 0, category, "Bukit Jalil", description, newOperationHours, newOperationDays);
         vendors.add(item);
@@ -511,6 +549,7 @@ public class CRUDVendor extends javax.swing.JFrame {
         emailField.setText("");
         passwordField.setText("");
         descriptionField.setText("");
+        categoryComboBox.setSelectedIndex(0);
     }//GEN-LAST:event_addActionPerformed
 
     private void startHourComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startHourComboBoxActionPerformed
@@ -536,6 +575,12 @@ public class CRUDVendor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_deleteActionPerformed
 
+    private void generatePasswordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatePasswordButtonActionPerformed
+        int passwordLength = 9;
+        String generatedPassword = generatePassword(passwordLength);
+        passwordField.setText(generatedPassword);
+    }//GEN-LAST:event_generatePasswordButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton add;
     private javax.swing.JComboBox<String> categoryComboBox;
@@ -545,7 +590,7 @@ public class CRUDVendor extends javax.swing.JFrame {
     private javax.swing.JTextField emailField;
     private javax.swing.JComboBox<String> endDayComboBox;
     private javax.swing.JComboBox<String> endHourComboBox;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton generatePasswordButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

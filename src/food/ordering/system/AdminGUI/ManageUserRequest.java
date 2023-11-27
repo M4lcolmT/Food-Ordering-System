@@ -23,8 +23,6 @@ public class ManageUserRequest extends javax.swing.JFrame {
     private List<CustomerRequest> customerRequests = new ArrayList<>();
     private List<VendorRequest> vendorRequests = new ArrayList<>();
     private List<RunnerRequest> runnerRequests = new ArrayList<>();
-    TextFilePaths path = new TextFilePaths();
-    String userRequestFilePath = path.getUserCRUDrequestTextFile();
     
     public ManageUserRequest(Admin admin) {
         initComponents();

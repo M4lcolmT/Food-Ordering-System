@@ -5,7 +5,9 @@
 package food.ordering.system.CustomerGUI;
 
 import food.ordering.system.AdminGUI.Notification;
+import food.ordering.system.AdminGUI.OrderNotification;
 import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.AdminGUI.UserProfileNotification;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,10 +47,12 @@ public class CustomerNotification extends javax.swing.JFrame {
             String notifType = item.getNotifType().name();
             switch(notifType) {
                 case "ORDER":
-                    System.out.println("Order");
+                    OrderNotification orderPanel = new OrderNotification(item.getTypeID());
+                    innerScrollPanel.add(orderPanel);
                     break;
                 case "USERPROFILE":
-                    System.out.println("User profile");
+                    UserProfileNotification userProfilePanel = new UserProfileNotification(item.getTypeID());
+                    innerScrollPanel.add(userProfilePanel);
                     break;
                 case "TOPUP":
                     TransactionNotification transactionPanel = new TransactionNotification(customer, item.getTypeID());
