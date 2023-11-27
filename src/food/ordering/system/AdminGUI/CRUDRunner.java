@@ -4,10 +4,16 @@
  */
 package food.ordering.system.AdminGUI;
 
-import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.RunnerGUI.Runner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import textFiles.TextFilePaths;
 
 /**
  *
@@ -16,6 +22,12 @@ import javax.swing.table.DefaultTableModel;
 public class CRUDRunner extends javax.swing.JFrame {
     private Admin admin;
     List<Runner> runners;
+    private int selectedRow = -1; // Instance variable to store the selected row
+    private boolean editMode = false;
+    private List<Integer> notificationIDs;
+    
+    TextFilePaths path = new TextFilePaths();
+    String runnerTextFile = path.getRunnerTextFile();
     
     public CRUDRunner(Admin admin) {
         initComponents();
@@ -23,6 +35,7 @@ public class CRUDRunner extends javax.swing.JFrame {
         
         ReadFiles reader = new ReadFiles();
         runners = reader.readRunners();
+        notificationIDs = reader.readNotificationID();
         loadRunners();
     }
 
@@ -30,10 +43,51 @@ public class CRUDRunner extends javax.swing.JFrame {
     private void loadRunners() {
         DefaultTableModel model = (DefaultTableModel) runnerTable.getModel();
         
-        for (Runner runner : runners) {
-            Object[] rowData = { runner.getName(), runner.getPhoneNumber(), runner.getEmail()
+        List<Runner> filteredRunners = runners.stream()
+                .collect(Collectors.toList());
+        // Sort the filtered items by ID
+        filteredRunners.sort(Comparator.comparingInt(Runner::getRunnerID));
+
+        // Clear existing rows
+        model.setRowCount(0);
+        
+        for (Runner runner : filteredRunners) {
+            Object[] rowData = { runner.getRunnerID(),runner.getName(), runner.getPhoneNumber(), runner.getEmail()
                     , runner.getPassword(), runner.getCity(), runner.getPlateNumber(), runner.getVehicleModel()};
             model.addRow(rowData);
+        }
+        
+     
+    }
+     private Runner getRunner(int id) {
+        for (Runner item : runners) {
+            if (id == item.getRunnerID()) {
+                return item;
+            }
+        }
+        return null;
+    }
+     
+    public int checkMaxID() {
+        int maxID = 0;
+        for (Runner item : runners) {
+                if (item.getRunnerID() > maxID) {
+                    maxID = item.getRunnerID();
+                }
+            }
+        
+        // Increment the maximum ID
+        return maxID + 1;
+    }
+    
+    private void writeToFile() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(runnerTextFile))) {
+            // Write each food item to the file
+            for (Runner foodItem : runners) {
+                writer.println(foodItem.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
         }
     }
     @SuppressWarnings("unchecked")
@@ -49,18 +103,18 @@ public class CRUDRunner extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jTextField6 = new javax.swing.JTextField();
+        vehicleModelField = new javax.swing.JTextField();
+        vehiclePlateField = new javax.swing.JTextField();
+        nameField = new javax.swing.JTextField();
+        phoneNumberField = new javax.swing.JTextField();
+        emailField = new javax.swing.JTextField();
+        addressField = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        passwordField = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        add = new javax.swing.JButton();
+        edit = new javax.swing.JButton();
+        delete = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         runnerTable = new javax.swing.JTable();
 
@@ -100,24 +154,24 @@ public class CRUDRunner extends javax.swing.JFrame {
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField3)
-                    .addComponent(jTextField2)
-                    .addComponent(jTextField1)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE))
+                    .addComponent(nameField)
+                    .addComponent(vehiclePlateField)
+                    .addComponent(vehicleModelField)
+                    .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
-                            .addComponent(jTextField5)
-                            .addComponent(jTextField4)))
+                            .addComponent(addressField, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                            .addComponent(emailField)
+                            .addComponent(phoneNumberField)))
                     .addComponent(jButton4))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -126,50 +180,55 @@ public class CRUDRunner extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(phoneNumberField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(vehiclePlateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel5))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(vehicleModelField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addressField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton4))
                 .addContainerGap(8, Short.MAX_VALUE))
         );
 
-        jButton1.setText("Add");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        add.setText("Add");
+        add.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Edit");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        edit.setText("Edit");
+        edit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                editActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Delete");
+        delete.setText("Delete");
+        delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteActionPerformed(evt);
+            }
+        });
 
         runnerTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Name", "Phone Num", "Email", "Password", "Address", "Vehicle Num", "Vehicle Model"
+                "ID", "Name", "Phone Num", "Email", "Password", "Address", "Vehicle Num", "Vehicle Model"
             }
         ));
         jScrollPane1.setViewportView(runnerTable);
@@ -185,11 +244,11 @@ public class CRUDRunner extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(add)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)
+                        .addComponent(edit)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton3)))
+                        .addComponent(delete)))
                 .addContainerGap(35, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -201,9 +260,9 @@ public class CRUDRunner extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(add)
+                    .addComponent(edit)
+                    .addComponent(delete))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -223,18 +282,146 @@ public class CRUDRunner extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
+        int runnerID = checkMaxID();
+        String name = nameField.getText();
+        String phoneNumber = phoneNumberField.getText();
+        String email = emailField.getText();
+        String password = passwordField.getText();
+        String address = addressField.getText();
+        String vehicleNum = vehiclePlateField.getText();
+        String vehicleModel = vehicleModelField.getText();
+        
+        Runner item = new Runner(runnerID, true, name, phoneNumber, email, password, address, vehicleNum, vehicleModel);
+        runners.add(item);
+        writeToFile();
+        JOptionPane.showMessageDialog(this, "Successfully added Runner Details", "Success", JOptionPane.INFORMATION_MESSAGE);
+        // Refresh the table with updated data
+        ReadFiles reader = new ReadFiles();
+        runners = reader.readRunners();
+        loadRunners();
+        nameField.setText("");
+        phoneNumberField.setText("");
+        emailField.setText("");
+        passwordField.setText("");
+        addressField.setText("");
+        vehiclePlateField.setText("");
+        vehicleModelField.setText("");
+    }//GEN-LAST:event_addActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
+        DefaultTableModel model = (DefaultTableModel) runnerTable.getModel();
+        if (!editMode) {
+        // Enter edit mode
+            selectedRow = runnerTable.getSelectedRow();
+            if (selectedRow != -1) {
+                // Get the current data from the selected row
+                String name = (String) model.getValueAt(selectedRow, 1);
+                String phoneNumber = (String) model.getValueAt(selectedRow, 2);
+                String email = (String) model.getValueAt(selectedRow, 3);
+                String password = (String) model.getValueAt(selectedRow, 4);
+                String address = (String) model.getValueAt(selectedRow, 5);
+                String vehicleNum = (String) model.getValueAt(selectedRow, 6);
+                String vehicleModel = (String) model.getValueAt(selectedRow, 7);
+                // Set the current data in the text fields
+                nameField.setText(name);
+                phoneNumberField.setText(phoneNumber);
+                emailField.setText(email);
+                passwordField.setText(password);
+                addressField.setText(address);
+                vehiclePlateField.setText(vehicleNum);
+                vehicleModelField.setText(vehicleModel);
+
+                editMode = true; // Switch to edit mode
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a Runner Details to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+        // Save changes
+            if (selectedRow != -1) {
+                // Get the updated data from the text fields
+                String newName = nameField.getText();
+                String newPhoneNumber = phoneNumberField.getText();
+                String newEmail = emailField.getText();
+                String newPassword = passwordField.getText();
+                String newAddress = addressField.getText();
+                String newVehiclePlate = vehiclePlateField.getText();
+                String newVehicleModel = vehicleModelField.getText();
+
+                // Check if changes have been made
+                if (!newName.equals(model.getValueAt(selectedRow, 1)) ||
+                        !newPhoneNumber.equals(model.getValueAt(selectedRow, 2)) ||
+                        !newEmail.equals (model.getValueAt(selectedRow, 3)) ||
+                        !newPassword.equals(model.getValueAt(selectedRow, 4)) ||
+                        !newAddress.equals(model.getValueAt(selectedRow, 5)) ||
+                        !newVehiclePlate.equals(model.getValueAt(selectedRow, 6)) ||
+                        !newVehicleModel.equals(model.getValueAt(selectedRow, 6))) {
+                        
+                    
+                    int runnerID = (int) model.getValueAt(selectedRow, 0);
+                    Runner selectedRunner = getRunner(runnerID);
+                    selectedRunner.setName(newName);
+                    selectedRunner.setPhoneNumber(newPhoneNumber);
+                    selectedRunner.setEmail(newEmail);
+                    selectedRunner.setPassword(newPassword);
+                    selectedRunner.setCity(newAddress);
+                    selectedRunner.setPlateNumber(newVehiclePlate);
+                    selectedRunner.setVehicleModel(newVehicleModel);
+                    // Remove the old food item
+                    runners.removeIf(item -> item.getRunnerID() == selectedRunner.getRunnerID());
+                    // Add the updated food item
+                    runners.add(selectedRunner);
+                    // Write the updated list back to the file
+                    writeToFile();
+                    JOptionPane.showMessageDialog(this, "Successfully edited Runner Details", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    // Refresh the table with updated data
+                    ReadFiles reader = new ReadFiles();
+                    runners = reader.readRunners();
+                    loadRunners();
+                    nameField.setText("");
+                    phoneNumberField.setText("");
+                    emailField.setText("");
+                    passwordField.setText("");
+                    addressField.setText("");
+                    vehiclePlateField.setText("");
+                    vehicleModelField.setText("");
+                    editMode = false; // Switch back to view mode
+                } else {
+                    // No changes were made
+                    JOptionPane.showMessageDialog(this, "No changes made", "No Changes", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a Customer Details to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_editActionPerformed
+
+    private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
+        DefaultTableModel model = (DefaultTableModel) runnerTable.getModel();
+        selectedRow = runnerTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to delete Runner Details?", "Delete Confirmation", JOptionPane.YES_NO_OPTION);        
+            if (confirmationResult == JOptionPane.YES_OPTION) {
+                int runnerID = (int) model.getValueAt(selectedRow, 0);
+                Runner selectedRunner = getRunner(runnerID);
+                runners.removeIf(item -> item.getRunnerID() == selectedRunner.getRunnerID());
+                writeToFile();
+                ReadFiles reader = new ReadFiles();
+                runners = reader.readRunners();
+                loadRunners();
+            } else {
+                JOptionPane.showMessageDialog(this, "Action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+             
+    }//GEN-LAST:event_deleteActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton add;
+    private javax.swing.JTextField addressField;
+    private javax.swing.JButton delete;
+    private javax.swing.JButton edit;
+    private javax.swing.JTextField emailField;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -247,13 +434,11 @@ public class CRUDRunner extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
+    private javax.swing.JTextField nameField;
+    private javax.swing.JTextField passwordField;
+    private javax.swing.JTextField phoneNumberField;
     private javax.swing.JTable runnerTable;
+    private javax.swing.JTextField vehicleModelField;
+    private javax.swing.JTextField vehiclePlateField;
     // End of variables declaration//GEN-END:variables
 }

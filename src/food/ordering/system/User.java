@@ -56,6 +56,6 @@ public class User {
     @Override
     public String toString() {
         String delimiter = ";";
-        return name + delimiter + phoneNumber + delimiter + email + delimiter + password;
+        return name + delimiter + phoneNumber + delimiter + email + delimiter + password + delimiter;
     }
 }
