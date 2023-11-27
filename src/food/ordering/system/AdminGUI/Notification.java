@@ -11,11 +11,12 @@ package food.ordering.system.AdminGUI;
 public class Notification {
     private int notificationID;
     private NotifType notifType;
+    private int typeID; // For orderID, userRequestID, and topUpRequestID
     private int userID;
-    private UserType userType;
+    private NotifUserType userType;
     private String description;
     
-    public enum UserType{
+    public enum NotifUserType{
         CUSTOMER,
         RUNNER,
         VENDOR
@@ -27,9 +28,10 @@ public class Notification {
         TOPUP
     }
     
-    public Notification(int notificationID, NotifType notifType, int userID, UserType userType, String description) {
+    public Notification(int notificationID, NotifType notifType, int typeID, int userID, NotifUserType userType, String description) {
         this.notificationID = notificationID;
         this.notifType = notifType;
+        this.typeID = typeID;
         this.userID = userID;
         this.userType = userType;
         this.description = description;
@@ -41,6 +43,22 @@ public class Notification {
 
     public void setNotificationID(int notificationID) {
         this.notificationID = notificationID;
+    }
+    
+    public NotifUserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(NotifUserType userType) {
+        this.userType = userType;
+    }
+
+    public int getTypeID() {
+        return typeID;
+    }
+
+    public void setTypeID(int typeID) {
+        this.typeID = typeID;
     }
     
     public int getUserID() {
@@ -70,6 +88,6 @@ public class Notification {
     @Override
     public String toString() {
         String delimeter = ";";
-        return notificationID + delimeter + notifType + delimeter + userID + delimeter + userType + delimeter + description;
+        return notificationID + delimeter + notifType + delimeter + typeID + delimeter + userID + delimeter + userType + delimeter + description;
     }
 }

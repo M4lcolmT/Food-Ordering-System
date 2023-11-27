@@ -79,6 +79,11 @@ public class CustomerMainMenu extends javax.swing.JFrame {
         });
 
         notificationButton.setText("Notifications");
+        notificationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                notificationButtonActionPerformed(evt);
+            }
+        });
 
         orderStatusLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         orderStatusLabel.setText("Order is on the way!");
@@ -250,6 +255,12 @@ public class CustomerMainMenu extends javax.swing.JFrame {
             this.dispose();
         }
     }//GEN-LAST:event_logOutButtonActionPerformed
+
+    private void notificationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notificationButtonActionPerformed
+        CustomerNotification page = new CustomerNotification(customer);
+        page.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_notificationButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton4;

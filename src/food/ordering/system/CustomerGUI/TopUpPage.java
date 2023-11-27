@@ -4,7 +4,9 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.AdminGUI.TopUpRequests;
+import food.ordering.system.AdminGUI.TopUpRequests.TransactionStatus;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -34,8 +36,10 @@ public class TopUpPage extends javax.swing.JFrame {
     
     public TopUpPage(Customer customer) {
         initComponents();
-        this.customer = customer;     
-        readTopUpRequests();
+        this.customer = customer;  
+        
+        ReadFiles reader = new ReadFiles();
+        requests = reader.readTopUpRequests();
         
         LocalDateTime originalDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
@@ -46,40 +50,6 @@ public class TopUpPage extends javax.swing.JFrame {
     private int setAmount (int amount) {
         topUpAmount = amount;
         return topUpAmount;
-    }
-    
-    private LocalDateTime parseDateTime(String data) {
-        LocalDateTime formattedDateTime = LocalDateTime.parse(data, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"));
-        return formattedDateTime;
-    }
-    
-    public List<TopUpRequests> readTopUpRequests() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(topUpRequestsTextFilePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(";");
-                if (parts.length == 8) {
-                    int requestID = Integer.parseInt(parts[0]);
-                    int customerID = Integer.parseInt(parts[1]);
-                    int amount = Integer.parseInt(parts[2]);
-                    String bankType = parts[3];
-                    long cardNumber = Long.parseLong(parts[4]);
-                    YearMonth monthYear = YearMonth.parse(parts[5], java.time.format.DateTimeFormatter.ofPattern("MM/yy"));
-                    int cvv = Integer.parseInt(parts[6]);
-                    String remarks = parts[7];
-                    LocalDateTime dateTime = parseDateTime(parts[8]);
-                    
-                    TopUpRequests requestItem = new TopUpRequests(requestID, customerID, amount, bankType, cardNumber, monthYear, cvv, remarks, dateTime);
-                    requests.add(requestItem);
-                } else {
-                    System.out.println("Skipping a line with an incorrect number of parts");
-                }
-            }
-        } catch (IOException e) {
-            // Handle the exception, e.g., log or display an error message
-            e.printStackTrace();
-        }
-        return requests;
     }
     
     public int checkMaxID(List<TopUpRequests> requests) {
@@ -97,7 +67,7 @@ public class TopUpPage extends javax.swing.JFrame {
         int requestID = checkMaxID(requests);
         
         TopUpRequests newRequest = new TopUpRequests(requestID, customer.getCustomerID(),
-        amount, bankType, cardNumber, monthYear, cvv, remarks, dateTime);
+        amount, bankType, cardNumber, monthYear, cvv, remarks, dateTime, TransactionStatus.PENDING);
         
         try (PrintWriter pw = new PrintWriter(new FileWriter(topUpRequestsTextFilePath, true))) {
             pw.println(newRequest.toString());
@@ -407,8 +377,8 @@ public class TopUpPage extends javax.swing.JFrame {
         if (confirmationResult == JOptionPane.YES_OPTION) {
             if (saveRequest(topUpAmount, bankType, cardNumber, monthYear, cvv, remarksText)) {
                 JOptionPane.showMessageDialog(this, "Successfully sent top-up request to admin!");
-                TransactionSummary message = new TransactionSummary(customer, topUpAmount, remarksText, dateTime);
-                message.setVisible(true);
+                CustomerMainMenu menu = new CustomerMainMenu(customer);
+                menu.setVisible(true);
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to send top-up request to admin, please revalidate your inputs", "Validation Error", JOptionPane.ERROR_MESSAGE);

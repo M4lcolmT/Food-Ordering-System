@@ -105,7 +105,6 @@ public class ManageOrder extends javax.swing.JFrame {
         readyButton = new javax.swing.JButton();
         dateLabel = new javax.swing.JLabel();
         timeLabel = new javax.swing.JLabel();
-        prepareButton = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -162,15 +161,17 @@ public class ManageOrder extends javax.swing.JFrame {
 
         readyButton.setText("Ready");
         readyButton.setPreferredSize(new java.awt.Dimension(100, 25));
+        readyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                readyButtonActionPerformed(evt);
+            }
+        });
 
         dateLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         dateLabel.setText("Date");
 
         timeLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         timeLabel.setText("Time");
-
-        prepareButton.setText("Prepare");
-        prepareButton.setPreferredSize(new java.awt.Dimension(100, 25));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -192,8 +193,7 @@ public class ManageOrder extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(acceptButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(rejectButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(readyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(prepareButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(readyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26))
         );
         jPanel1Layout.setVerticalGroup(
@@ -220,8 +220,6 @@ public class ManageOrder extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(rejectButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(prepareButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
                         .addComponent(readyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
@@ -252,6 +250,10 @@ public class ManageOrder extends javax.swing.JFrame {
         //Sent notif to customer
     }//GEN-LAST:event_rejectButtonActionPerformed
 
+    private void readyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readyButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_readyButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;
     public javax.swing.JLabel dateLabel;
@@ -262,7 +264,6 @@ public class ManageOrder extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     public javax.swing.JLabel orderIDLabel;
     private javax.swing.JTable orderTable;
-    private javax.swing.JButton prepareButton;
     private javax.swing.JButton readyButton;
     private javax.swing.JButton rejectButton;
     public javax.swing.JLabel timeLabel;

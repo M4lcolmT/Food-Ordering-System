@@ -1,5 +1,7 @@
 package food.ordering.system.AdminGUI;
 
+import food.ordering.system.AdminGUI.Notification.NotifType;
+import food.ordering.system.AdminGUI.Notification.NotifUserType;
 import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.CustomerGUI.CustomerRequest;
 import food.ordering.system.RunnerGUI.Runner;
@@ -9,6 +11,9 @@ import food.ordering.system.VendorGUI.VendorRequest;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import textFiles.TextFilePaths;
@@ -25,6 +30,8 @@ public class ReadFiles {
     String adminTextFilePath = filePaths.getAdminTextFile();
     String userRequestsTextFilePath = filePaths.getUserCRUDrequestTextFile();
     String notificationFilePath = filePaths.getNotificationsTextFile();
+    String topUpRequestsTextFilePath = filePaths.getTopUpRequestsTextFile();
+    String notificationsTextFilePath = filePaths.getNotificationsTextFile();
     
     //Read customers from file
     public List<Customer> readCustomers() {
@@ -267,5 +274,72 @@ public class ReadFiles {
         }
 
         return notificationIDs;
+    }
+    
+    // Read top up requests
+    private LocalDateTime parseDateTime(String data) {
+        LocalDateTime formattedDateTime = LocalDateTime.parse(data, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"));
+        return formattedDateTime;
+    }
+    
+    public List<TopUpRequests> readTopUpRequests() {
+        List<TopUpRequests> requests = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(topUpRequestsTextFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(";");
+                if (parts.length == 10) {
+                    int requestID = Integer.parseInt(parts[0]);
+                    int customerID = Integer.parseInt(parts[1]);
+                    int amount = Integer.parseInt(parts[2]);
+                    String bankType = parts[3];
+                    long cardNumber = Long.parseLong(parts[4]);
+                    YearMonth monthYear = YearMonth.parse(parts[5], java.time.format.DateTimeFormatter.ofPattern("MM/yy"));
+                    int cvv = Integer.parseInt(parts[6]);
+                    String remarks = parts[7];
+                    LocalDateTime datetime = parseDateTime(parts[8]);
+                    TopUpRequests.TransactionStatus status = TopUpRequests.TransactionStatus.valueOf(parts[9]);
+                    
+                    TopUpRequests requestItem = new TopUpRequests(requestID, customerID, amount, bankType, cardNumber, monthYear, cvv, remarks, datetime, status);
+                    requests.add(requestItem);
+                } else {
+                    System.out.println("Skipping a line with an incorrect number of parts");
+                }
+            }
+        } catch (IOException e) {
+            // Handle the exception, e.g., log or display an error message
+            e.printStackTrace();
+        }
+        return requests;
+    }
+    
+    // Read notifications from text file
+    public List<Notification> readNotifications() {
+        List<Notification> notifications = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(notificationsTextFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(";");
+                if (parts.length == 6) {
+                    int notificationID = Integer.parseInt(parts[0]);
+                    NotifType notifType = NotifType.valueOf(parts[1]);
+                    int typeID = Integer.parseInt(parts[2]);
+                    int userID = Integer.parseInt(parts[3]);
+                    NotifUserType userType = NotifUserType.valueOf(parts[4]);
+                    String description = parts[5];
+                    
+                    Notification newNotification = new Notification(notificationID, notifType, typeID, userID, userType, description);
+                    notifications.add(newNotification);
+                } else {
+                    System.out.println("Skipping a line with an incorrect number of parts");
+                }
+            }
+        } catch (IOException e) {
+            // Handle the exception, e.g., log or display an error message
+            e.printStackTrace();
+        }
+        return notifications;
     }
 }

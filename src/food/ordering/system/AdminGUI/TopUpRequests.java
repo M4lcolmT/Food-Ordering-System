@@ -21,9 +21,15 @@ public class TopUpRequests {
     private int cvv;
     private String remarks;
     private LocalDateTime dateTime;
+    private TransactionStatus transactionStatus;
 
+    public enum TransactionStatus {
+        PENDING,
+        APPROVED,
+        REJECTED
+    }
     
-    public TopUpRequests(int requestID, int customerID, int amount, String bankType, long cardNumber, YearMonth cardExpiryDate, int cvv, String remarks, LocalDateTime dateTime) {
+    public TopUpRequests(int requestID, int customerID, int amount, String bankType, long cardNumber, YearMonth cardExpiryDate, int cvv, String remarks, LocalDateTime dateTime, TransactionStatus transactionStatus) {
         this.requestID = requestID;
         this.customerID = customerID;
         this.amount = amount;
@@ -33,6 +39,7 @@ public class TopUpRequests {
         this.cvv = cvv;
         this.remarks = remarks;
         this.dateTime = dateTime;
+        this.transactionStatus = transactionStatus;
     }
     
     public int getRequestID() {
@@ -75,13 +82,17 @@ public class TopUpRequests {
         this.dateTime = dateTime;
     }
     
+    public TransactionStatus getTransactionStatus() {
+        return transactionStatus;
+    }
+    
     @Override
     public String toString(){
         String delimiter = ";";
         String formattedExpiryDate = cardExpiryDate.format(java.time.format.DateTimeFormatter.ofPattern("MM/yy"));
         
         return requestID + delimiter + customerID + delimiter + amount + delimiter + bankType + delimiter + cardNumber + delimiter + 
-                formattedExpiryDate + delimiter + cvv + delimiter + remarks + delimiter + dateTime;
+                formattedExpiryDate + delimiter + cvv + delimiter + remarks + delimiter + dateTime + delimiter + transactionStatus;
     }
     
     

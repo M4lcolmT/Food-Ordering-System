@@ -88,7 +88,6 @@
                       <Component id="acceptButton" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="rejectButton" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="readyButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="prepareButton" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               </Group>
@@ -124,8 +123,6 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="rejectButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="prepareButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                           <Component id="readyButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -225,6 +222,9 @@
               <Dimension value="[100, 25]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="readyButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="dateLabel">
           <Properties>
@@ -243,14 +243,6 @@
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
           </AuxValues>
-        </Component>
-        <Component class="javax.swing.JButton" name="prepareButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Prepare"/>
-            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[100, 25]"/>
-            </Property>
-          </Properties>
         </Component>
       </SubComponents>
     </Container>
