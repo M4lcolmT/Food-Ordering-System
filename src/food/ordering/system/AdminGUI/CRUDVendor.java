@@ -464,7 +464,7 @@ public class CRUDVendor extends javax.swing.JFrame {
                     // Refresh the table with updated data
                     ReadFiles reader = new ReadFiles();
                     vendors = reader.readVendors();
-                    loadvendors();
+                    loadVendors();
                     nameField.setText("");
                     phoneNumberField.setText("");
                     emailField.setText("");
@@ -568,7 +568,4 @@ public class CRUDVendor extends javax.swing.JFrame {
     private javax.swing.JTable vendorTable;
     // End of variables declaration//GEN-END:variables
 
-    private void loadvendors() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }
