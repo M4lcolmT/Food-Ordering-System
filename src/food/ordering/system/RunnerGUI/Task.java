@@ -13,6 +13,7 @@ public class Task {
     private int runnerID;
     private int orderID;
     private TaskStatus taskStatus;
+    private double deliveryFee;
     
     public enum TaskStatus {
         PENDING,
@@ -23,11 +24,12 @@ public class Task {
         DELIVERED
     }
     
-    public Task(int taskID, int runnerID, int orderID, TaskStatus taskStatus) {
+    public Task(int taskID, int runnerID, int orderID, TaskStatus taskStatus, double deliveryFee) {
         this.taskID = taskID;
         this.runnerID = runnerID;
         this.orderID = orderID;
         this.taskStatus = taskStatus;
+        this.deliveryFee = deliveryFee;
     }
     
     public int getTaskID() {

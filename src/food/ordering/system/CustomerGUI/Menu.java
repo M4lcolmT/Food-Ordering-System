@@ -268,7 +268,7 @@ public class Menu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void confirmBasketMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmBasketMouseClicked
-        Order order = new Order(0, Order.OrderType.DELIVERY, customer, vendor, basket, totalPrice, OrderStatus.PENDING, false, 0, LocalDateTime.now(), 0);
+        Order order = new Order(0, Order.OrderType.DELIVERY, customer, vendor, basket, totalPrice, OrderStatus.PENDING, LocalDateTime.now());
         OrderSummary orderSummary = new OrderSummary(order, basket);
         orderSummary.setVisible(true);
         this.dispose();

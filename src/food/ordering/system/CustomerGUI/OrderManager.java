@@ -145,12 +145,9 @@ public class OrderManager {
                     List<FoodItem> basket = parseOrderBasket(parts[4]);
                     double orderTotalPrice = Double.parseDouble(parts[5]);
                     Order.OrderStatus orderStatus = Order.OrderStatus.valueOf(parts[6]);
-                    boolean orderRunnerAvailability = Boolean.parseBoolean(parts[7]);
-                    int orderRunnerID = Integer.parseInt(parts[8]);
                     LocalDateTime orderDateTime = parseDateTime(parts[9]);
-                    double deliveryFee = Double.parseDouble(parts[10]);
 
-                    Order newOrder = new Order(id, orderType, orderCustomer, orderVendor, basket, orderTotalPrice, orderStatus, orderRunnerAvailability, orderRunnerID,  orderDateTime, deliveryFee);
+                    Order newOrder = new Order(id, orderType, orderCustomer, orderVendor, basket, orderTotalPrice, orderStatus, orderDateTime);
                     orders.add(newOrder);
                 } else {
                     System.out.println("Skipping a line with an incorrect number of parts: " + line);

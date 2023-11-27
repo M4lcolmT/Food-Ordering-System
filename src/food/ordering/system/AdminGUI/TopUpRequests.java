@@ -4,8 +4,17 @@
  */
 package food.ordering.system.AdminGUI;
 
+import food.ordering.system.RunnerGUI.Runner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import textFiles.TextFilePaths;
 
 /**
  *
@@ -22,6 +31,9 @@ public class TopUpRequests {
     private String remarks;
     private LocalDateTime dateTime;
     private TransactionStatus transactionStatus;
+    
+    TextFilePaths path = new TextFilePaths();
+    String topUpRequestTextFilePath = path.getTopUpRequestsTextFile();
 
     public enum TransactionStatus {
         PENDING,
@@ -82,8 +94,40 @@ public class TopUpRequests {
         this.dateTime = dateTime;
     }
     
+    public void setTransactionStatus(TransactionStatus transactionStatus) {
+        this.transactionStatus = transactionStatus; 
+    }
+    
     public TransactionStatus getTransactionStatus() {
         return transactionStatus;
+    }
+    
+    public void updateTransactionStatus(TopUpRequests request, List<TopUpRequests> requests) {
+        int requestId = request.getRequestID();
+
+        for (TopUpRequests item : requests) {
+            if (requestId == item.getRequestID()) {
+                // Update the transaction status 
+                item.setTransactionStatus(TopUpRequests.TransactionStatus.APPROVED);
+            }
+        }
+
+        // Filter and sort the data
+        List<TopUpRequests> filteredItems = requests.stream()
+                .collect(Collectors.toList());
+
+        // Sort the filtered items by ID
+        Collections.sort(filteredItems, Comparator.comparingInt(TopUpRequests::getRequestID));
+
+        // Update the file with the new runner status
+        try (PrintWriter writer = new PrintWriter(new FileWriter(topUpRequestTextFilePath))) {
+            // Write each runner item to the file
+            for (TopUpRequests i : filteredItems) {
+                writer.println(i.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     @Override

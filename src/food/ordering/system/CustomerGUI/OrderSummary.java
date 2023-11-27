@@ -8,9 +8,15 @@ import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.CustomerGUI.Order.OrderType;
 import food.ordering.system.Location;
 import food.ordering.system.RunnerGUI.Runner;
+import food.ordering.system.RunnerGUI.Task;
 import food.ordering.system.VendorGUI.Vendor;
 import food.ordering.system.VendorGUI.FoodItem;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +47,7 @@ public class OrderSummary extends javax.swing.JFrame {
     DecimalFormat df = new DecimalFormat("#.#");
     
     TextFilePaths path = new TextFilePaths();
-    String orderTextFile = path.getOrderTextFile();
+    String orderTextFilePath = path.getOrderTextFile();
     
     public OrderSummary(Order order, List<FoodItem> orderBasket) {
         initComponents();
@@ -158,6 +164,51 @@ public class OrderSummary extends javax.swing.JFrame {
         }
         return null;
     }
+    
+    private int checkMaxOrderID(List<Order> orders) {
+        int maxID = 0;
+        for (Order order : orders) {
+            if (order.getOrderID() > maxID) {
+                maxID = order.getOrderID();
+            }
+        }
+        // Increment the maximum ID
+        return maxID + 1;
+    }
+    
+    // Create a new order instance
+    private void createOrder(OrderType orderType, List<Order> orders, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, Order.OrderStatus status) {
+        LocalDateTime originalDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        String formattedDateTimeStr = originalDateTime.format(formatter);
+        LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTimeStr, formatter);
+        
+        int newOrderID = checkMaxOrderID(orders);
+        Order newOrder = new Order(newOrderID, orderType, customer, vendor, orderBasket, totalPrice, status, parsedDateTime);
+
+        orders.add(newOrder);
+        saveOrder(newOrder);
+    }
+    
+    // Save order into text file
+    private void saveOrder(Order newOrder) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(orderTextFilePath, true))) {
+            pw.println(newOrder.toString());
+        } catch (IOException ex) {
+            System.out.println("Failed to save!");
+        }
+    }
+    
+    private int checkMaxTaskID(List<Task> tasks) {
+        int maxID = 0;
+        for (Task task : tasks) {
+            if (task.getTaskID() > maxID) {
+                maxID = task.getTaskID();
+            }
+        }
+        // Increment the maximum ID
+        return maxID + 1;
+    }
 
     private void placeOrder() {
         Vendor vendor = order.getVendor();
@@ -169,15 +220,16 @@ public class OrderSummary extends javax.swing.JFrame {
         if (availableRunner == null) {
             // No delivery fees and recalculate total price
             deliveryFee = 0;
-            customer.placeOrder(newOrderType, orderManager.getOrders(), vendor, orderBasket, 
-                    calculateTotal(), Order.OrderStatus.PENDING, false, 
-                    0, deliveryFee);
+            createOrder(newOrderType, orderManager.getOrders(), vendor, orderBasket, 
+                    calculateTotal(), Order.OrderStatus.PENDING);
         } else {
-            customer.placeOrder(newOrderType, orderManager.getOrders(), vendor, orderBasket, 
-                    calculateTotal(), Order.OrderStatus.PENDING, availableRunner.isRunnerAvailability(), 
-                    availableRunner.getRunnerID(), deliveryFee);
+            createOrder(newOrderType, orderManager.getOrders(), vendor, orderBasket, 
+                    calculateTotal(), Order.OrderStatus.PENDING);
             // Change runner availability to false once an order is assigned to him
             availableRunner.updateRunnerStatus(availableRunner, runners, true);
+//            // New Runner task
+//            int newTaskID = checkMaxTaskID();
+//            Task newTask = new Task(0, availableRunner.getRunnerID(), );
         }
         orderBasket.clear();
         this.dispose();
@@ -526,10 +578,10 @@ public class OrderSummary extends javax.swing.JFrame {
   
     private void backToMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backToMenuButtonActionPerformed
         loadBasketItems(orderBasket);
-        Customer customer = order.getCustomer();
-        Vendor vendor = order.getVendor();
+        Customer orderCustomer = order.getCustomer();
+        Vendor orderVendor = order.getVendor();
         
-        Menu menu = new Menu(vendor, customer, orderBasket);
+        Menu menu = new Menu(orderVendor, orderCustomer, orderBasket);
         menu.updateItemCount();
         double subtotalDecimal = Double.parseDouble(df.format(subtotal));
         menu.totalPriceLabel.setText(Double.toString(subtotalDecimal));

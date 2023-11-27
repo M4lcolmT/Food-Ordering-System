@@ -14,7 +14,6 @@ public class Notification {
     private int typeID; // For orderID, userRequestID, and topUpRequestID
     private int userID;
     private NotifUserType userType;
-    private String description;
     
     public enum NotifUserType{
         CUSTOMER,
@@ -28,13 +27,12 @@ public class Notification {
         TOPUP
     }
     
-    public Notification(int notificationID, NotifType notifType, int typeID, int userID, NotifUserType userType, String description) {
+    public Notification(int notificationID, NotifType notifType, int typeID, int userID, NotifUserType userType) {
         this.notificationID = notificationID;
         this.notifType = notifType;
         this.typeID = typeID;
         this.userID = userID;
         this.userType = userType;
-        this.description = description;
     }
     
     public int getNotificationID() {
@@ -69,14 +67,6 @@ public class Notification {
         this.userID = userID;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public NotifType getNotifType() {
         return notifType;
     }
@@ -88,6 +78,6 @@ public class Notification {
     @Override
     public String toString() {
         String delimeter = ";";
-        return notificationID + delimeter + notifType + delimeter + typeID + delimeter + userID + delimeter + userType + delimeter + description;
+        return notificationID + delimeter + notifType + delimeter + typeID + delimeter + userID + delimeter + userType;
     }
 }

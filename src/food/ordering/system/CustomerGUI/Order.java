@@ -28,11 +28,8 @@ public class Order {
     private Vendor vendor;
     private List<FoodItem> orderBasket;
     private double totalPrice;
-    private boolean runnerAvailability;
-    private int runnerID;
     private OrderStatus status;
     private LocalDateTime dateTime;
-    private double deliveryFee;
     
     TextFilePaths path = new TextFilePaths();
     String orderTextFilePath = path.getOrderTextFile();
@@ -53,7 +50,7 @@ public class Order {
         CANCELLED
     }
     
-    public Order(int orderID, OrderType orderType, Customer customer, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, OrderStatus status, boolean runnerAvailability, int runnerID, LocalDateTime dateTime, double deliveryFee) {
+    public Order(int orderID, OrderType orderType, Customer customer, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, OrderStatus status, LocalDateTime dateTime) {
         this.orderID = orderID;
         this.orderType = orderType;
         this.customer = customer;
@@ -61,10 +58,7 @@ public class Order {
         this.orderBasket = orderBasket;
         this.totalPrice = totalPrice;
         this.status = status;
-        this.runnerAvailability = runnerAvailability;
-        this.runnerID = runnerID;
         this.dateTime = dateTime;
-        this.deliveryFee = deliveryFee;
     }
     
     public int getOrderID() {
@@ -106,18 +100,6 @@ public class Order {
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
-
-    public boolean isRunnerAvailability() {
-        return runnerAvailability;
-    }
-
-    public void setRunnerAvailability(boolean runnerAvailability) {
-        this.runnerAvailability = runnerAvailability;
-    }
-
-    public int getRunnerID() {
-        return runnerID;
-    }
     
     public LocalDateTime getDateTime() {
         return dateTime;
@@ -125,14 +107,6 @@ public class Order {
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
-    }
-    
-    public double getDeliveryFee() {
-        return deliveryFee;
-    }
-
-    public void setDeliveryFee(double deliveryFee) {
-        this.deliveryFee = deliveryFee;
     }
     
     public void updateOrderStatus(Order specificOrder, List<Order> orders, OrderStatus orderStatus) {
@@ -166,7 +140,7 @@ public class Order {
     @Override
     public String toString() {
         String delimiter = ";";
-        return orderID + delimiter + orderType + delimiter + customer.getCustomerID() + delimiter + vendor.getVendorID() + delimiter + serializeOrderBasket() + delimiter + totalPrice + delimiter + status + delimiter + runnerAvailability + delimiter + runnerID + delimiter + dateTime + delimiter + deliveryFee;
+        return orderID + delimiter + orderType + delimiter + customer.getCustomerID() + delimiter + vendor.getVendorID() + delimiter + serializeOrderBasket() + delimiter + totalPrice + delimiter + status + delimiter + dateTime;
     }
 
     // Serialize the order basket to a string

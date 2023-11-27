@@ -189,7 +189,9 @@ public class AdminMainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_crudRunnerButtonActionPerformed
 
     private void manageTopUpRequestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageTopUpRequestButtonActionPerformed
-        // TODO add your handling code here:
+        ManageTopUpRequest page = new ManageTopUpRequest(admin);
+        page.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_manageTopUpRequestButtonActionPerformed
 
     private void crudCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crudCustomerButtonActionPerformed

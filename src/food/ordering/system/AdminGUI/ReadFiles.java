@@ -322,15 +322,14 @@ public class ReadFiles {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 6) {
+                if (parts.length == 5) {
                     int notificationID = Integer.parseInt(parts[0]);
                     NotifType notifType = NotifType.valueOf(parts[1]);
                     int typeID = Integer.parseInt(parts[2]);
                     int userID = Integer.parseInt(parts[3]);
                     NotifUserType userType = NotifUserType.valueOf(parts[4]);
-                    String description = parts[5];
                     
-                    Notification newNotification = new Notification(notificationID, notifType, typeID, userID, userType, description);
+                    Notification newNotification = new Notification(notificationID, notifType, typeID, userID, userType);
                     notifications.add(newNotification);
                 } else {
                     System.out.println("Skipping a line with an incorrect number of parts");
