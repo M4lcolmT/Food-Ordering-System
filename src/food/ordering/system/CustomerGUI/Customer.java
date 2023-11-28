@@ -7,7 +7,6 @@ package food.ordering.system.CustomerGUI;
 import food.ordering.system.User;
 import java.util.ArrayList;
 import java.util.List;
-import textFiles.TextFilePaths;
 
 /**
  *

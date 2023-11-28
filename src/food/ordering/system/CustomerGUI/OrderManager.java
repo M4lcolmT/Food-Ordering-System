@@ -137,7 +137,7 @@ public class OrderManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 11) {
+                if (parts.length == 8) {
                     int id = Integer.parseInt(parts[0]);
                     OrderType orderType = OrderType.valueOf(parts[1].toUpperCase());
                     Customer orderCustomer = parseOrderCustomer(Integer.parseInt(parts[2]));
@@ -145,7 +145,7 @@ public class OrderManager {
                     List<FoodItem> basket = parseOrderBasket(parts[4]);
                     double orderTotalPrice = Double.parseDouble(parts[5]);
                     Order.OrderStatus orderStatus = Order.OrderStatus.valueOf(parts[6]);
-                    LocalDateTime orderDateTime = parseDateTime(parts[9]);
+                    LocalDateTime orderDateTime = parseDateTime(parts[7]);
 
                     Order newOrder = new Order(id, orderType, orderCustomer, orderVendor, basket, orderTotalPrice, orderStatus, orderDateTime);
                     orders.add(newOrder);

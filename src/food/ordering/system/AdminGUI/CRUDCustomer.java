@@ -345,7 +345,7 @@ public class CRUDCustomer extends javax.swing.JFrame {
                 }
                 editMode = true; // Switch to edit mode
             } else {
-                JOptionPane.showMessageDialog(this, "Please select a food item to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please select a customer to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
             }
         } else {
         // Save changes
@@ -463,12 +463,12 @@ public class CRUDCustomer extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
-    private javax.swing.JTextField addressField;
-    private javax.swing.JComboBox<String> cityComboBox;
+    public javax.swing.JTextField addressField;
+    public javax.swing.JComboBox<String> cityComboBox;
     private javax.swing.JTable customerTable;
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton editButton;
-    private javax.swing.JTextField emailField;
+    public javax.swing.JTextField emailField;
     private javax.swing.JButton generatePasswordButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
@@ -480,9 +480,9 @@ public class CRUDCustomer extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField nameField;
-    private javax.swing.JTextField passwordField;
-    private javax.swing.JTextField phoneNumberField;
+    public javax.swing.JTextField nameField;
+    public javax.swing.JTextField passwordField;
+    public javax.swing.JTextField phoneNumberField;
     // End of variables declaration//GEN-END:variables
 }
 

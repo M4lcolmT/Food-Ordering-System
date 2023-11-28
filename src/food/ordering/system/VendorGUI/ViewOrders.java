@@ -5,6 +5,7 @@
 package food.ordering.system.VendorGUI;
 
 import food.ordering.system.CustomerGUI.Order;
+import food.ordering.system.CustomerGUI.Order.OrderStatus;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -35,23 +36,38 @@ public class ViewOrders extends javax.swing.JFrame {
     }
     
     private void filterOrders() {
+        // Clear existing lists before populating
+        deliveries.clear();
+        takeAways.clear();
+        dineIns.clear();
+
         for (Order item : orders) {
-            switch (item.getOrderType()) {
-                case DELIVERY:
-                    deliveries.add(item);
-                    break;
-                case TAKEAWAY:
-                    takeAways.add(item);
-                    break;
-                case DINEIN:
-                    dineIns.add(item);
-                    break;
-                default:
-                    System.out.println("Invalid order type.");
-                    break;
+            // Debug print statements
+            System.out.println("Order Status: " + item.getStatus());
+            System.out.println("Order Type: " + item.getOrderType());
+
+            // Check if the order is cancelled
+            if (!item.getStatus().name().equals("CANCELLED")) {
+                switch (item.getOrderType()) {
+                    case DELIVERY:
+                        deliveries.add(item);
+                        break;
+                    case TAKEAWAY:
+                        takeAways.add(item);
+                        break;
+                    case DINEIN:
+                        dineIns.add(item);
+                        break;
+                    default:
+                        System.out.println("Invalid order type: " + item.getOrderType());
+                        break;
+                }
             }
         }
     }
+
+
+
     
     private void updateTable() {
         DefaultTableModel model = (DefaultTableModel) orderTable.getModel();

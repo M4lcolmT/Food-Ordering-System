@@ -41,6 +41,7 @@ public class OrderSummary extends javax.swing.JFrame {
     private double totalPrice;
     private List<FoodItem> orderBasket;
     private List<Runner> runners;
+    private List<Task> tasks;
     private OrderType newOrderType;
 
     
@@ -48,6 +49,7 @@ public class OrderSummary extends javax.swing.JFrame {
     
     TextFilePaths path = new TextFilePaths();
     String orderTextFilePath = path.getOrderTextFile();
+    String taskTextFilePath = path.getRunnerTasksTextFile();
     
     public OrderSummary(Order order, List<FoodItem> orderBasket) {
         initComponents();
@@ -78,6 +80,7 @@ public class OrderSummary extends javax.swing.JFrame {
         
         ReadFiles reader = new ReadFiles();
         runners = reader.readRunners();
+        tasks = reader.readTasks();
         availableRunner = checkRunner();
     }
     
@@ -167,9 +170,9 @@ public class OrderSummary extends javax.swing.JFrame {
     
     private int checkMaxOrderID(List<Order> orders) {
         int maxID = 0;
-        for (Order order : orders) {
-            if (order.getOrderID() > maxID) {
-                maxID = order.getOrderID();
+        for (Order i : orders) {
+            if (i.getOrderID() > maxID) {
+                maxID = i.getOrderID();
             }
         }
         // Increment the maximum ID
@@ -199,7 +202,7 @@ public class OrderSummary extends javax.swing.JFrame {
         }
     }
     
-    private int checkMaxTaskID(List<Task> tasks) {
+    private int checkMaxTaskID() {
         int maxID = 0;
         for (Task task : tasks) {
             if (task.getTaskID() > maxID) {
@@ -226,10 +229,14 @@ public class OrderSummary extends javax.swing.JFrame {
             createOrder(newOrderType, orderManager.getOrders(), vendor, orderBasket, 
                     calculateTotal(), Order.OrderStatus.PENDING);
             // Change runner availability to false once an order is assigned to him
-            availableRunner.updateRunnerStatus(availableRunner, runners, true);
-//            // New Runner task
-//            int newTaskID = checkMaxTaskID();
-//            Task newTask = new Task(0, availableRunner.getRunnerID(), );
+            // availableRunner.updateRunnerStatus(availableRunner, runners, true);
+            // New Runner task
+            Task newTask = new Task(checkMaxTaskID(), availableRunner.getRunnerID(), order.getOrderID(), Task.TaskStatus.PENDING, deliveryFee);
+            try (PrintWriter pw = new PrintWriter(new FileWriter(taskTextFilePath, true))) {
+                pw.println(newTask.toString());
+            } catch (IOException ex) {
+                System.out.println("Failed to save!");
+            }
         }
         orderBasket.clear();
         this.dispose();

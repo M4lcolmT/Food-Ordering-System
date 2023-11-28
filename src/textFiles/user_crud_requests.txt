@@ -3,5 +3,4 @@
 3;1;CUSTOMER;CHANGEPASSWORD;Sheng Khai;0139008765;nsk@gmail.com;2;12, Jalan Mewah 3/4, Taman Mewah; Kajang
 4;3;VENDOR;UPDATEPROFILE;Jollibee;0390887654;jollibee@gmail.com;j123;Kajang;Sells good fried chicken;9:00am-9:00pm;Tuesday-Sunday
 5;3;VENDOR;UPDATEPROFILE;Jollibee;0111166098;jollibee@gmail.com;j123;Bukit Jalil;Bukit Jalil;11:00am-9:00pm;Tuesday-Saturday
-6;1;RUNNER;UPDATEPROFILE;Kho;0134569873;khoo@gmail.com;k123;Petaling Jaya
-7;1;RUNNER;UPDATEPROFILE;Khoo;0134569873;khoo@gmail.com;k123;Kajang
+6;1;CUSTOMER;UPDATEPROFILE;jonathan;0139008765;nsk@gmail.com;1;11, jalan biru;Cyberjaya

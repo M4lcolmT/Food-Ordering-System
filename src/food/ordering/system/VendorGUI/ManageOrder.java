@@ -4,9 +4,15 @@
  */
 package food.ordering.system.VendorGUI;
 
+import food.ordering.system.AdminGUI.Notification;
+import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.CustomerGUI.Order;
 import food.ordering.system.CustomerGUI.Order.OrderStatus;
 import food.ordering.system.CustomerGUI.OrderManager;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -15,6 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import textFiles.TextFilePaths;
 
 /**
  *
@@ -26,6 +33,11 @@ public class ManageOrder extends javax.swing.JFrame {
     private int orderID;
     private List<Order> allOrders;
     private OrderStatus orderStatus;
+    private List<Notification> notifications;
+    
+    TextFilePaths path = new TextFilePaths();
+    String orderTextFilePath = path.getOrderTextFile();
+    String notificationTextFilePath = path.getNotificationsTextFile();
     
     public ManageOrder(Vendor vendor, int orderID) {
         initComponents();
@@ -37,6 +49,9 @@ public class ManageOrder extends javax.swing.JFrame {
         specificOrder = findOrder();
         loadOrder();
         readyButton.setVisible(false);
+        
+        ReadFiles reader = new ReadFiles();
+        notifications = reader.readNotifications();
     }
     
     // Check if order is ready for delivery 
@@ -87,6 +102,18 @@ public class ManageOrder extends javax.swing.JFrame {
             }
         }
         return count;
+    }
+    
+    // Check max id in notification text file
+    private int checkMaxID() {
+        int maxID = 0;
+        for (Notification i : notifications) {
+            if (i.getNotificationID() > maxID) {
+                maxID = i.getNotificationID();
+            }
+        }
+        // Increment the maximum ID
+        return maxID + 1;
     }
     
     @SuppressWarnings("unchecked")
@@ -239,19 +266,48 @@ public class ManageOrder extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
-        JOptionPane.showMessageDialog(this, "Order is accepted, proceed to prepare.", "Accept Order", JOptionPane.INFORMATION_MESSAGE);
-        specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.CONFIRMED);
-        //Send notif to customer
+        int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to accept order?", "Accept Confirmation", JOptionPane.YES_NO_OPTION);        
+
+        if (confirmationResult == JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(this, "Order is accepted, proceed to prepare.", "Accept Order", JOptionPane.INFORMATION_MESSAGE);
+            specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.CONFIRMED);
+            //Send notif to customer
+        }
     }//GEN-LAST:event_acceptButtonActionPerformed
 
     private void rejectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rejectButtonActionPerformed
-        JOptionPane.showMessageDialog(this, "Order is rejected.", "Reject Order", JOptionPane.INFORMATION_MESSAGE);
-        specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.CANCELLED);
-        //Sent notif to customer
+        Order selectedOrder = findOrder();
+
+        int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to reject order?", "Reject Confirmation", JOptionPane.YES_NO_OPTION);        
+
+        if (confirmationResult == JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(this, "Order is rejected.", "Reject Order", JOptionPane.INFORMATION_MESSAGE);
+            specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.CANCELLED);
+            //Sent notif to customer
+            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, orderID, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER);
+            try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFilePath, true))) {
+                pw.println(newNotif.toString());
+            } catch (IOException ex) {
+                System.out.println("Failed to save!");
+            }
+            try (PrintWriter writer = new PrintWriter(new FileWriter(orderTextFilePath))) {
+                // Write each order to the file
+                for (Order item : allOrders) {
+                    writer.println(item.toString());
+                }
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
+            }
+            ViewOrders page = new ViewOrders(vendor, allOrders);
+            page.setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_rejectButtonActionPerformed
 
     private void readyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readyButtonActionPerformed
-        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(this, "Order is ready.", "Finisihed Order", JOptionPane.INFORMATION_MESSAGE);
+        specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.READY_FOR_PICKUP);
+        //Sent notif to customer
     }//GEN-LAST:event_readyButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

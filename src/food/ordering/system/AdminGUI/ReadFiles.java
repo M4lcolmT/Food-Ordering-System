@@ -6,6 +6,7 @@ import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.CustomerGUI.CustomerRequest;
 import food.ordering.system.RunnerGUI.Runner;
 import food.ordering.system.RunnerGUI.RunnerRequest;
+import food.ordering.system.RunnerGUI.Task;
 import food.ordering.system.VendorGUI.Vendor;
 import food.ordering.system.VendorGUI.VendorRequest;
 import java.io.BufferedReader;
@@ -32,6 +33,7 @@ public class ReadFiles {
     String notificationFilePath = filePaths.getNotificationsTextFile();
     String topUpRequestsTextFilePath = filePaths.getTopUpRequestsTextFile();
     String notificationsTextFilePath = filePaths.getNotificationsTextFile();
+    String tasksTextFilePath = filePaths.getRunnerTasksTextFile();
     
     //Read customers from file
     public List<Customer> readCustomers() {
@@ -185,8 +187,8 @@ public class ReadFiles {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length > 1) {
-                    String userType = parts[1];
+                if (parts.length > 3) {
+                    String userType = parts[2];
                     switch (userType) {
                         case "CUSTOMER":
                             customerRequests.add(processCustomer(parts));
@@ -341,4 +343,33 @@ public class ReadFiles {
         }
         return notifications;
     }
+    // Read runners' tasks from text file
+    public List<Task> readTasks() {
+        List<Task> tasks = new ArrayList<>();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(tasksTextFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(";");
+                if (parts.length == 5) {
+                    int taskID = Integer.parseInt(parts[0]);
+                    int runnerID = Integer.parseInt(parts[1]);
+                    int orderID = Integer.parseInt(parts[2]);
+                    Task.TaskStatus status = Task.TaskStatus.valueOf(parts[3]);
+                    double deliveryFee = Double.parseDouble(parts[4]);
+                    
+                    Task newTask = new Task(taskID, runnerID, orderID, status, deliveryFee);
+                    tasks.add(newTask);
+                } else {
+                    System.out.println("Skipping a line with an incorrect number of parts");
+                }
+            }
+        } catch (IOException e) {
+            // Handle the exception, e.g., log or display an error message
+            e.printStackTrace();
+        }
+        return tasks;
+    }
+    
+    
 }

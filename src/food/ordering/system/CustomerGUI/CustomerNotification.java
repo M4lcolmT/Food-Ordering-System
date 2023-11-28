@@ -8,8 +8,13 @@ import food.ordering.system.AdminGUI.Notification;
 import food.ordering.system.AdminGUI.OrderNotification;
 import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.AdminGUI.UserProfileNotification;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
+import textFiles.TextFilePaths;
 
 /**
  *
@@ -19,6 +24,9 @@ public class CustomerNotification extends javax.swing.JFrame {
     private Customer customer;
     private List<Notification> allNotifications;
     private List<Notification> custNotifications;
+    
+    TextFilePaths path = new TextFilePaths();
+    String notificationTextFile = path.getNotificationsTextFile();
     
     public CustomerNotification(Customer customer) {
         initComponents();
@@ -76,6 +84,7 @@ public class CustomerNotification extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         innerScrollPanel = new javax.swing.JPanel();
+        clearNotifButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -94,6 +103,13 @@ public class CustomerNotification extends javax.swing.JFrame {
         innerScrollPanel.setLayout(new javax.swing.BoxLayout(innerScrollPanel, javax.swing.BoxLayout.Y_AXIS));
         jScrollPane1.setViewportView(innerScrollPanel);
 
+        clearNotifButton.setText("Clear Notifications");
+        clearNotifButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearNotifButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -101,12 +117,13 @@ public class CustomerNotification extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(clearNotifButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(305, 305, 305)
                         .addComponent(backButton)))
@@ -115,9 +132,11 @@ public class CustomerNotification extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(23, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(clearNotifButton)
+                    .addComponent(jLabel1))
+                .addGap(8, 8, 8)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(backButton)
@@ -139,11 +158,37 @@ public class CustomerNotification extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        // TODO add your handling code here:
+        CustomerMainMenu page = new CustomerMainMenu(customer);
+        page.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_backButtonActionPerformed
+
+    private void clearNotifButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearNotifButtonActionPerformed
+        int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to clear all notifications?", "Delete Confirmation", JOptionPane.YES_NO_OPTION);        
+
+        if (confirmationResult == JOptionPane.YES_OPTION) {
+            try {
+                List<Notification> customerNotifs = getNotifications();
+                allNotifications.removeAll(customerNotifs);
+                custNotifications.clear();
+
+                try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFile, false))) {
+                    for (Notification notif : allNotifications) {
+                        pw.println(notif.toString());                
+                    }
+                }
+
+                populateInnerPanel();
+            } catch (IOException ex) {
+                System.out.println("Failed to clear and save notifications: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_clearNotifButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
+    private javax.swing.JButton clearNotifButton;
     private javax.swing.JPanel innerScrollPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

@@ -63,4 +63,10 @@ public class Task {
     public void setTaskStatus(TaskStatus taskStatus) {
         this.taskStatus = taskStatus;
     }
+
+    @Override
+    public String toString() {
+        String delimiter = ";";
+        return taskID + delimiter + runnerID + delimiter + orderID + delimiter + taskStatus + delimiter + deliveryFee;
+    }
 }
