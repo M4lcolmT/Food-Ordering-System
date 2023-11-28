@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import textFiles.TextFilePaths;
@@ -279,9 +280,19 @@ public class ReadFiles {
     }
     
     // Read top up requests
-    private LocalDateTime parseDateTime(String data) {
-        LocalDateTime formattedDateTime = LocalDateTime.parse(data, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"));
-        return formattedDateTime;
+    public LocalDateTime parseDateTime(String dateTimeString) {
+        try {
+            // Try parsing the date time with nanoseconds
+            return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS"));
+        } catch (DateTimeParseException e) {
+            try {
+                // If parsing with nanoseconds fails, try parsing without nanoseconds
+                return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"));
+            } catch (DateTimeParseException ex) {
+                // If both attempts fail, try parsing with the format 'yyyy-MM-dd'
+                return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            }
+        }
     }
     
     public List<TopUpRequests> readTopUpRequests() {
@@ -351,14 +362,15 @@ public class ReadFiles {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 5) {
+                if (parts.length == 6) {
                     int taskID = Integer.parseInt(parts[0]);
                     int runnerID = Integer.parseInt(parts[1]);
                     int orderID = Integer.parseInt(parts[2]);
                     Task.TaskStatus status = Task.TaskStatus.valueOf(parts[3]);
                     double deliveryFee = Double.parseDouble(parts[4]);
+                    LocalDateTime date = parseDateTime(parts[5]);
                     
-                    Task newTask = new Task(taskID, runnerID, orderID, status, deliveryFee);
+                    Task newTask = new Task(taskID, runnerID, orderID, status, deliveryFee, date);
                     tasks.add(newTask);
                 } else {
                     System.out.println("Skipping a line with an incorrect number of parts");

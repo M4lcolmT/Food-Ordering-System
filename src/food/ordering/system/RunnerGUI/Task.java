@@ -4,6 +4,8 @@
  */
 package food.ordering.system.RunnerGUI;
 
+import java.time.LocalDateTime;
+
 /**
  *
  * @author LENOVO
@@ -14,6 +16,11 @@ public class Task {
     private int orderID;
     private TaskStatus taskStatus;
     private double deliveryFee;
+    private LocalDateTime date;
+
+    public LocalDateTime getDate() {
+        return date;
+    }
     
     public enum TaskStatus {
         PENDING,
@@ -24,12 +31,13 @@ public class Task {
         DELIVERED
     }
     
-    public Task(int taskID, int runnerID, int orderID, TaskStatus taskStatus, double deliveryFee) {
+    public Task(int taskID, int runnerID, int orderID, TaskStatus taskStatus, double deliveryFee, LocalDateTime date) {
         this.taskID = taskID;
         this.runnerID = runnerID;
         this.orderID = orderID;
         this.taskStatus = taskStatus;
         this.deliveryFee = deliveryFee;
+        this.date = date;
     }
     
     public int getTaskID() {
@@ -46,6 +54,10 @@ public class Task {
 
     public void setRunnerID(int runnerID) {
         this.runnerID = runnerID;
+    }
+
+    public double getDeliveryFee() {
+        return deliveryFee;
     }
 
     public int getOrderID() {
@@ -67,6 +79,6 @@ public class Task {
     @Override
     public String toString() {
         String delimiter = ";";
-        return taskID + delimiter + runnerID + delimiter + orderID + delimiter + taskStatus + delimiter + deliveryFee;
+        return taskID + delimiter + runnerID + delimiter + orderID + delimiter + taskStatus + delimiter + deliveryFee + delimiter + date;
     }
 }
