@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import textFiles.TextFilePaths;
 
@@ -24,6 +26,7 @@ public class Runner extends User{
     private String city;
     private String plateNumber;
     private String vehicleModel;
+    private List<Task> tasks;
     
     TextFilePaths path = new TextFilePaths();
     String runnerTextFilePath = path.getRunnerTextFile();

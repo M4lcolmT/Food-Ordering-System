@@ -1,4 +1,4 @@
-1;false;KhooJS;0134569873;khoo@gmail.com;k123;Petaling Jaya;VJC2908;Toyota Motorcycle
+1;true;KhooJS;0134569873;khoo@gmail.com;k123;Petaling Jaya;VJC2908;Toyota Motorcycle
 2;false;Tan;0123456178;tan@gmail.com;t456;Kuala Lumpur;ABC1234;Honda Scooter
 3;false;Lim;0198765743;lim@gmail.com;l789;Shah Alam;XYZ5678;Yamaha Bike
 4;false;Wong;0109897654;wong@gmail.com;w321;Subang Jaya;DEF4321;Suzuki Motorcycle

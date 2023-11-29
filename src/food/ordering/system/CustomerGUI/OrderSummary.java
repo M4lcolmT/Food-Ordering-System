@@ -247,7 +247,7 @@ public class OrderSummary extends javax.swing.JFrame {
             // Change runner availability to false once an order is assigned to him (Not sure)
             // availableRunner.updateRunnerStatus(availableRunner, runners, true);
             // New Runner task
-            Task newTask = new Task(checkMaxTaskID(), availableRunner.getRunnerID(), order.getOrderID(), Task.TaskStatus.PENDING, deliveryFee);
+            Task newTask = new Task(checkMaxTaskID(), availableRunner.getRunnerID(), order.getOrderID(), Task.TaskStatus.PENDING, deliveryFee, LocalDateTime.now());
             try (PrintWriter pw = new PrintWriter(new FileWriter(taskTextFilePath, true))) {
                 pw.println(newTask.toString());
             } catch (IOException ex) {
