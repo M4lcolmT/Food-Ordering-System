@@ -71,7 +71,7 @@ public class OrderHistory extends javax.swing.JFrame {
                             .addComponent(jscrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(295, 295, 295)
+                        .addGap(317, 317, 317)
                         .addComponent(backButton)))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
@@ -102,8 +102,8 @@ public class OrderHistory extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        CustomerMainMenu mainMenu = new CustomerMainMenu(customer);
-        mainMenu.setVisible(true);
+        CustomerMainMenu page = new CustomerMainMenu(customer);
+        page.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_backButtonActionPerformed
 
