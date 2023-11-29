@@ -7,18 +7,19 @@ package food.ordering.system.RunnerGUI;
 import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.CustomerGUI.Order;
 import food.ordering.system.CustomerGUI.OrderManager;
-import java.time.Instant;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.time.YearMonth;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -32,6 +33,7 @@ public class RevenueDashboard extends javax.swing.JFrame {
     private List<Order> orders;
     private List<Task> tasks;
     private List<String> customerCity;
+    private List<Task> runnerOrder;
     private LocalDateTime selectedDate;
             
     public RevenueDashboard(Runner runner) {
@@ -44,17 +46,107 @@ public class RevenueDashboard extends javax.swing.JFrame {
         
         OrderManager manager = new OrderManager();
         orders = manager.getOrders(); 
-        getCustomerID();
-        displayTotalRevenue(tasks);
-        updateDashboard();
+        runnerOrder = getRunnerOrders();
     }
     
-    private void displayTotalRevenue(List<Task> tasks) {
-        double totalRevenue = calculateTotalRevenue(tasks);
-        // Assuming totalRevenueLabel is a JLabel to display the result
-        revenueLabel.setText("RM" + String.format("%.2f", totalRevenue));
-    }
+    private List<Task> getRunnerOrders() {
+        List<Task> runnerTasks = new ArrayList<>();
 
+        for (Task task : tasks) {
+                if (task.getRunnerID() == runner.getRunnerID()) {
+                    runnerTasks.add(task);
+                }
+        }
+        return runnerTasks;
+    }
+    
+    private LocalDateTime convertToLocalDateTime(Date dateToConvert) {
+        return dateToConvert.toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime();
+    }
+    
+    private List<Task> getFilteredRunnerTasks(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        List<Task> filteredTasks = new ArrayList<>();
+
+        for (Task task : runnerOrder) {
+            Order order = findOrder(task.getOrderID());
+            if (order != null) {
+                LocalDateTime orderDateTime = order.getDateTime();
+
+                if ((orderDateTime.isAfter(startDateTime) || orderDateTime.isEqual(startDateTime)) &&
+                        orderDateTime.isBefore(endDateTime)) {
+                    filteredTasks.add(task);
+                }
+            }
+        }
+        return filteredTasks;
+    }
+    
+    private List<Task> displayFilteredOrders(String timeFrame, LocalDateTime dateTime) {
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
+
+        switch (timeFrame) {
+            case "Daily":
+                startDateTime = dateTime;
+                endDateTime = dateTime.plusDays(1);
+                break;
+            case "Monthly":
+                startDateTime = dateTime.withDayOfMonth(1);
+                endDateTime = startDateTime.plusMonths(1);
+                break;
+            case "Yearly":
+                startDateTime = dateTime.withDayOfYear(1);
+                endDateTime = startDateTime.plusYears(1);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid time frame selection");
+        }
+
+        return getFilteredRunnerTasks(startDateTime, endDateTime);
+    }
+    
+    private Map<String, Long> calculateTopLocation(List<Task> filteredTasks) {
+        Map<String, Long> locationCounts = new HashMap<>();
+        for (Task task : filteredTasks) {
+            Order order = findOrder(task.getOrderID());
+            if (order != null) {
+                String location = order.getCustomer().getCity();
+
+                // Increment the count for the location
+                locationCounts.merge(location, 1L, Long::sum);
+            }
+        }
+
+        // Sort the locations by count in descending order and limit to top 5
+        Map<String, Long> topLocations = locationCounts.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(5)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+        return topLocations;
+    }
+    
+    private void updateTopLocationDisplay(Map<String, Long> topLocation) {
+        List<Map.Entry<String, Long>> sortedItems = topLocation.entrySet().stream()
+            .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+            .limit(5)
+            .collect(Collectors.toList());
+
+        JLabel[] topItemLabels = {locationLabel1, locationLabel2, locationLabel3, locationLabel4, locationLabel5};
+        int i = 0;
+        for (Map.Entry<String, Long> entry : sortedItems) {
+            topItemLabels[i].setText(entry.getKey() + " - " + entry.getValue());
+            i++;
+        }
+        // Clear remaining labels if there are less than 5 top items
+        while (i < topItemLabels.length) {
+            topItemLabels[i].setText("-");
+            i++;
+        }
+    }
+    
     private double calculateTotalRevenue(List<Task> tasks) {
         double totalRevenue = 0.0;
 
@@ -63,51 +155,25 @@ public class RevenueDashboard extends javax.swing.JFrame {
         }
         return totalRevenue;
     }
-    
-    private List<Task> getRunnerTasks() {
-        List<Task> runnerTasks = new ArrayList<>();
-        
-        for (Task i : tasks) {
-            if (i.getTaskID() == runner.getRunnerID()) {
-                runnerTasks.add(i);
-            }
-        }
-        return runnerTasks;
-    }
-    
-    private void getCustomerID(){
-        List<Task> runnerTasks = getRunnerTasks();
-        
-        for (Task i : runnerTasks){
-            Order order = findOrder(i.getOrderID());
-            if (order != null && order.getCustomer() != null) {
-                customerCity.add(order.getCustomer().getCity());
-            }
-            
+
+    private double calculateAverageDeliveryFee(List<Task> tasks) {
+        double totalRevenue = calculateTotalRevenue(tasks);
+        int totalTasks = tasks.size();
+
+        if (totalTasks > 0) {
+            return totalRevenue / totalTasks;
+        } else {
+            return 0.0; // Avoid division by zero, return 0 if there are no tasks
         }
     }
     
-    private List<Task> getFilteredRunnerTasks() {
-        List<Task> runnerTasks = getRunnerTasks();
-        List<Task> filteredTasks = new ArrayList<>();
-
-        for (Task task : runnerTasks) {
-            if (isTaskInSelectedDateRange(task)) {
-                filteredTasks.add(task);
+    private Task findTaskByOrderId(int orderId) {
+        for (Task task : tasks) {
+            if (task.getOrderID() == orderId) {
+                return task;
             }
         }
-
-        return filteredTasks;
-    }
-    
-    private boolean isTaskInSelectedDateRange(Task task) {
-        if (selectedDate != null) {
-            LocalDateTime taskDateTime = task.getDate(); // Assuming getDate() returns a LocalDateTime
-
-            return taskDateTime.isEqual(selectedDate)
-                || (taskDateTime.isAfter(selectedDate) && taskDateTime.isBefore(selectedDate.plusDays(1)));
-    }
-    return true;
+        return null;
     }
     
     private Order findOrder(int id) {
@@ -118,32 +184,7 @@ public class RevenueDashboard extends javax.swing.JFrame {
         }
         return null;
     }
-    
-    private void displayTop5Cities() {
-        Map<String, Long> cityCount = customerCity.stream()
-                .collect(Collectors.groupingBy(String::toLowerCase, Collectors.counting()));
 
-        List<Map.Entry<String, Long>> sortedCities = cityCount.entrySet().stream()
-                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                .limit(5)
-                .collect(Collectors.toList());
-
-        updateLabel(locationLabel1, sortedCities, 0);
-        updateLabel(locationLabel2, sortedCities, 1);
-        updateLabel(locationLabel3, sortedCities, 2);
-        updateLabel(locationLabel4, sortedCities, 3);
-        updateLabel(locationLabel5, sortedCities, 4);
-    }
-    
-    private void updateLabel(javax.swing.JLabel label, List<Map.Entry<String, Long>> sortedCities, int index) {
-        if (index < sortedCities.size()) {
-            Map.Entry<String, Long> entry = sortedCities.get(index);
-            label.setText(entry.getKey() + ": " + entry.getValue() + " orders");
-        } else {
-            label.setText(""); // Clear the label if there are fewer than 5 cities
-        }
-    }
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -173,9 +214,10 @@ public class RevenueDashboard extends javax.swing.JFrame {
         jPanel11 = new javax.swing.JPanel();
         jLabel21 = new javax.swing.JLabel();
         totalorderLabel = new javax.swing.JLabel();
-        monthChooser = new com.toedter.calendar.JMonthChooser();
         calander = new com.toedter.calendar.JCalendar();
         backButton = new javax.swing.JButton();
+        checkButton = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -185,7 +227,7 @@ public class RevenueDashboard extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Revenue Dashboard");
 
-        comboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Daily", "Weekly", "Monthly", "Yearly" }));
+        comboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Daily", "Monthly", "Yearly" }));
         comboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxActionPerformed(evt);
@@ -376,14 +418,6 @@ public class RevenueDashboard extends javax.swing.JFrame {
                 .addContainerGap(35, Short.MAX_VALUE))
         );
 
-        monthChooser.setBackground(new java.awt.Color(102, 102, 102));
-        monthChooser.setForeground(new java.awt.Color(255, 255, 255));
-        monthChooser.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                monthChooserPropertyChange(evt);
-            }
-        });
-
         calander.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 calanderPropertyChange(evt);
@@ -396,6 +430,15 @@ public class RevenueDashboard extends javax.swing.JFrame {
                 backButtonActionPerformed(evt);
             }
         });
+
+        checkButton.setText("Check");
+        checkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("jLabel4");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -410,11 +453,15 @@ public class RevenueDashboard extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(calander, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(monthChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(56, 56, 56)
-                                .addComponent(backButton))
-                            .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(checkButton)
+                                    .addComponent(backButton)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(68, 68, 68)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -432,24 +479,24 @@ public class RevenueDashboard extends javax.swing.JFrame {
                 .addGap(31, 31, 31)
                 .addComponent(jLabel1)
                 .addGap(20, 20, 20)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(calander, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(monthChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(checkButton)
+                        .addGap(18, 18, 18)
                         .addComponent(backButton))
                     .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(8, Short.MAX_VALUE))
@@ -469,11 +516,17 @@ public class RevenueDashboard extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    private void updateDashboard(){
-        getCustomerID();
-        List<Task> filteredRunnerTasks = getFilteredRunnerTasks();
-        displayTop5Cities();
-        displayTotalRevenue(filteredRunnerTasks);
+    private void updateDashboard(List<Task> filteredTasks) {
+        double totalRevenue = calculateTotalRevenue(filteredTasks);
+        double averageRevenue = calculateAverageDeliveryFee(filteredTasks);
+        int totalOrdersCount = filteredTasks.size();
+
+        // Update the GUI labels with the calculated values
+        revenueLabel.setText("RM " + String.format("%.2f", totalRevenue));
+        averageLabel.setText("RM " + String.format("%.2f", averageRevenue));
+        totalorderLabel.setText(Integer.toString(totalOrdersCount));
+        Map<String, Long> topSellingItems = calculateTopLocation(filteredTasks);
+        updateTopLocationDisplay(topSellingItems);
     }        
     
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
@@ -481,60 +534,57 @@ public class RevenueDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void calanderPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_calanderPropertyChange
-        if ("date".equals(evt.getPropertyName())) {
-            Date utilDate = calander.getDate();
-            Instant instant = utilDate.toInstant();
-            ZoneId zoneId = ZoneId.systemDefault();
-            selectedDate = LocalDateTime.ofInstant(instant, zoneId);
-            updateDashboard();
+        Date date = calander.getDate();
+        if (date != null) {
+            // Format the date as you prefer
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = dateFormat.format(date);
+            // Set the formatted date string to your label
+            jLabel4.setText(dateString);
+        } else {
+            // Handle the case where a date is not selected
+            jLabel4.setText("No date selected");
         }
     }//GEN-LAST:event_calanderPropertyChange
 
-    private void monthChooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_monthChooserPropertyChange
-        if ("month".equals(evt.getPropertyName())) {
-            selectedDate = getSelectedDateFromMonthChooser();
-            updateDashboard();
-        }
-    }//GEN-LAST:event_monthChooserPropertyChange
-
     private void comboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxActionPerformed
-        selectedDate = getSelectedDateFromComboBox();
-        updateDashboard();
+
     }//GEN-LAST:event_comboBoxActionPerformed
 
-    private LocalDateTime getSelectedDateFromMonthChooser() {
-        int selectedMonth = monthChooser.getMonth();
+    private void checkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkButtonActionPerformed
+        String selectedTimeFrame = (String) comboBox.getSelectedItem();
+        String labelDate = jLabel4.getText();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parsedDate;
 
-        // Assuming the latest year, you can adjust this if needed
-        int latestYear = LocalDateTime.now().getYear();
+        try {
+            // Parse the date from the label
+            parsedDate = dateFormat.parse(labelDate);
+            LocalDateTime dateTime = convertToLocalDateTime(parsedDate);
 
-        return LocalDateTime.of(latestYear, selectedMonth + 1, 1, 0, 0);
-    }
+            // Get the filtered orders based on the selection
+            List<Task> filteredOrders = displayFilteredOrders(selectedTimeFrame.trim(), dateTime);
 
-    private LocalDateTime getSelectedDateFromComboBox() {
-        int selectedMonth = monthChooser.getMonth();
+            // Update the dashboard view with the filtered orders
+            updateDashboard(filteredOrders);
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(this, "Invalid date format.", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_checkButtonActionPerformed
 
-        LocalDateTime now = LocalDateTime.now();
-
-        // Assuming the latest year, you can adjust this if needed
-        int latestYear = now.getYear();
-
-        LocalDateTime startDate = LocalDateTime.of(latestYear, selectedMonth + 1, 1, 0, 0);
-        LocalDateTime endDate = LocalDateTime.now();
-
-        return startDate;
-    }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel averageLabel;
     private javax.swing.JButton backButton;
     private com.toedter.calendar.JCalendar calander;
+    private javax.swing.JButton checkButton;
     private javax.swing.JComboBox<String> comboBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -551,7 +601,6 @@ public class RevenueDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel locationLabel3;
     private javax.swing.JLabel locationLabel4;
     private javax.swing.JLabel locationLabel5;
-    private com.toedter.calendar.JMonthChooser monthChooser;
     private javax.swing.JLabel revenueLabel;
     private javax.swing.JLabel totalorderLabel;
     // End of variables declaration//GEN-END:variables
