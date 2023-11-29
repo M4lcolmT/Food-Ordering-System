@@ -4,54 +4,27 @@
  */
 package food.ordering.system.AdminGUI;
 
-import food.ordering.system.CustomerGUI.CustomerRequest;
-import food.ordering.system.CustomerGUI.Order;
-import food.ordering.system.CustomerGUI.OrderManager;
-import food.ordering.system.RunnerGUI.RunnerRequest;
-import food.ordering.system.VendorGUI.VendorRequest;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import textFiles.TextFilePaths;
 
 /**
  *
  * @author LENOVO
  */
-public class UserProfileNotification extends javax.swing.JPanel {
-    private int userProfileRequestID;
-    private UserRequest userRequest;
-    private List<CustomerRequest> customerRequests = new ArrayList<>();
-    private List<VendorRequest> vendorRequests = new ArrayList<>();
-    private List<RunnerRequest> runnerRequests = new ArrayList<>();
-    
-    public UserProfileNotification(int userProfileRequestID) {
+public class UserProfileNotificationPanel extends javax.swing.JPanel {
+    private String updateDescription;
+    private LocalDateTime dateTime;
+
+    public UserProfileNotificationPanel(String updateDescription, LocalDateTime dateTime) {
         initComponents();
-        this.userProfileRequestID = userProfileRequestID;
+        this.updateDescription = updateDescription;
+        this.dateTime = dateTime;
         
-        ReadFiles reader = new ReadFiles();
-        reader.readUserRequests(customerRequests, vendorRequests, runnerRequests);
-        userRequest = findUserRequest();
-        
-        if (userRequest.getRequestType().name().equals("CHANGEPASSWORD")) {
-            updateLabel.setText("Your password is changed!");
-        } else if (userRequest.getRequestType().name().equals("UPDATEPROFILE")){
-            updateLabel.setText("Your profile is updated!");
-        }
-        LocalDateTime dateTime = LocalDateTime.now();
+        updateLabel.setText(updateDescription);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm");
         String formattedDateTime = dateTime.format(formatter);
         dateTimeLabel.setText(formattedDateTime);
-    }
-    
-    private UserRequest findUserRequest() {
-        for (UserRequest item : customerRequests) {
-            if (item.getUserRequestID() == userProfileRequestID) {
-                return item;
-            }
-        }
-        return null;
     }
     
     @SuppressWarnings("unchecked")

@@ -5,12 +5,12 @@
 package food.ordering.system.AdminGUI;
 
 
-import static food.ordering.system.AdminGUI.CRUDCustomer.generatePassword;
 import food.ordering.system.VendorGUI.Vendor;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -26,10 +26,9 @@ import textFiles.TextFilePaths;
 public class CRUDVendor extends javax.swing.JFrame {
     private Admin admin;
     List<Vendor> vendors;
-    private int selectedRow = -1; // Instance variable to store the selected row
-    private boolean editMode = false;
-    private List<Integer> notificationIDs;
-    
+    public int userRequestVendorID = 0;
+    private List<Notification> notifications;
+
     private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
     private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String DIGITS = "0123456789";
@@ -37,14 +36,15 @@ public class CRUDVendor extends javax.swing.JFrame {
     
     TextFilePaths path = new TextFilePaths();
     String vendorTextFile = path.getVendorTextFile();
-    
+    String notificationTextFile = path.getNotificationsTextFile();
+
     public CRUDVendor(Admin admin) {
         initComponents();
         this.admin = admin;
         
         ReadFiles reader = new ReadFiles();
         vendors = reader.readVendors();
-        notificationIDs = reader.readNotificationID();
+        notifications = reader.readNotifications();
         loadVendors();
     }
     
@@ -76,6 +76,7 @@ public class CRUDVendor extends javax.swing.JFrame {
         return null;
     }
     
+    // Check max id in vendor text file to create new vendors
     public int checkMaxID() {
         int maxID = 0;
         for (Vendor item : vendors) {
@@ -88,15 +89,49 @@ public class CRUDVendor extends javax.swing.JFrame {
         return maxID + 1;
     }
     
-    private void writeToFile() {
+    public int checkMaxNotificationID() {
+        int maxID = 0;
+        for (Notification i : notifications) {
+                if (i.getNotificationID() > maxID) {
+                    maxID = i.getNotificationID();
+                }
+            }
+        // Increment the maximum ID
+        return maxID + 1;
+    }
+    
+    private void writeNotificationToFile() {        
+        try (PrintWriter writer = new PrintWriter(new FileWriter(notificationTextFile))) {
+            for (Notification item : notifications) {
+                writer.println(item.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
+        }
+    }
+    
+    private void writeVendorToFile() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(vendorTextFile))) {
-            // Write each food item to the file
             for (Vendor item : vendors) {
                 writer.println(item.toString());
             }
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
         }
+    }
+    
+    // Write vendor and refresh vendor table
+    private void createNewVendors() {
+        writeVendorToFile();
+        // Refresh the table with updated data
+        ReadFiles reader = new ReadFiles();
+        vendors = reader.readVendors();
+        loadVendors();
+        nameField.setText("");
+        phoneNumberField.setText("");
+        emailField.setText("");
+        passwordField.setText("");
+        descriptionField.setText("");
     }
     
     private boolean isEmpty(String str) {
@@ -117,6 +152,19 @@ public class CRUDVendor extends javax.swing.JFrame {
         }
 
         return password.toString();
+    }
+    
+    public int getUserRequestVendorID() {
+        DefaultTableModel model = (DefaultTableModel) vendorTable.getModel();
+        int rowCount = model.getRowCount();
+
+        for (int i = 0; i < rowCount; i++) {
+            int vendorid = (int) model.getValueAt(i, 0);
+            if (vendorid == userRequestVendorID) {
+                return vendorid; // Return the customer ID if ID matches
+            }
+        }
+        return -1; // Return -1 if no matching ID is found
     }
     
     @SuppressWarnings("unchecked")
@@ -393,126 +441,46 @@ public class CRUDVendor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
-        // Once user is edited, sent notification to customer
-        DefaultTableModel model = (DefaultTableModel) vendorTable.getModel();
-        if (!editMode) {
-        // Enter edit mode
-            selectedRow = vendorTable.getSelectedRow();
-            if (selectedRow != -1) {
-                // Get the current data from the selected row
-                String name = (String) model.getValueAt(selectedRow, 1);
-                String phoneNumber = (String) model.getValueAt(selectedRow, 2);
-                String email = (String) model.getValueAt(selectedRow, 3);
-                String password = (String) model.getValueAt(selectedRow, 4);
-                String description = (String) model.getValueAt(selectedRow, 5);
-                String operationHours = (String) model.getValueAt(selectedRow, 6);
-                String operationDays = (String) model.getValueAt(selectedRow, 7);
-                String category = (String) model.getValueAt(selectedRow, 8);
-                
-              
-                // Set the current data in the text fields
-                nameField.setText(name);
-                phoneNumberField.setText(phoneNumber);
-                emailField.setText(email);
-                passwordField.setText(password);
-                descriptionField.setText(description);
-                categoryComboBox.setSelectedItem(category);
-                
-                
-                String[] hourParts = operationHours.split("-");
-                for (int i = 0; i < startHourComboBox.getItemCount(); i++) {
-                    if (hourParts[0].equals(startHourComboBox.getItemAt(i))) {
-                        startHourComboBox.setSelectedIndex(i);
-                        break;
-                    }
-                }
-                for (int i = 0; i < endHourComboBox.getItemCount(); i++) {
-                    if (hourParts[1].equals(endHourComboBox.getItemAt(i))) {
-                        endHourComboBox.setSelectedIndex(i);
-                        break;
-                    }
-                }
+        // Get the updated data from the text fields
+        String newName = nameField.getText();
+        String newPhoneNumber = phoneNumberField.getText();
+        String newEmail = emailField.getText();
+        String newPassword = passwordField.getText();
+        String newDescription = descriptionField.getText();
+        String startHour = String.valueOf(startHourComboBox.getSelectedItem());
+        String endHour = String.valueOf(endHourComboBox.getSelectedItem());
+        String newOperationHours = startHour+"-"+endHour;
+        String startDay = String.valueOf(startDayComboBox.getSelectedItem());
+        String endDay = String.valueOf(endDayComboBox.getSelectedItem());
+        String newOperationDays = startDay+"-"+endDay; 
+        String newCategory = String.valueOf(categoryComboBox.getSelectedItem());
 
-                String[] dayParts = operationDays.split("-");
-                for (int i = 0; i < startDayComboBox.getItemCount(); i++) {
-                    if (dayParts[0].equals(startDayComboBox.getItemAt(i))) {
-                        startDayComboBox.setSelectedIndex(i);
-                        break;
-                    }
-                }
-                for (int i = 0; i < endDayComboBox.getItemCount(); i++) {
-                    if (dayParts[1].equals(endDayComboBox.getItemAt(i))) {
-                        endDayComboBox.setSelectedIndex(i);
-                        break;
-                    }
-                }
-                        editMode = true; // Switch to edit mode
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Please select a vendor detail to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
-                    }
-                } else {
-        // Save changes
-            if (selectedRow != -1) {
-                // Get the updated data from the text fields
-                String newName = nameField.getText();
-                String newPhoneNumber = phoneNumberField.getText();
-                String newEmail = emailField.getText();
-                String newPassword = passwordField.getText();
-                String newDescription = descriptionField.getText();
-                String startHour = String.valueOf(startHourComboBox.getSelectedItem());
-                String endHour = String.valueOf(endHourComboBox.getSelectedItem());
-                String newOperationHours = startHour+"-"+endHour;
-                String startDay = String.valueOf(startDayComboBox.getSelectedItem());
-                String endDay = String.valueOf(endDayComboBox.getSelectedItem());
-                String newOperationDays = startDay+"-"+endDay; 
-                String newCategory = String.valueOf(categoryComboBox.getSelectedItem());
-                
+        // Prompt admin to go to manage user request page to edit user profile
+        if (!newName.equals("") ||
+                !newPhoneNumber.equals("") ||
+                !newEmail.equals ("") ||
+                !newPassword.equals("") ||
+                !newDescription.equals("") ||
+                !newOperationHours.equals("") ||
+                !newOperationDays.equals("") ||
+                !newCategory.equals("")){
 
-                // Check if changes have been made
-                if (!newName.equals(model.getValueAt(selectedRow, 1)) ||
-                        !newPhoneNumber.equals(model.getValueAt(selectedRow, 2)) ||
-                        !newEmail.equals (model.getValueAt(selectedRow, 3)) ||
-                        !newPassword.equals(model.getValueAt(selectedRow, 4)) ||
-                        !newDescription.equals(model.getValueAt(selectedRow, 5)) ||
-                        !newOperationHours.equals(model.getValueAt(selectedRow, 6)) ||
-                        !newOperationDays.equals(model.getValueAt(selectedRow, 7)) ||
-                        !newCategory.equals(model.getValueAt(selectedRow,8))){
-                        
-                    int vendorID = (int) model.getValueAt(selectedRow, 0);
-                    Vendor selectedVendor = getVendor(vendorID);
-                    selectedVendor.setName(newName);
-                    selectedVendor.setPhoneNumber(newPhoneNumber);
-                    selectedVendor.setEmail(newEmail);
-                    selectedVendor.setPassword(newPassword);
-                    selectedVendor.setDescription(newDescription);
-                    selectedVendor.setOperationHours(newOperationHours);
-                    selectedVendor.setCategory(newCategory);
-                    // Remove the old food item
-                    vendors.removeIf(item -> item.getVendorID() == selectedVendor.getVendorID());
-                    // Add the updated food item
-                    vendors.add(selectedVendor);
-                    // Write the updated list back to the file
-                    writeToFile();
-                    JOptionPane.showMessageDialog(this, "Successfully edited Vendor Details", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    // Refresh the table with updated data
-                    ReadFiles reader = new ReadFiles();
-                    vendors = reader.readVendors();
-                    loadVendors();
-                    nameField.setText("");
-                    phoneNumberField.setText("");
-                    emailField.setText("");
-                    passwordField.setText("");
-                    descriptionField.setText("");
-                  
-                    editMode = false; // Switch back to view mode
-                } else {
-                    // No changes were made
-                    JOptionPane.showMessageDialog(this, "No changes made", "No Changes", JOptionPane.INFORMATION_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Please select a Vendor Details to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+            Vendor selectedVendor = getVendor(getUserRequestVendorID());
+            selectedVendor.setName(newName);
+            selectedVendor.setPhoneNumber(newPhoneNumber);
+            selectedVendor.setEmail(newEmail);
+            selectedVendor.setPassword(newPassword);
+            selectedVendor.setDescription(newDescription);
+            selectedVendor.setOperationHours(newOperationHours);
+            selectedVendor.setCategory(newCategory);
+            createNewVendors();
+            Notification newNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.USERPROFILE, selectedVendor.getVendorID(), Notification.NotifUserType.VENDOR, 0, "Your profile is updated!", LocalDateTime.now());
+            notifications.add(newNotif);
+            writeNotificationToFile();
+            JOptionPane.showMessageDialog(this, "Successfully edited Vendor Details", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Proceed to Manage User Requests page to edit user profile details.", "Error", JOptionPane.INFORMATION_MESSAGE);
+        }        
     }//GEN-LAST:event_editActionPerformed
 
     private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
@@ -538,18 +506,8 @@ public class CRUDVendor extends javax.swing.JFrame {
         
         Vendor item = new Vendor(vendorID, name, phoneNumber, email, password, 0, category, "Bukit Jalil", description, newOperationHours, newOperationDays);
         vendors.add(item);
-        writeToFile();
-        JOptionPane.showMessageDialog(this, "Successfully added Vendor Details", "Success", JOptionPane.INFORMATION_MESSAGE);
-        // Refresh the table with updated data
-        ReadFiles reader = new ReadFiles();
-        vendors = reader.readVendors();
-        loadVendors();
-        nameField.setText("");
-        phoneNumberField.setText("");
-        emailField.setText("");
-        passwordField.setText("");
-        descriptionField.setText("");
-        categoryComboBox.setSelectedIndex(0);
+        JOptionPane.showMessageDialog(this, "Successfully added the new Vendor!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        createNewVendors();
     }//GEN-LAST:event_addActionPerformed
 
     private void startHourComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startHourComboBoxActionPerformed
@@ -558,14 +516,14 @@ public class CRUDVendor extends javax.swing.JFrame {
 
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
         DefaultTableModel model = (DefaultTableModel) vendorTable.getModel();
-        selectedRow = vendorTable.getSelectedRow();
+        int selectedRow = vendorTable.getSelectedRow();
         if (selectedRow != -1) {
             int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to delete Vendor Details?", "Delete Confirmation", JOptionPane.YES_NO_OPTION);        
             if (confirmationResult == JOptionPane.YES_OPTION) {
                 int vendorID = (int) model.getValueAt(selectedRow, 0);
                 Vendor selectedVendor = getVendor(vendorID);
                 vendors.removeIf(item -> item.getVendorID() == selectedVendor.getVendorID());
-                writeToFile();
+                writeVendorToFile();
                 ReadFiles reader = new ReadFiles();
                 vendors = reader.readVendors();
                 loadVendors();
@@ -583,13 +541,13 @@ public class CRUDVendor extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton add;
-    private javax.swing.JComboBox<String> categoryComboBox;
+    public javax.swing.JComboBox<String> categoryComboBox;
     private javax.swing.JButton delete;
-    private javax.swing.JTextField descriptionField;
+    public javax.swing.JTextField descriptionField;
     private javax.swing.JButton edit;
-    private javax.swing.JTextField emailField;
-    private javax.swing.JComboBox<String> endDayComboBox;
-    private javax.swing.JComboBox<String> endHourComboBox;
+    public javax.swing.JTextField emailField;
+    public javax.swing.JComboBox<String> endDayComboBox;
+    public javax.swing.JComboBox<String> endHourComboBox;
     private javax.swing.JButton generatePasswordButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -605,11 +563,11 @@ public class CRUDVendor extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField nameField;
-    private javax.swing.JTextField passwordField;
-    private javax.swing.JTextField phoneNumberField;
-    private javax.swing.JComboBox<String> startDayComboBox;
-    private javax.swing.JComboBox<String> startHourComboBox;
+    public javax.swing.JTextField nameField;
+    public javax.swing.JTextField passwordField;
+    public javax.swing.JTextField phoneNumberField;
+    public javax.swing.JComboBox<String> startDayComboBox;
+    public javax.swing.JComboBox<String> startHourComboBox;
     private javax.swing.JTable vendorTable;
     // End of variables declaration//GEN-END:variables
 

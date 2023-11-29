@@ -184,7 +184,7 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
             TopUpRequests selectedRequest = findRequest(transactionID);
             selectedRequest.updateTransactionStatus(selectedRequest, requests);
             
-            Notification requestNotif = new Notification(newNotifID, Notification.NotifType.TOPUP, transactionID, customerID, Notification.NotifUserType.CUSTOMER);
+            Notification requestNotif = new Notification(newNotifID, Notification.NotifType.TOPUP, customerID, Notification.NotifUserType.CUSTOMER, transactionID, "", LocalDateTime.now());
             try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFile, true))) {
                 pw.println(requestNotif.toString());
             } catch (IOException ex) {

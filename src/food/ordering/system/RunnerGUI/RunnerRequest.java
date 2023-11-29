@@ -35,4 +35,11 @@ public class RunnerRequest extends UserRequest{
     public void setPlateNumber(String plateNumber) {
         this.plateNumber = plateNumber;
     }
+
+    @Override
+    public String toString() {
+        String delimeter = ";";
+        return super.toString() + delimeter + vehicleModel + delimeter + plateNumber;
+    }
+    
 }

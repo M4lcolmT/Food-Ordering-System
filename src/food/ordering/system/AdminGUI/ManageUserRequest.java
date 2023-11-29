@@ -4,14 +4,14 @@
  */
 package food.ordering.system.AdminGUI;
 
+import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.CustomerGUI.CustomerRequest;
-import food.ordering.system.CustomerGUI.Order;
 import food.ordering.system.RunnerGUI.RunnerRequest;
 import food.ordering.system.VendorGUI.VendorRequest;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +29,9 @@ public class ManageUserRequest extends javax.swing.JFrame {
     private List<CustomerRequest> customerRequests = new ArrayList<>();
     private List<VendorRequest> vendorRequests = new ArrayList<>();
     private List<RunnerRequest> runnerRequests = new ArrayList<>();
+    
+    TextFilePaths filePaths = new TextFilePaths();
+    String userRequestsTextFilePath = filePaths.getUserCRUDrequestTextFile();
     
     public ManageUserRequest(Admin admin) {
         initComponents();
@@ -90,6 +93,16 @@ public class ManageUserRequest extends javax.swing.JFrame {
             }
         }
         return null;
+    }
+    
+    private void writeRequests() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(userRequestsTextFilePath))) {
+            for (UserRequest item : allRequests) {
+                writer.println(item.toFormmatedString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -184,7 +197,7 @@ public class ManageUserRequest extends javax.swing.JFrame {
                         .addGap(222, 222, 222)
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(processButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(processButton, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(26, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -259,11 +272,14 @@ public class ManageUserRequest extends javax.swing.JFrame {
                             break;
                         }
                     }
+                    page.userRequestCustomerID = selectedRequest.getUserID();
                     page.setVisible(true);
                     this.dispose();
+                    allRequests.remove(selectedRequest);
+                    writeRequests();
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Please select an order to view.", "View Order", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a customer to edit.", "Manage Customer", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_processButtonActionPerformed
 

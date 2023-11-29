@@ -1,6 +1,2 @@
-1;1;CUSTOMER;UPDATEPROFILE;Fifi;0139008765;nsk@gmail.com;1;12, Jalan Mewah 3/4, Taman Mewah; Kajang
-2;1;RUNNER;CHANGEPASSWORD;Khoo;0133521508;Khoo@gmail.com;k123;Petaling Jaya;VJC1909;Mitshubisi Motorcycle
-3;1;CUSTOMER;CHANGEPASSWORD;Sheng Khai;0139008765;nsk@gmail.com;2;12, Jalan Mewah 3/4, Taman Mewah; Kajang
-4;3;VENDOR;UPDATEPROFILE;Jollibee;0390887654;jollibee@gmail.com;j123;Kajang;Sells good fried chicken;9:00am-9:00pm;Tuesday-Sunday
-5;3;VENDOR;UPDATEPROFILE;Jollibee;0111166098;jollibee@gmail.com;j123;Bukit Jalil;Bukit Jalil;11:00am-9:00pm;Tuesday-Saturday
-6;1;CUSTOMER;UPDATEPROFILE;jonathan;0139008765;nsk@gmail.com;1;11, jalan biru;Cyberjaya
+3;1;VENDOR;UPDATEPROFILE;McDonalds;0128883332;mcd@gmail.com;1;Bukit Jalil;Best Food Eva;9:00am-9:00pm;Tuesday-Sunday
+2;1;RUNNER;UPDATEPROFILE;Khoo;0134569873;khoo@gmail.com;k123;Petaling Jaya;VJC2908;Toyota Motorcycle

@@ -14,23 +14,24 @@ import java.util.List;
  *
  * @author LENOVO
  */
-public class TransactionNotification extends javax.swing.JPanel {
+public class TransactionNotificationPanel extends javax.swing.JPanel {
     private Customer customer;
     private int transactionID;
     private List<TopUpRequests> requests;
     private TopUpRequests request;
-    
-    public TransactionNotification(Customer customer, int transactionID) {
+    private LocalDateTime dateTime;
+
+    public TransactionNotificationPanel(Customer customer, int transactionID, LocalDateTime dateTime) {
         initComponents();
         this.customer = customer;
         this.transactionID = transactionID;
+        this.dateTime = dateTime;
         
         ReadFiles reader = new ReadFiles();
         requests = reader.readTopUpRequests();
         request = findTopUpRequest();
         
         statusLabel.setText(request.getTransactionStatus().name().toLowerCase()+"!");
-        LocalDateTime dateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm");
         String formattedDateTime = dateTime.format(formatter);
         dateTimeLabel.setText(formattedDateTime);

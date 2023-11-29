@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package food.ordering.system.AdminGUI;
 
 /**
@@ -27,7 +23,9 @@ public class UserRequest {
     
     public enum RequestType{
         CHANGEPASSWORD,
-        UPDATEPROFILE
+        UPDATEPROFILE,
+        NEWPROFILE,
+        DELETEPROFILE
     }
     
     public UserRequest(int userRequestID, int userID, UserType userType, RequestType requestType, String name, String phoneNumber, String email, String password, String address) {
@@ -113,6 +111,10 @@ public class UserRequest {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+    
+    public String toFormmatedString() {
+        return toString();
     }
     
     @Override

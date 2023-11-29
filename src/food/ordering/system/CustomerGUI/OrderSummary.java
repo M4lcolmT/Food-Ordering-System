@@ -4,6 +4,7 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.AdminGUI.Notification;
 import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.CustomerGUI.Order.OrderType;
 import food.ordering.system.Location;
@@ -42,6 +43,7 @@ public class OrderSummary extends javax.swing.JFrame {
     private List<FoodItem> orderBasket;
     private List<Runner> runners;
     private List<Task> tasks;
+    private List<Notification> notifications;
     private OrderType newOrderType;
 
     
@@ -50,6 +52,7 @@ public class OrderSummary extends javax.swing.JFrame {
     TextFilePaths path = new TextFilePaths();
     String orderTextFilePath = path.getOrderTextFile();
     String taskTextFilePath = path.getRunnerTasksTextFile();
+    String notificationTextFilePath = path.getNotificationsTextFile();
     
     public OrderSummary(Order order, List<FoodItem> orderBasket) {
         initComponents();
@@ -81,6 +84,7 @@ public class OrderSummary extends javax.swing.JFrame {
         ReadFiles reader = new ReadFiles();
         runners = reader.readRunners();
         tasks = reader.readTasks();
+        notifications = reader.readNotifications();
         availableRunner = checkRunner();
     }
     
@@ -179,6 +183,28 @@ public class OrderSummary extends javax.swing.JFrame {
         return maxID + 1;
     }
     
+    private int checkMaxTaskID() {
+        int maxID = 0;
+        for (Task task : tasks) {
+            if (task.getTaskID() > maxID) {
+                maxID = task.getTaskID();
+            }
+        }
+        // Increment the maximum ID
+        return maxID + 1;
+    }
+    
+    private int checkMaxNotificationID() {
+        int maxID = 0;
+        for (Notification notification : notifications) {
+            if (notification.getNotificationID() > maxID) {
+                maxID = notification.getNotificationID();
+            }
+        }
+        // Increment the maximum ID
+        return maxID + 1;
+    }
+    
     // Create a new order instance
     private void createOrder(OrderType orderType, List<Order> orders, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, Order.OrderStatus status) {
         LocalDateTime originalDateTime = LocalDateTime.now();
@@ -202,16 +228,6 @@ public class OrderSummary extends javax.swing.JFrame {
         }
     }
     
-    private int checkMaxTaskID() {
-        int maxID = 0;
-        for (Task task : tasks) {
-            if (task.getTaskID() > maxID) {
-                maxID = task.getTaskID();
-            }
-        }
-        // Increment the maximum ID
-        return maxID + 1;
-    }
 
     private void placeOrder() {
         Vendor vendor = order.getVendor();
@@ -228,7 +244,7 @@ public class OrderSummary extends javax.swing.JFrame {
         } else {
             createOrder(newOrderType, orderManager.getOrders(), vendor, orderBasket, 
                     calculateTotal(), Order.OrderStatus.PENDING);
-            // Change runner availability to false once an order is assigned to him
+            // Change runner availability to false once an order is assigned to him (Not sure)
             // availableRunner.updateRunnerStatus(availableRunner, runners, true);
             // New Runner task
             Task newTask = new Task(checkMaxTaskID(), availableRunner.getRunnerID(), order.getOrderID(), Task.TaskStatus.PENDING, deliveryFee);
@@ -553,6 +569,19 @@ public class OrderSummary extends javax.swing.JFrame {
         if (checkRunner() != null) {
             newOrderType = OrderType.DELIVERY;
             placeOrder();
+            //Send notif to vendor
+            Notification vendorNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", LocalDateTime.now());
+            //Send notif to runner
+            Notification runnerNotif = new Notification(checkMaxNotificationID()+1, Notification.NotifType.ORDER, availableRunner.getRunnerID(), Notification.NotifUserType.RUNNER, order.getOrderID(), "New order!", LocalDateTime.now());
+            notifications.add(vendorNotif);
+            notifications.add(runnerNotif);
+            try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFilePath))) {
+                for (Notification i : notifications) {
+                    pw.println(i.toString());                    
+                }
+            } catch (IOException ex) {
+                System.out.println("Failed to save!");
+            }
         } else {
             int result = JOptionPane.showOptionDialog(this, "There is no available runners. Would you like to dine in or take away instead?", "No runners", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
             switch (result) {
@@ -560,13 +589,11 @@ public class OrderSummary extends javax.swing.JFrame {
                     // User clicked on "Take Away"
                     newOrderType = OrderType.TAKEAWAY;
                     placeOrder();
-                    System.out.println("Take Away.");
                     break;
                 case JOptionPane.NO_OPTION:
                     // User clicked on "Dine In"
                     newOrderType = OrderType.DINEIN;
                     placeOrder();
-                    System.out.println("Dine In.");
                     break;
                 case JOptionPane.CLOSED_OPTION:
                     // User click the x button to close the dialog
@@ -577,7 +604,6 @@ public class OrderSummary extends javax.swing.JFrame {
                     CustomerMainMenu page = new CustomerMainMenu(customer);
                     page.setVisible(true);
                     this.dispose();
-                    System.out.println("Order Cancelled.");
                     break;
             }
         }

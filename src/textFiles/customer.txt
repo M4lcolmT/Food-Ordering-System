@@ -7,5 +7,5 @@
 10;Daniel Harris;0198765434;dan@gmail.com;1;14, Jalan Hutan Hijau, Taman Hijau; Hulu Langat
 11;Sapphire;9085601708;angelsapphire@gmail.com;saphan1728;sky blue gate; Kajang
 8;James Wilson;0145678901;james@gmail.com;1;32, Jalan Usahawan U1/8, Subang Perdana;Cyberjaya
-1;Sheng Khai;0139008765;1@gmail.com;1;11, jalan biru;Cyberjaya
 3;Alice Smith;0198765432;alice@gmail.com;1;7, Jalan Masjid, Taman Sri Petaling;Puchong
+1;weewee;0139008765;nsk@gmail.com;1;12, Jalan Mewah 3/4, Taman Mewah;Kajang

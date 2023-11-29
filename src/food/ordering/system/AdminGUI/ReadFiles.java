@@ -256,28 +256,6 @@ public class ReadFiles {
         return new RunnerRequest(requestID, userID, userType, requestType, name, phoneNumber, email, password, address, plateNumber, model);
     }
     
-    // Notification ID list
-    public List<Integer> readNotificationID() {
-        List<Integer> notificationIDs = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(notificationFilePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(";");
-                if (parts.length > 0) { 
-                    int notifID = Integer.parseInt(parts[0]);
-                    notificationIDs.add(notifID);
-                } else {
-                    System.out.println("Skipping invalid line: " + line);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return notificationIDs;
-    }
-    
     // Read top up requests
     private LocalDateTime parseDateTime(String data) {
         LocalDateTime formattedDateTime = LocalDateTime.parse(data, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"));
@@ -324,14 +302,16 @@ public class ReadFiles {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 5) {
+                if (parts.length == 7) {
                     int notificationID = Integer.parseInt(parts[0]);
                     NotifType notifType = NotifType.valueOf(parts[1]);
-                    int typeID = Integer.parseInt(parts[2]);
-                    int userID = Integer.parseInt(parts[3]);
-                    NotifUserType userType = NotifUserType.valueOf(parts[4]);
+                    int userID = Integer.parseInt(parts[2]);
+                    NotifUserType userType = NotifUserType.valueOf(parts[3]);
+                    int transactionID = Integer.parseInt(parts[4]);
+                    String updateDesc = parts[5];
+                    LocalDateTime dateTime = parseDateTime(parts[6]);
                     
-                    Notification newNotification = new Notification(notificationID, notifType, typeID, userID, userType);
+                    Notification newNotification = new Notification(notificationID, notifType, userID, userType, transactionID, updateDesc, dateTime);
                     notifications.add(newNotification);
                 } else {
                     System.out.println("Skipping a line with an incorrect number of parts");

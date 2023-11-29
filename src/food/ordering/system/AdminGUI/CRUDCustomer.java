@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -24,9 +25,8 @@ import textFiles.TextFilePaths;
 public class CRUDCustomer extends javax.swing.JFrame {
     private Admin admin;
     private List<Customer> customers;
-    private int selectedRow = -1; // Instance variable to store the selected row
-    private boolean editMode = false;
-    private List<Integer> notificationIDs;
+    public int userRequestCustomerID = 0;
+    private List<Notification> notifications;
     
     private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
     private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -34,16 +34,16 @@ public class CRUDCustomer extends javax.swing.JFrame {
     private static final String SPECIAL_CHARACTERS = "!@#$%^&*()-_+=<>?";
     
     TextFilePaths path = new TextFilePaths();
-    String customerTextFile = path.getCustomerTextFile();
-    
+    String customerTextFile = path.getCustomerTextFile();    
+    String notificationTextFile = path.getNotificationsTextFile();
+
     public CRUDCustomer(Admin admin) {
         initComponents();
         this.admin = admin;
         
-        
         ReadFiles reader = new ReadFiles();
         customers = reader.readCustomers();
-        notificationIDs = reader.readNotificationID();
+        notifications = reader.readNotifications();
         loadCustomers();
     }
 
@@ -75,7 +75,8 @@ public class CRUDCustomer extends javax.swing.JFrame {
         return null;
     }
     
-     public int checkMaxID() {
+    // Check max id in customer text file to create new customers
+    public int checkMaxID() {
         int maxID = 0;
         for (Customer item : customers) {
                 if (item.getCustomerID() > maxID) {
@@ -87,15 +88,50 @@ public class CRUDCustomer extends javax.swing.JFrame {
         return maxID + 1;
     }
     
-    private void writeToFile() {
+    public int checkMaxNotificationID() {
+        int maxID = 0;
+        for (Notification i : notifications) {
+                if (i.getNotificationID() > maxID) {
+                    maxID = i.getNotificationID();
+                }
+            }
+        // Increment the maximum ID
+        return maxID + 1;
+    }
+    
+    private void writeCustomerToFile() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(customerTextFile))) {
-            // Write each food item to the file
             for (Customer item : customers) {
                 writer.println(item.toString());
             }
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
         }
+    }
+    
+    private void writeNotificationToFile() {        
+        try (PrintWriter writer = new PrintWriter(new FileWriter(notificationTextFile))) {
+            for (Notification item : notifications) {
+                writer.println(item.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
+        }
+    }
+    
+    // Write customer and refresh customer table
+    private void createNewCustomers() {
+        writeCustomerToFile();
+        // Refresh the table with updated data
+        ReadFiles reader = new ReadFiles();
+        customers = reader.readCustomers();
+        loadCustomers();
+        nameField.setText("");
+        phoneNumberField.setText("");
+        emailField.setText("");
+        passwordField.setText("");
+        addressField.setText("");
+        cityComboBox.setSelectedIndex(0);
     }
     
     private boolean isEmpty(String str) {
@@ -116,6 +152,20 @@ public class CRUDCustomer extends javax.swing.JFrame {
         }
 
         return password.toString();
+    }
+    
+    public int getUserRequestCustomerID() {
+        DefaultTableModel model = (DefaultTableModel) customerTable.getModel();
+        int rowCount = model.getRowCount();
+
+        for (int i = 0; i < rowCount; i++) {
+            int customerId = (int) model.getValueAt(i, 0);
+            if (customerId == userRequestCustomerID) {
+                return customerId; // Return the customer ID if ID matches
+            }
+        }
+
+        return -1; // Return -1 if no matching ID is found
     }
     
     @SuppressWarnings("unchecked")
@@ -276,10 +326,10 @@ public class CRUDCustomer extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(addButton)
-                        .addGap(51, 51, 51)
-                        .addComponent(editButton)
-                        .addGap(59, 59, 59)
-                        .addComponent(deleteButton))
+                        .addGap(18, 18, 18)
+                        .addComponent(deleteButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(editButton))
                     .addComponent(jLabel1)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE))
@@ -317,92 +367,35 @@ public class CRUDCustomer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        // Once user is edited, sent notification to customer
-        DefaultTableModel model = (DefaultTableModel) customerTable.getModel();
-        if (!editMode) {
-        // Enter edit mode
-            selectedRow = customerTable.getSelectedRow();
-            if (selectedRow != -1) {
-                // Get the current data from the selected row
-                String name = (String) model.getValueAt(selectedRow, 1);
-                String phoneNumber = (String) model.getValueAt(selectedRow, 2);
-                String email = (String) model.getValueAt(selectedRow, 3);
-                String password = (String) model.getValueAt(selectedRow, 4);
-                String address = (String) model.getValueAt(selectedRow, 5);
-                String city = (String) model.getValueAt(selectedRow, 6);
-                // Set the current data in the text fields
-                nameField.setText(name);
-                phoneNumberField.setText(phoneNumber);
-                emailField.setText(email);
-                passwordField.setText(password);
-                addressField.setText(address);
-                String customerCity = city.trim().toLowerCase();
-                for (int i = 0; i < cityComboBox.getItemCount(); i++) {
-                    if (customerCity.equals(cityComboBox.getItemAt(i).trim().toLowerCase())) {
-                        cityComboBox.setSelectedIndex(i);
-                        break;
-                    }
-                }
-                editMode = true; // Switch to edit mode
-            } else {
-                JOptionPane.showMessageDialog(this, "Please select a customer to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-        // Save changes
-            if (selectedRow != -1) {
-                // Get the updated data from the text fields
-                String newName = nameField.getText();
-                String newPhoneNumber = phoneNumberField.getText();
-                String newEmail = emailField.getText();
-                String newPassword = passwordField.getText();
-                String newAddress = addressField.getText();
-                String newCity = String.valueOf(cityComboBox.getSelectedItem());
-
-                // Check if changes have been made
-                if (!newName.equals(model.getValueAt(selectedRow, 1)) ||
-                        !newPhoneNumber.equals(model.getValueAt(selectedRow, 2)) ||
-                        !newEmail.equals (model.getValueAt(selectedRow, 3)) ||
-                        !newPassword.equals(model.getValueAt(selectedRow, 4)) ||
-                        !newAddress.equals(model.getValueAt(selectedRow, 5)) ||
-                        !newCity.equals(model.getValueAt(selectedRow, 6))) {
-                        
-                    
-                    int customerID = (int) model.getValueAt(selectedRow, 0);
-                    Customer selectedVendor = getCustomer(customerID);
-                    selectedVendor.setName(newName);
-                    selectedVendor.setPhoneNumber(newPhoneNumber);
-                    selectedVendor.setEmail(newEmail);
-                    selectedVendor.setPassword(newPassword);
-                    selectedVendor.setStreetAddress(newAddress);
-                    selectedVendor.setCity(newCity);
-                    // Remove the old food item
-                    customers.removeIf(item -> item.getCustomerID() == selectedVendor.getCustomerID());
-                    // Add the updated food item
-                    customers.add(selectedVendor);
-                    // Write the updated list back to the file
-                    writeToFile();
-                    JOptionPane.showMessageDialog(this, "Successfully edited Customer Details", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    // Refresh the table with updated data
-                    ReadFiles reader = new ReadFiles();
-                    customers = reader.readCustomers();
-                    loadCustomers();
-                    nameField.setText("");
-                    phoneNumberField.setText("");
-                    emailField.setText("");
-                    passwordField.setText("");
-                    addressField.setText("");
-                    cityComboBox.setSelectedIndex(0);
-                    editMode = false; // Switch back to view mode
-                } else {
-                    // No changes were made
-                    JOptionPane.showMessageDialog(this, "No changes made", "No Changes", JOptionPane.INFORMATION_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Please select a Customer Details to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-                             
+        // Get the updated data from the text fields
+        String newName = nameField.getText();
+        String newPhoneNumber = phoneNumberField.getText();
+        String newEmail = emailField.getText();
+        String newPassword = passwordField.getText();
+        String newAddress = addressField.getText();
+        String newCity = String.valueOf(cityComboBox.getSelectedItem());
         
+        if (!newName.equals("") ||
+                        !newPhoneNumber.equals("") ||
+                        !newEmail.equals ("") ||
+                        !newPassword.equals("") ||
+                        !newAddress.equals("") ||
+                        !newCity.equals("Select City")) {
+            Customer selectedCustomer = getCustomer(getUserRequestCustomerID());
+            selectedCustomer.setName(newName);
+            selectedCustomer.setPhoneNumber(newPhoneNumber);
+            selectedCustomer.setEmail(newEmail);
+            selectedCustomer.setPassword(newPassword);
+            selectedCustomer.setStreetAddress(newAddress);
+            selectedCustomer.setCity(newCity);
+            createNewCustomers();
+            Notification newNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.USERPROFILE, selectedCustomer.getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "Your profile is updated!", LocalDateTime.now());
+            notifications.add(newNotif);
+            writeNotificationToFile();
+            JOptionPane.showMessageDialog(this, "Successfully edited Customer Details", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Proceed to Manage User Requests page to edit user profile details.", "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
@@ -422,30 +415,20 @@ public class CRUDCustomer extends javax.swing.JFrame {
 
         Customer item = new Customer(customerID, name, phoneNumber, email, password, address, city);
         customers.add(item);
-        writeToFile();
-        JOptionPane.showMessageDialog(this, "Successfully added Customer Details", "Success", JOptionPane.INFORMATION_MESSAGE);
-        // Refresh the table with updated data
-        ReadFiles reader = new ReadFiles();
-        customers = reader.readCustomers();
-        loadCustomers();
-        nameField.setText("");
-        phoneNumberField.setText("");
-        emailField.setText("");
-        passwordField.setText("");
-        addressField.setText("");
-        cityComboBox.setSelectedIndex(0);
+        JOptionPane.showMessageDialog(this, "Successfully added the new Customer!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        createNewCustomers();
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         DefaultTableModel model = (DefaultTableModel) customerTable.getModel();
-        selectedRow = customerTable.getSelectedRow();
+        int selectedRow = customerTable.getSelectedRow();
         if (selectedRow != -1) {
             int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to delete Customer Details?", "Delete Confirmation", JOptionPane.YES_NO_OPTION);        
             if (confirmationResult == JOptionPane.YES_OPTION) {
                 int customerID = (int) model.getValueAt(selectedRow, 0);
-                Customer selectedVendor = getCustomer(customerID);
-                customers.removeIf(item -> item.getCustomerID() == selectedVendor.getCustomerID());
-                writeToFile();
+                Customer selectedCustomer = getCustomer(customerID);
+                customers.removeIf(item -> item.getCustomerID() == selectedCustomer.getCustomerID());
+                writeCustomerToFile();
                 ReadFiles reader = new ReadFiles();
                 customers = reader.readCustomers();
                 loadCustomers();

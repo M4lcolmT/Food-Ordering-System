@@ -81,6 +81,11 @@ public class VendorMainMenu extends javax.swing.JFrame {
         });
 
         notificationsButton.setText("Notifications");
+        notificationsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                notificationsButtonActionPerformed(evt);
+            }
+        });
 
         profileButton.setText("Profile");
         profileButton.addActionListener(new java.awt.event.ActionListener() {
@@ -209,6 +214,12 @@ public class VendorMainMenu extends javax.swing.JFrame {
             allOrders.clear();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void notificationsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notificationsButtonActionPerformed
+        VendorNotification page = new VendorNotification(vendor);
+        page.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_notificationsButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton foodMenuButton;

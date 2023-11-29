@@ -6,13 +6,14 @@ package food.ordering.system.VendorGUI;
 
 import food.ordering.system.AdminGUI.Notification;
 import food.ordering.system.AdminGUI.ReadFiles;
-import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.CustomerGUI.Order;
 import food.ordering.system.CustomerGUI.Order.OrderStatus;
 import food.ordering.system.CustomerGUI.OrderManager;
+import food.ordering.system.RunnerGUI.Runner;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -31,8 +32,9 @@ public class ManageOrder extends javax.swing.JFrame {
     private Vendor vendor;
     private Order specificOrder;
     private int orderID;
-    private List<Order> allOrders;
     private OrderStatus orderStatus;
+    private List<Order> allOrders;
+    private List<Runner> runners;
     private List<Notification> notifications;
     
     TextFilePaths path = new TextFilePaths();
@@ -48,16 +50,11 @@ public class ManageOrder extends javax.swing.JFrame {
         allOrders = manager.getOrders();
         specificOrder = findOrder();
         loadOrder();
-        readyButton.setVisible(false);
         
         ReadFiles reader = new ReadFiles();
         notifications = reader.readNotifications();
+        runners = reader.readRunners();
     }
-    
-    // Check if order is ready for delivery 
-    private void readyOrder() {
-        
-    }    
     
     private Order findOrder() {
         for (Order item : allOrders) {
@@ -114,6 +111,17 @@ public class ManageOrder extends javax.swing.JFrame {
         }
         // Increment the maximum ID
         return maxID + 1;
+    }
+    
+    //Check runner avaliability
+    private Runner checkRunner() {
+        for (Runner item : runners) {
+            if (item.isRunnerAvailability() == true) {
+                System.out.println("id:"+item.getRunnerID());
+                return item;
+            }
+        }
+        return null;
     }
     
     @SuppressWarnings("unchecked")
@@ -266,12 +274,32 @@ public class ManageOrder extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
+        Order selectedOrder = findOrder();
+       
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to accept order?", "Accept Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
             JOptionPane.showMessageDialog(this, "Order is accepted, proceed to prepare.", "Accept Order", JOptionPane.INFORMATION_MESSAGE);
             specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.CONFIRMED);
             //Send notif to customer
+            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "Your order is preparing", LocalDateTime.now());
+            try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFilePath, true))) {
+                pw.println(newNotif.toString());
+            } catch (IOException ex) {
+                System.out.println("Failed to save!");
+            }
+            //Save updated order status
+            try (PrintWriter writer = new PrintWriter(new FileWriter(orderTextFilePath))) {
+                for (Order item : allOrders) {
+                    writer.println(item.toString());
+                }
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
+            }
+            //Set button visibility
+            acceptButton.setVisible(false);
+            rejectButton.setVisible(false);
+            readyButton.setVisible(true);
         }
     }//GEN-LAST:event_acceptButtonActionPerformed
 
@@ -284,14 +312,14 @@ public class ManageOrder extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Order is rejected.", "Reject Order", JOptionPane.INFORMATION_MESSAGE);
             specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.CANCELLED);
             //Sent notif to customer
-            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, orderID, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER);
+            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "Your order is cancelled", LocalDateTime.now());
             try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFilePath, true))) {
                 pw.println(newNotif.toString());
             } catch (IOException ex) {
                 System.out.println("Failed to save!");
             }
+            //Save updated order status
             try (PrintWriter writer = new PrintWriter(new FileWriter(orderTextFilePath))) {
-                // Write each order to the file
                 for (Order item : allOrders) {
                     writer.println(item.toString());
                 }
@@ -305,13 +333,23 @@ public class ManageOrder extends javax.swing.JFrame {
     }//GEN-LAST:event_rejectButtonActionPerformed
 
     private void readyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readyButtonActionPerformed
+        Order selectedOrder = findOrder();
+
         JOptionPane.showMessageDialog(this, "Order is ready.", "Finisihed Order", JOptionPane.INFORMATION_MESSAGE);
         specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.READY_FOR_PICKUP);
         //Sent notif to customer
+        Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "picked up!", LocalDateTime.now());
+        try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFilePath, true))) {
+            pw.println(newNotif.toString());
+        } catch (IOException ex) {
+            System.out.println("Failed to save!");
+        }
+        // Check if runner accepted the order or not. If accepted then changed the order status to OUT_FOR_DELIVERY, otherwise search for another available runner
+        
     }//GEN-LAST:event_readyButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton acceptButton;
+    public javax.swing.JButton acceptButton;
     public javax.swing.JLabel dateLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
@@ -320,8 +358,8 @@ public class ManageOrder extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     public javax.swing.JLabel orderIDLabel;
     private javax.swing.JTable orderTable;
-    private javax.swing.JButton readyButton;
-    private javax.swing.JButton rejectButton;
+    public javax.swing.JButton readyButton;
+    public javax.swing.JButton rejectButton;
     public javax.swing.JLabel timeLabel;
     // End of variables declaration//GEN-END:variables
 }

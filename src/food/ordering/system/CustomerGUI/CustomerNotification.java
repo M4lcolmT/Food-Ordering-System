@@ -5,21 +5,19 @@
 package food.ordering.system.CustomerGUI;
 
 import food.ordering.system.AdminGUI.Notification;
-import food.ordering.system.AdminGUI.OrderNotification;
+import food.ordering.system.AdminGUI.OrderNotificationPanel;
 import food.ordering.system.AdminGUI.ReadFiles;
-import food.ordering.system.AdminGUI.UserProfileNotification;
+import food.ordering.system.AdminGUI.UserProfileNotificationPanel;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import textFiles.TextFilePaths;
 
-/**
- *
- * @author jiasi
- */
+
 public class CustomerNotification extends javax.swing.JFrame {
     private Customer customer;
     private List<Notification> allNotifications;
@@ -53,17 +51,19 @@ public class CustomerNotification extends javax.swing.JFrame {
         innerScrollPanel.removeAll();
         for (Notification item : custNotifications) {
             String notifType = item.getNotifType().name();
+            String updateDesc = item.getUpdateDescription();
+            LocalDateTime dateTime = item.getDateTime();
             switch(notifType) {
                 case "ORDER":
-                    OrderNotification orderPanel = new OrderNotification(item.getTypeID());
+                    OrderNotificationPanel orderPanel = new OrderNotificationPanel(item.getTransactionID(), updateDesc, dateTime);
                     innerScrollPanel.add(orderPanel);
                     break;
                 case "USERPROFILE":
-                    UserProfileNotification userProfilePanel = new UserProfileNotification(item.getTypeID());
+                    UserProfileNotificationPanel userProfilePanel = new UserProfileNotificationPanel(updateDesc, dateTime);
                     innerScrollPanel.add(userProfilePanel);
                     break;
                 case "TOPUP":
-                    TransactionNotification transactionPanel = new TransactionNotification(customer, item.getTypeID());
+                    TransactionNotificationPanel transactionPanel = new TransactionNotificationPanel(customer, item.getTransactionID(), dateTime);
                     innerScrollPanel.add(transactionPanel);
                     break;
                 default:

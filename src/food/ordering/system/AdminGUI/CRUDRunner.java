@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -24,10 +25,9 @@ import textFiles.TextFilePaths;
 public class CRUDRunner extends javax.swing.JFrame {
     private Admin admin;
     List<Runner> runners;
-    private int selectedRow = -1; // Instance variable to store the selected row
-    private boolean editMode = false;
-    private List<Integer> notificationIDs;
-    
+    private int userRequestRunnerID = 0;
+    private List<Notification> notifications;
+
     private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
     private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String DIGITS = "0123456789";
@@ -35,14 +35,15 @@ public class CRUDRunner extends javax.swing.JFrame {
     
     TextFilePaths path = new TextFilePaths();
     String runnerTextFile = path.getRunnerTextFile();
-    
+    String notificationTextFile = path.getNotificationsTextFile();
+
     public CRUDRunner(Admin admin) {
         initComponents();
         this.admin = admin;
         
         ReadFiles reader = new ReadFiles();
         runners = reader.readRunners();
-        notificationIDs = reader.readNotificationID();
+        notifications = reader.readNotifications();
         loadRunners();
     }
 
@@ -87,15 +88,51 @@ public class CRUDRunner extends javax.swing.JFrame {
         return maxID + 1;
     }
     
-    private void writeToFile() {
+    public int checkMaxNotificationID() {
+        int maxID = 0;
+        for (Notification i : notifications) {
+                if (i.getNotificationID() > maxID) {
+                    maxID = i.getNotificationID();
+                }
+            }
+        // Increment the maximum ID
+        return maxID + 1;
+    }
+    
+    private void writeNotificationToFile() {        
+        try (PrintWriter writer = new PrintWriter(new FileWriter(notificationTextFile))) {
+            for (Notification item : notifications) {
+                writer.println(item.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
+        }
+    }
+    
+    private void writeRunnerToFile() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(runnerTextFile))) {
-            // Write each food item to the file
             for (Runner foodItem : runners) {
                 writer.println(foodItem.toString());
             }
         } catch (IOException e) {
             e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
         }
+    }
+    
+    // Write runner, prompt message, refresh runner table
+    private void createNewRunners() {
+        writeRunnerToFile();
+        // Refresh the table with updated data
+        ReadFiles reader = new ReadFiles();
+        runners = reader.readRunners();
+        loadRunners();
+        nameField.setText("");
+        phoneNumberField.setText("");
+        emailField.setText("");
+        passwordField.setText("");
+        cityComboBox.setSelectedIndex(0);
+        vehiclePlateField.setText("");
+        vehicleModelField.setText("");
     }
     
     private boolean isEmpty(String str) {
@@ -116,6 +153,19 @@ public class CRUDRunner extends javax.swing.JFrame {
         }
 
         return password.toString();
+    }
+    
+    public int getUserRequestRunnerID() {
+        DefaultTableModel model = (DefaultTableModel) runnerTable.getModel();
+        int rowCount = model.getRowCount();
+
+        for (int i = 0; i < rowCount; i++) {
+            int runnerId = (int) model.getValueAt(i, 0);
+            if (runnerId == userRequestRunnerID) {
+                return runnerId; // Return the customer ID if ID matches
+            }
+        }
+        return -1; // Return -1 if no matching ID is found
     }
     
     @SuppressWarnings("unchecked")
@@ -341,124 +391,56 @@ public class CRUDRunner extends javax.swing.JFrame {
         
         Runner item = new Runner(runnerID, true, name, phoneNumber, email, password, city, vehicleNum, vehicleModel);
         runners.add(item);
-        writeToFile();
-        JOptionPane.showMessageDialog(this, "Successfully added Runner Details", "Success", JOptionPane.INFORMATION_MESSAGE);
-        // Refresh the table with updated data
-        ReadFiles reader = new ReadFiles();
-        runners = reader.readRunners();
-        loadRunners();
-        nameField.setText("");
-        phoneNumberField.setText("");
-        emailField.setText("");
-        passwordField.setText("");
-        cityComboBox.setSelectedIndex(0);
-        vehiclePlateField.setText("");
-        vehicleModelField.setText("");
+        JOptionPane.showMessageDialog(this, "Successfully added the new Runner!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        createNewRunners();
     }//GEN-LAST:event_addActionPerformed
 
     private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
-        DefaultTableModel model = (DefaultTableModel) runnerTable.getModel();
-        if (!editMode) {
-        // Enter edit mode
-            selectedRow = runnerTable.getSelectedRow();
-            if (selectedRow != -1) {
-                // Get the current data from the selected row
-                String name = (String) model.getValueAt(selectedRow, 1);
-                String phoneNumber = (String) model.getValueAt(selectedRow, 2);
-                String email = (String) model.getValueAt(selectedRow, 3);
-                String password = (String) model.getValueAt(selectedRow, 4);
-                String city = (String) model.getValueAt(selectedRow, 5);
-                String vehicleNum = (String) model.getValueAt(selectedRow, 6);
-                String vehicleModel = (String) model.getValueAt(selectedRow, 7);
-                // Set the current data in the text fields
-                nameField.setText(name);
-                phoneNumberField.setText(phoneNumber);
-                emailField.setText(email);
-                passwordField.setText(password);
-                String customerCity = city.trim().toLowerCase();
-                for (int i = 0; i < cityComboBox.getItemCount(); i++) {
-                    if (customerCity.equals(cityComboBox.getItemAt(i).trim().toLowerCase())) {
-                        cityComboBox.setSelectedIndex(i);
-                        break;
-                    }
-                }
-                vehiclePlateField.setText(vehicleNum);
-                vehicleModelField.setText(vehicleModel);
+        // Get the updated data from the text fields
+        String newName = nameField.getText();
+        String newPhoneNumber = phoneNumberField.getText();
+        String newEmail = emailField.getText();
+        String newPassword = passwordField.getText();
+        String newCity = String.valueOf(cityComboBox.getSelectedItem());
+        String newVehiclePlate = vehiclePlateField.getText();
+        String newVehicleModel = vehicleModelField.getText();
 
-                editMode = true; // Switch to edit mode
-            } else {
-                JOptionPane.showMessageDialog(this, "Please select a Runner Details to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
-            }
+        // Prompt admin to go to manage user request page to edit user profile
+        if (!newName.equals("") ||
+                !newPhoneNumber.equals("") ||
+                !newEmail.equals ("") ||
+                !newPassword.equals("") ||
+                !newCity.equals("") ||
+                !newVehiclePlate.equals("") ||
+                !newVehicleModel.equals("")) {
+            Runner selectedRunner = getRunner(getUserRequestRunnerID());
+            selectedRunner.setName(newName);
+            selectedRunner.setPhoneNumber(newPhoneNumber);
+            selectedRunner.setEmail(newEmail);
+            selectedRunner.setPassword(newPassword);
+            selectedRunner.setCity(newCity);
+            selectedRunner.setPlateNumber(newVehiclePlate);
+            selectedRunner.setVehicleModel(newVehicleModel);
+            createNewRunners();
+            Notification newNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.USERPROFILE, selectedRunner.getRunnerID(), Notification.NotifUserType.CUSTOMER, 0, "Your profile is updated!", LocalDateTime.now());
+            notifications.add(newNotif);
+            writeNotificationToFile();
+            JOptionPane.showMessageDialog(this, "Successfully edited Runner Details", "Success", JOptionPane.INFORMATION_MESSAGE);
         } else {
-        // Save changes
-            if (selectedRow != -1) {
-                // Get the updated data from the text fields
-                String newName = nameField.getText();
-                String newPhoneNumber = phoneNumberField.getText();
-                String newEmail = emailField.getText();
-                String newPassword = passwordField.getText();
-                String newCity = String.valueOf(cityComboBox.getSelectedItem());
-                String newVehiclePlate = vehiclePlateField.getText();
-                String newVehicleModel = vehicleModelField.getText();
-
-                // Check if changes have been made
-                if (!newName.equals(model.getValueAt(selectedRow, 1)) ||
-                        !newPhoneNumber.equals(model.getValueAt(selectedRow, 2)) ||
-                        !newEmail.equals (model.getValueAt(selectedRow, 3)) ||
-                        !newPassword.equals(model.getValueAt(selectedRow, 4)) ||
-                        !newCity.equals(model.getValueAt(selectedRow, 5)) ||
-                        !newVehiclePlate.equals(model.getValueAt(selectedRow, 6)) ||
-                        !newVehicleModel.equals(model.getValueAt(selectedRow, 6))) {
-                        
-                    
-                    int runnerID = (int) model.getValueAt(selectedRow, 0);
-                    Runner selectedRunner = getRunner(runnerID);
-                    selectedRunner.setName(newName);
-                    selectedRunner.setPhoneNumber(newPhoneNumber);
-                    selectedRunner.setEmail(newEmail);
-                    selectedRunner.setPassword(newPassword);
-                    selectedRunner.setCity(newCity);
-                    selectedRunner.setPlateNumber(newVehiclePlate);
-                    selectedRunner.setVehicleModel(newVehicleModel);
-                    // Remove the old food item
-                    runners.removeIf(item -> item.getRunnerID() == selectedRunner.getRunnerID());
-                    // Add the updated food item
-                    runners.add(selectedRunner);
-                    // Write the updated list back to the file
-                    writeToFile();
-                    JOptionPane.showMessageDialog(this, "Successfully edited Runner Details", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    // Refresh the table with updated data
-                    ReadFiles reader = new ReadFiles();
-                    runners = reader.readRunners();
-                    loadRunners();
-                    nameField.setText("");
-                    phoneNumberField.setText("");
-                    emailField.setText("");
-                    passwordField.setText("");
-                    cityComboBox.setSelectedIndex(0);
-                    vehiclePlateField.setText("");
-                    vehicleModelField.setText("");
-                    editMode = false; // Switch back to view mode
-                } else {
-                    // No changes were made
-                    JOptionPane.showMessageDialog(this, "No changes made", "No Changes", JOptionPane.INFORMATION_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Please select a Customer Details to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
-            }
+            JOptionPane.showMessageDialog(this, "Proceed to Manage User Requests page to edit user profile details.", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_editActionPerformed
 
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
         DefaultTableModel model = (DefaultTableModel) runnerTable.getModel();
-        selectedRow = runnerTable.getSelectedRow();
+        int selectedRow = runnerTable.getSelectedRow();
         if (selectedRow != -1) {
             int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to delete Runner Details?", "Delete Confirmation", JOptionPane.YES_NO_OPTION);        
             if (confirmationResult == JOptionPane.YES_OPTION) {
                 int runnerID = (int) model.getValueAt(selectedRow, 0);
                 Runner selectedRunner = getRunner(runnerID);
                 runners.removeIf(item -> item.getRunnerID() == selectedRunner.getRunnerID());
-                writeToFile();
+                writeRunnerToFile();
                 ReadFiles reader = new ReadFiles();
                 runners = reader.readRunners();
                 loadRunners();

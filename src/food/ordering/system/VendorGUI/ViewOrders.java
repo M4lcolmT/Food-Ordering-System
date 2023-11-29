@@ -5,7 +5,6 @@
 package food.ordering.system.VendorGUI;
 
 import food.ordering.system.CustomerGUI.Order;
-import food.ordering.system.CustomerGUI.Order.OrderStatus;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 public class ViewOrders extends javax.swing.JFrame {
     private Vendor vendor;
     private List<Order> orders;
+    private List<Order> filterOrders;
     private List<Order> deliveries = new ArrayList<>();
     private List<Order> takeAways = new ArrayList<>();
     private List<Order> dineIns = new ArrayList<>();
@@ -31,8 +31,22 @@ public class ViewOrders extends javax.swing.JFrame {
         this.vendor = vendor;
         this.orders = orders;
         
+        filterOrders = removeCancelledOrders();
         filterOrders();
         updateTable();
+    }
+    
+    private List<Order> removeCancelledOrders() {
+        List<Order> filtOrders = new ArrayList<>();
+        
+        for (Order item : orders) {
+            if (!item.getStatus().name().equals("CANCELLED")) {
+                filtOrders.add(item);
+            } else {
+                System.out.println("Cancelled item!");
+            }
+        }
+        return filtOrders;
     }
     
     private void filterOrders() {
@@ -41,34 +55,24 @@ public class ViewOrders extends javax.swing.JFrame {
         takeAways.clear();
         dineIns.clear();
 
-        for (Order item : orders) {
-            // Debug print statements
-            System.out.println("Order Status: " + item.getStatus());
-            System.out.println("Order Type: " + item.getOrderType());
-
-            // Check if the order is cancelled
-            if (!item.getStatus().name().equals("CANCELLED")) {
-                switch (item.getOrderType()) {
-                    case DELIVERY:
-                        deliveries.add(item);
-                        break;
-                    case TAKEAWAY:
-                        takeAways.add(item);
-                        break;
-                    case DINEIN:
-                        dineIns.add(item);
-                        break;
-                    default:
-                        System.out.println("Invalid order type: " + item.getOrderType());
-                        break;
-                }
+        for (Order item : filterOrders) {
+            switch (item.getOrderType()) {
+                case DELIVERY:
+                    deliveries.add(item);
+                    break;
+                case TAKEAWAY:
+                    takeAways.add(item);
+                    break;
+                case DINEIN:
+                    dineIns.add(item);
+                    break;
+                default:
+                    System.out.println("Invalid order type: " + item.getOrderType());
+                    break;
             }
         }
     }
 
-
-
-    
     private void updateTable() {
         DefaultTableModel model = (DefaultTableModel) orderTable.getModel();
         model.setRowCount(0);
@@ -78,7 +82,7 @@ public class ViewOrders extends javax.swing.JFrame {
         List<Order> filteredItems;
 
         if (noCheckBoxSelected) {
-            filteredItems = orders;
+            filteredItems = filterOrders;
         } else {
             filteredItems = new ArrayList<>();
 
@@ -259,12 +263,28 @@ public class ViewOrders extends javax.swing.JFrame {
             int orderID = (int) model.getValueAt(selectedRow, 0);
             String time = (String) model.getValueAt(selectedRow, 2);
             String date = (String) model.getValueAt(selectedRow, 3);
-            ManageOrder page = new ManageOrder(vendor, orderID);
-            page.orderIDLabel.setText(Integer.toString(orderID));
-            page.timeLabel.setText(time);
-            page.dateLabel.setText(date);
-            page.setVisible(true);
-            this.dispose();
+            Order.OrderStatus status = (Order.OrderStatus) model.getValueAt(selectedRow, 4);
+            if (status.name().trim().equals("PENDING")) {
+                ManageOrder page = new ManageOrder(vendor, orderID);
+                page.orderIDLabel.setText(Integer.toString(orderID));
+                page.timeLabel.setText(time);
+                page.dateLabel.setText(date);
+                page.acceptButton.setVisible(true);
+                page.rejectButton.setVisible(true);
+                page.readyButton.setVisible(false);
+                page.setVisible(true);
+                this.dispose();
+            } else if (status.name().trim().equals("CONFIRMED")) {
+                ManageOrder page = new ManageOrder(vendor, orderID);
+                page.orderIDLabel.setText(Integer.toString(orderID));
+                page.timeLabel.setText(time);
+                page.dateLabel.setText(date);
+                page.acceptButton.setVisible(false);
+                page.rejectButton.setVisible(false);
+                page.readyButton.setVisible(true);
+                page.setVisible(true);
+                this.dispose();
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Please select an order to view.", "View Order", JOptionPane.ERROR_MESSAGE);
         }

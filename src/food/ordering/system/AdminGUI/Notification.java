@@ -4,6 +4,8 @@
  */
 package food.ordering.system.AdminGUI;
 
+import java.time.LocalDateTime;
+
 /**
  *
  * @author LENOVO
@@ -11,10 +13,12 @@ package food.ordering.system.AdminGUI;
 public class Notification {
     private int notificationID;
     private NotifType notifType;
-    private int typeID; // For orderID, userRequestID, and topUpRequestID
     private int userID;
     private NotifUserType userType;
-    
+    private int transactionID;
+    private String updateDescription;
+    private LocalDateTime dateTime;
+
     public enum NotifUserType{
         CUSTOMER,
         RUNNER,
@@ -27,12 +31,14 @@ public class Notification {
         TOPUP
     }
     
-    public Notification(int notificationID, NotifType notifType, int typeID, int userID, NotifUserType userType) {
+    public Notification(int notificationID, NotifType notifType, int userID, NotifUserType userType, int transactionID, String updateDescription, LocalDateTime dateTime) {
         this.notificationID = notificationID;
         this.notifType = notifType;
-        this.typeID = typeID;
         this.userID = userID;
         this.userType = userType;
+        this.transactionID = transactionID;
+        this.updateDescription = updateDescription;
+        this.dateTime = dateTime;
     }
     
     public int getNotificationID() {
@@ -49,14 +55,6 @@ public class Notification {
 
     public void setUserType(NotifUserType userType) {
         this.userType = userType;
-    }
-
-    public int getTypeID() {
-        return typeID;
-    }
-
-    public void setTypeID(int typeID) {
-        this.typeID = typeID;
     }
     
     public int getUserID() {
@@ -75,9 +73,29 @@ public class Notification {
         this.notifType = notifType;
     }
     
+    public String getUpdateDescription() {
+        return updateDescription;
+    }
+
+    public void setUpdateDescription(String updateDescription) {
+        this.updateDescription = updateDescription;
+    }
+    
+    public int getTransactionID() {
+        return transactionID;
+    }
+
+    public void setTransactionID(int transactionID) {
+        this.transactionID = transactionID;
+    }
+    
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+    
     @Override
     public String toString() {
         String delimeter = ";";
-        return notificationID + delimeter + notifType + delimeter + typeID + delimeter + userID + delimeter + userType;
+        return notificationID + delimeter + notifType + delimeter + userID + delimeter + userType + delimeter + transactionID + delimeter + updateDescription + delimeter + dateTime;
     }
 }
