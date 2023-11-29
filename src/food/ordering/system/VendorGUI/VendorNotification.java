@@ -5,6 +5,7 @@
 package food.ordering.system.VendorGUI;
 
 import food.ordering.system.AdminGUI.Notification;
+import food.ordering.system.AdminGUI.OrderNotificationPanel;
 import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.AdminGUI.UserProfileNotificationPanel;
 import java.io.FileWriter;

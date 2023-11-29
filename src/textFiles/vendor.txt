@@ -1,4 +1,4 @@
-1;Mc-Donalds;0128883332;mcd@gmail.com;1;4.5;Fast Food;Bukit Jalil;Mc'Lovin it;9:00am-9:00pm;Tuesday-Sunday
+1;McDonalds;0128883332;mcd@gmail.com;1;4.5;Fast Food;Bukit Jalil;Mc'Lovin it;9:00am-9:00pm;Tuesday-Sunday
 2;KFC;0111122098;kfc@gmail.com;kfc231;3.2;Fast Food;Bukit Jalil;Finger-Lickin' Good;10:00am-10:00pm;Monday-Sunday
 3;Jollibee;0111166098;jollibee@gmail.com;j123;4.8;Fast Food;Bukit Jalil;Home of the Chickenjoy;11:00am-9:00pm;Tuesday-Sunday
 4;The Steakhouse;0131122098;steakhouse@gmail.com;steak456;4.7;Western;Bukit Jalil;Fine Dining Steakhouse;5:00pm-11:00pm;Tuesday-Sunday

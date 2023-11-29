@@ -51,7 +51,7 @@ public class VendorChangePassword extends javax.swing.JFrame {
         VendorRequest newRequest = new VendorRequest(userRequestID, vendor.getVendorID(),
         UserRequest.UserType.CUSTOMER, UserRequest.RequestType.CHANGEPASSWORD,
         vendor.getName(), vendor.getPhoneNumber(), vendor.getEmail(), password, 
-        vendor.getCity(), vendor.getCategory(), vendor.getDescription(), 
+        vendor.getCity(), vendor.getDescription(), 
         vendor.getOperationHours(), vendor.getOperationDays());
         
         try (PrintWriter pw = new PrintWriter(new FileWriter(userRequestTextFile, true))) {

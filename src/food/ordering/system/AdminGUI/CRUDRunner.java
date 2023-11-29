@@ -25,7 +25,7 @@ import textFiles.TextFilePaths;
 public class CRUDRunner extends javax.swing.JFrame {
     private Admin admin;
     List<Runner> runners;
-    public int userRequestRunnerID = 0;
+    private int userRequestRunnerID = 0;
     private List<Notification> notifications;
 
     private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
@@ -337,19 +337,22 @@ public class CRUDRunner extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(add)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(edit)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(delete))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
+                            .addComponent(jLabel1)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(add)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(edit)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(delete))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton1)))
                 .addContainerGap(35, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -481,10 +484,10 @@ public class CRUDRunner extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton add;
-    public javax.swing.JComboBox<String> cityComboBox;
+    private javax.swing.JComboBox<String> cityComboBox;
     private javax.swing.JButton delete;
     private javax.swing.JButton edit;
-    public javax.swing.JTextField emailField;
+    private javax.swing.JTextField emailField;
     private javax.swing.JButton generatePasswordButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -498,11 +501,11 @@ public class CRUDRunner extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    public javax.swing.JTextField nameField;
-    public javax.swing.JTextField passwordField;
-    public javax.swing.JTextField phoneNumberField;
+    private javax.swing.JTextField nameField;
+    private javax.swing.JTextField passwordField;
+    private javax.swing.JTextField phoneNumberField;
     private javax.swing.JTable runnerTable;
-    public javax.swing.JTextField vehicleModelField;
-    public javax.swing.JTextField vehiclePlateField;
+    private javax.swing.JTextField vehicleModelField;
+    private javax.swing.JTextField vehiclePlateField;
     // End of variables declaration//GEN-END:variables
 }

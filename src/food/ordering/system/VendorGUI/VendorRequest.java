@@ -8,25 +8,15 @@ import food.ordering.system.AdminGUI.UserRequest;
  * @author LENOVO
  */
 public class VendorRequest extends UserRequest{
-    private String category;
     private String description;
     private String operationHours;
     private String operationDays;
     
-    public VendorRequest(int userRequestID, int userID, UserType userType, RequestType requestType, String name, String phoneNumber, String email, String password, String address, String category, String description, String operationHours, String operationDays) {
+    public VendorRequest(int userRequestID, int userID, UserType userType, RequestType requestType, String name, String phoneNumber, String email, String password, String address, String description, String operationHours, String operationDays) {
         super(userRequestID, userID, userType, requestType, name, phoneNumber, email, password, address);
-        this.category = category;
         this.description = description;
         this.operationHours = operationHours;
         this.operationDays = operationDays;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public String getDescription() {
@@ -56,6 +46,6 @@ public class VendorRequest extends UserRequest{
     @Override
     public String toString() {
         String delimiter = ";";
-        return super.toString() + delimiter + category + delimiter + description + delimiter + operationHours + delimiter + operationDays;
+        return super.toString() + delimiter + description + delimiter + operationHours + delimiter + operationDays;
     }
 }
