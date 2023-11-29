@@ -4,7 +4,6 @@
  */
 package food.ordering.system.VendorGUI;
 
-import food.ordering.system.CustomerGUI.*;
 import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.AdminGUI.UserRequest;
 import java.io.FileWriter;
@@ -32,6 +31,8 @@ public class VendorUserProfile extends javax.swing.JFrame {
         nameField.setText(vendor.getName());
         emailField.setText(vendor.getEmail());
         phoneNumberField.setText(vendor.getPhoneNumber());
+        descriptionField.setText(vendor.getDescription());
+        categoryComboBox.setSelectedItem(vendor.getCategory());
         
         String operationHours = vendor.getOperationHours();
         String[] hourParts = operationHours.split("-");
@@ -82,12 +83,12 @@ public class VendorUserProfile extends javax.swing.JFrame {
         return maxID + 1;
     }
     
-    private boolean saveRequest(String name, String phoneNumber, String email, String password, String description, String operationHours, String operationDays) {
+    private boolean saveRequest(String name, String phoneNumber, String email, String password, String category, String description, String operationHours, String operationDays) {
         int userRequestID = checkMaxID(requestIDs);
         VendorRequest newRequest = new VendorRequest(userRequestID, vendor.getVendorID(),
  UserRequest.UserType.VENDOR, UserRequest.RequestType.UPDATEPROFILE, 
         name, phoneNumber,
-        email, password, vendor.getCity(), description, operationHours, operationDays);
+        email, password, vendor.getCity(), category, description, operationHours, operationDays);
         
         try (PrintWriter pw = new PrintWriter(new FileWriter(userRequestTextFile, true))) {
             pw.println(newRequest.toString());
@@ -126,6 +127,8 @@ public class VendorUserProfile extends javax.swing.JFrame {
         saveButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        categoryComboBox = new javax.swing.JComboBox<>();
 
         jTextField1.setText("jTextField1");
 
@@ -250,7 +253,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel8))
@@ -311,6 +314,10 @@ public class VendorUserProfile extends javax.swing.JFrame {
             }
         });
 
+        jLabel5.setText("Category");
+
+        categoryComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Category", "Non-Halal", "Fast Food", "Western", "Korean", "Chinese", "Malay" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -318,22 +325,25 @@ public class VendorUserProfile extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changePassword))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(25, 25, 25)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
                                     .addComponent(jButton1)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(32, 32, 32)
                                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(changePassword)))
                 .addContainerGap(95, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -345,23 +355,24 @@ public class VendorUserProfile extends javax.swing.JFrame {
                     .addComponent(changePassword))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 632, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 632, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -376,6 +387,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
         String phoneNumber = phoneNumberField.getText();
         String email = emailField.getText();
         String description = descriptionField.getText();
+        String category = String.valueOf(categoryComboBox.getSelectedItem());
         String startHour = String.valueOf(startHourComboBox.getSelectedItem());
         String endHour = String.valueOf(endHourComboBox.getSelectedItem());
         String operationHours = startHour+"-"+endHour;
@@ -383,7 +395,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
         String endDay = String.valueOf(endDayComboBox.getSelectedItem());
         String operationDays = startDay+"-"+endDay;
 
-        if (isEmpty(name) || isEmpty(phoneNumber) || isEmpty(email) || isEmpty(description))  {
+        if (isEmpty(name) || isEmpty(phoneNumber) || isEmpty(email) || isEmpty(description) || category.equals("Select Category"))  {
            JOptionPane.showMessageDialog(this, "Please fill in all inputs.", "Input Error", JOptionPane.ERROR_MESSAGE);
            return;
         }
@@ -401,7 +413,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed with the new changes?", "Edit Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
-            if (saveRequest(name, phoneNumber, email, vendor.getPassword(), description, operationHours, operationDays)) {
+            if (saveRequest(name, phoneNumber, email, vendor.getPassword(), category, description, operationHours, operationDays)) {
                 JOptionPane.showMessageDialog(this, "Successfully sent user profile changes request to admin!");
                 VendorMainMenu menu = new VendorMainMenu(vendor);
                 menu.setVisible(true);
@@ -442,6 +454,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
+    public javax.swing.JComboBox<String> categoryComboBox;
     private javax.swing.JLabel changePassword;
     private javax.swing.JTextField descriptionField;
     private javax.swing.JTextField emailField;
@@ -454,6 +467,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
