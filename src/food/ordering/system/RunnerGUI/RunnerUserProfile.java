@@ -30,7 +30,7 @@ public class RunnerUserProfile extends javax.swing.JFrame {
         nameField.setText(runner.getName());
         emailField.setText(runner.getEmail());
         phoneNumberField.setText(runner.getPhoneNumber());
-        cityField.setText(runner.getCity());
+        cityComboBox.setSelectedItem(runner.getCity());
         plateNumberField.setText(runner.getPlateNumber());
         vehicleModelField.setText(runner.getVehicleModel());
         
@@ -78,7 +78,6 @@ public class RunnerUserProfile extends javax.swing.JFrame {
         changePassword = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        cityField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         phoneNumberField = new javax.swing.JTextField();
         nameField = new javax.swing.JTextField();
@@ -89,6 +88,7 @@ public class RunnerUserProfile extends javax.swing.JFrame {
         plateNumberField = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         vehicleModelField = new javax.swing.JTextField();
+        cityComboBox = new javax.swing.JComboBox<>();
         saveButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
@@ -124,6 +124,13 @@ public class RunnerUserProfile extends javax.swing.JFrame {
 
         jLabel7.setText("Vehicle Model");
 
+        cityComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select City", "Shah Alam", "Petaling Jaya", "Subang Jaya", "Klang", "Puchong", "Ampang", "Kajang", "Cyberjaya", "Seri Kembangan", "Hulu Langat", "Bukit Jalil" }));
+        cityComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cityComboBoxItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -142,12 +149,12 @@ public class RunnerUserProfile extends javax.swing.JFrame {
                         .addGap(31, 31, 31)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel5)
-                            .addComponent(cityField)
                             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
                             .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(vehicleModelField)
-                            .addComponent(plateNumberField))))
-                .addContainerGap())
+                            .addComponent(plateNumberField)
+                            .addComponent(cityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,11 +164,12 @@ public class RunnerUserProfile extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(6, 6, 6)
-                        .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5)
-                        .addGap(4, 4, 4)
-                        .addComponent(cityField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(26, 26, 26)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -241,7 +249,7 @@ public class RunnerUserProfile extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(jButton1))
         );
 
@@ -263,11 +271,11 @@ public class RunnerUserProfile extends javax.swing.JFrame {
         String name = nameField.getText();
         String phoneNumber = phoneNumberField.getText();
         String email = emailField.getText();
-        String city = cityField.getText();
+        String city = String.valueOf(cityComboBox.getSelectedItem());
         String plateNumber = plateNumberField.getText();
         String vehicalModel = vehicleModelField.getText();
         
-        if (isEmpty(name) || isEmpty(phoneNumber) || isEmpty(email) || isEmpty(city) || isEmpty(plateNumber) || isEmpty(vehicalModel))  {
+        if (isEmpty(name) || isEmpty(phoneNumber) || isEmpty(email) || city.equals("Select City") || isEmpty(plateNumber) || isEmpty(vehicalModel))  {
            JOptionPane.showMessageDialog(this, "Please fill in all inputs.", "Input Error", JOptionPane.ERROR_MESSAGE);
            return;
         }
@@ -320,10 +328,14 @@ public class RunnerUserProfile extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void cityComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cityComboBoxItemStateChanged
+
+    }//GEN-LAST:event_cityComboBoxItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel changePassword;
-    private javax.swing.JTextField cityField;
+    private javax.swing.JComboBox<String> cityComboBox;
     private javax.swing.JTextField emailField;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
