@@ -219,6 +219,19 @@ public class OrderSummary extends javax.swing.JFrame {
         saveOrder(newOrder);
     }
     
+    private void createTask() {
+        LocalDateTime originalDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        String formattedDateTimeStr = originalDateTime.format(formatter);
+        LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTimeStr, formatter);
+        Task newTask = new Task(checkMaxTaskID(), availableRunner.getRunnerID(), order.getOrderID(), Task.TaskStatus.PENDING, deliveryFee, parsedDateTime);
+        try (PrintWriter pw = new PrintWriter(new FileWriter(taskTextFilePath, true))) {
+            pw.println(newTask.toString());
+        } catch (IOException ex) {
+            System.out.println("Failed to save!");
+        }
+    }
+    
     // Save order into text file
     private void saveOrder(Order newOrder) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(orderTextFilePath, true))) {
@@ -247,12 +260,7 @@ public class OrderSummary extends javax.swing.JFrame {
             // Change runner availability to false once an order is assigned to him (Not sure)
             // availableRunner.updateRunnerStatus(availableRunner, runners, true);
             // New Runner task
-            Task newTask = new Task(checkMaxTaskID(), availableRunner.getRunnerID(), order.getOrderID(), Task.TaskStatus.PENDING, deliveryFee, LocalDateTime.now());
-            try (PrintWriter pw = new PrintWriter(new FileWriter(taskTextFilePath, true))) {
-                pw.println(newTask.toString());
-            } catch (IOException ex) {
-                System.out.println("Failed to save!");
-            }
+            createTask();
         }
         orderBasket.clear();
         this.dispose();
@@ -569,10 +577,14 @@ public class OrderSummary extends javax.swing.JFrame {
         if (checkRunner() != null) {
             newOrderType = OrderType.DELIVERY;
             placeOrder();
+            LocalDateTime originalDateTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            String formattedDateTimeStr = originalDateTime.format(formatter);
+            LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTimeStr, formatter);
             //Send notif to vendor
-            Notification vendorNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", LocalDateTime.now());
+            Notification vendorNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", parsedDateTime);
             //Send notif to runner
-            Notification runnerNotif = new Notification(checkMaxNotificationID()+1, Notification.NotifType.ORDER, availableRunner.getRunnerID(), Notification.NotifUserType.RUNNER, order.getOrderID(), "New order!", LocalDateTime.now());
+            Notification runnerNotif = new Notification(checkMaxNotificationID()+1, Notification.NotifType.ORDER, availableRunner.getRunnerID(), Notification.NotifUserType.RUNNER, order.getOrderID(), "New order!", parsedDateTime);
             notifications.add(vendorNotif);
             notifications.add(runnerNotif);
             try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFilePath))) {

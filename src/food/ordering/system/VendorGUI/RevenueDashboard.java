@@ -6,6 +6,7 @@ package food.ordering.system.VendorGUI;
 
 import food.ordering.system.CustomerGUI.Order;
 import food.ordering.system.CustomerGUI.OrderManager;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,10 @@ import java.util.stream.Collectors;
 import javax.swing.JLabel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JOptionPane;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 
 
 /**
@@ -23,6 +28,7 @@ import java.util.Date;
 public class RevenueDashboard extends javax.swing.JFrame {
     private Vendor vendor;
     private List<Order> orders;
+    private List<Order> vendorOrders;
     private List<FoodItem> menu;
     private double revenue;
     private double cost;
@@ -35,106 +41,135 @@ public class RevenueDashboard extends javax.swing.JFrame {
 
         OrderManager manager = new OrderManager();
         orders = manager.getOrders();
-        getVendorOrders(); // Now that 'orders' is initialized and populated, this method can filter the list
-        updateDashboardView("Monthly");
-        timeFrame.addActionListener(e -> updateDashboardView(timeFrame.getSelectedItem().toString()));
-    }
-
-    
-    private void updateDashboardView(String timeFrame) {
-        // Filter and calculate metrics based on the selected time frame
-        calculateRevenue(timeFrame);
-        calculateCost(timeFrame);
-        calculateProfit();
-        calculateTopSellingItems(timeFrame);
-        calculateTotalOrders(timeFrame);
-        // Update the GUI labels with the calculated values
-        revenueLabel.setText("RM " + String.format("%.2f", revenue));
-        costsLabel.setText("RM " + String.format("%.2f", cost));
-        netProfitLabel.setText("RM " + String.format("%.2f", profit));
-        // You would also update the top-selling items and total orders here
+        vendorOrders = getVendorOrders(); 
     }
     
-    
-    
-    private void calculateTopSellingItems(String timeFrame) {
-        // Reset the top items list
-        Map<String, Long> itemCounts = new HashMap<>();
-
-        // Count each FoodItem sold
-        for (Order order : orders) {
-            for (FoodItem item : order.getOrderBasket()) {
-                // Increment the count for each item
-                itemCounts.put(item.getItemName(), itemCounts.getOrDefault(item.getItemName(), 0L) + 1);
-            }
-        }
-
-        // Sort the map by count and get the top 5 entries
-        List<Map.Entry<String, Long>> topItems = itemCounts.entrySet().stream()
-            .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-            .limit(5)
-            .collect(Collectors.toList());
-
-        // Update GUI components with the top 5 items
-        JLabel[] topItemLabels = {firstItem, secondItem, thirdItem, fourthItem, fifthItem};
-        for (int i = 0; i < topItemLabels.length; i++) {
-            if (i < topItems.size()) {
-                Map.Entry<String, Long> entry = topItems.get(i);
-                String itemName = entry.getKey();
-                Long count = entry.getValue();
-                String label = itemName;
-                topItemLabels[i].setText(label);
-            } else {
-                topItemLabels[i].setText((i + 1) + ". ");
-            }
-        }
-    }
-
-
-    
-    private void calculateTotalOrders(String timeFrame) {
-        int totalOrdersCount = getVendorOrders().size(); 
-        totalOrders.setText("Total Orders: " + totalOrdersCount);
-    }
-
     
     private List<Order> getVendorOrders() {
-        List<Order> vendorOrders = new ArrayList<>();
+        List<Order> vendororders = new ArrayList<>();
         
         for (Order orderItem : orders) {
             if (orderItem.getVendor().getVendorID() == vendor.getVendorID()) {
-                vendorOrders.add(orderItem);
+                vendororders.add(orderItem);
             } else {
                 System.out.println("Skipping orders with unmatched vendor ID.");
             }
         }
-        return vendorOrders;
+        return vendororders;
     }
     
-    private void calculateRevenue(String timeFrame) {
-        revenue = 0;
-        for (Order orderItem : orders) {
-            revenue = revenue + orderItem.getTotalPrice();
-        }
+    private LocalDateTime convertToLocalDateTime(Date dateToConvert) {
+        return dateToConvert.toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime();
     }
     
-    private void calculateCost(String timeFrame) {
-        cost = 0; // Reset cost
-        for (Order order : orders) {
-            for (FoodItem item : order.getOrderBasket()) {
-                // Here you need to calculate the cost. Assuming FoodItem has a method getCost.
-                cost += item.getItemCost(); // Make sure you have a getCost() method in FoodItem.
+    private List<Order> filterOrdersByDate(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        List<Order> filteredOrders = new ArrayList<>();
+        for (Order order : vendorOrders) {
+            LocalDateTime orderDateTime = order.getDateTime(); // Assuming getDateTime() returns a LocalDateTime
+            if ((orderDateTime.isAfter(startDateTime) || orderDateTime.isEqual(startDateTime)) &&
+                    orderDateTime.isBefore(endDateTime)) {
+                filteredOrders.add(order);
             }
         }
+        return filteredOrders;
     }
-    
-    private void calculateProfit() {
-    // Assuming revenue and cost have already been calculated
-    profit = revenue - cost;
-}
+
+    private List<Order> displayFilteredOrders(String timeFrame, LocalDateTime dateTime) {
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
+
+        switch (timeFrame) {
+            case "Daily":
+                startDateTime = dateTime;
+                endDateTime = dateTime.plusDays(1);
+                break;
+            case "Monthly":
+                startDateTime = dateTime.withDayOfMonth(1);
+                endDateTime = startDateTime.plusMonths(1);
+                break;
+            case "Yearly":
+                startDateTime = dateTime.withDayOfYear(1);
+                endDateTime = startDateTime.plusYears(1);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid time frame selection");
+        }
+
+        return filterOrdersByDate(startDateTime, endDateTime);
+    }
 
     
+    private void updateDashboardViewWithFilteredOrders(List<Order> filteredOrders) {
+        // Calculate and update metrics based on the filtered orders
+        double totalRevenue = calculateRevenue(filteredOrders);
+        double totalCosts = calculateCost(filteredOrders);
+        double totalProfit = calculateProfit(totalRevenue, totalCosts);
+        int totalOrdersCount = filteredOrders.size();
+
+        // Update the GUI labels with the calculated values
+        revenueLabel.setText("RM " + String.format("%.2f", totalRevenue));
+        costsLabel.setText("RM " + String.format("%.2f", totalCosts));
+        netProfitLabel.setText("RM " + String.format("%.2f", totalProfit));
+        totalOrdersLabel.setText(Integer.toString(totalOrdersCount));
+        Map<String, Long> topSellingItems = calculateTopSellingItems(filteredOrders);
+        updateTopSellingItemsDisplay(topSellingItems);
+    }
+
+    private Map<String, Long> calculateTopSellingItems(List<Order> filteredOrders) {
+        Map<String, Long> itemCounts = new HashMap<>();
+        for (Order order : filteredOrders) {
+            for (FoodItem item : order.getOrderBasket()) {
+                itemCounts.merge(item.getItemName(), 1L, Long::sum);
+            }
+        }
+        return itemCounts;
+    }
     
+    private void updateTopSellingItemsDisplay(Map<String, Long> topSellingItems) {
+        List<Map.Entry<String, Long>> sortedItems = topSellingItems.entrySet().stream()
+            .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+            .limit(5)
+            .collect(Collectors.toList());
+
+        JLabel[] topItemLabels = {firstItem, secondItem, thirdItem, fourthItem, fifthItem};
+        int i = 0;
+        for (Map.Entry<String, Long> entry : sortedItems) {
+            topItemLabels[i].setText(entry.getKey() + " - " + entry.getValue());
+            i++;
+        }
+        // Clear remaining labels if there are less than 5 top items
+        while (i < topItemLabels.length) {
+            topItemLabels[i].setText("-");
+            i++;
+        }
+    }
+
+    private double calculateRevenue(List<Order> orders) {
+        double total = 0.0;
+        for (Order order : orders) {
+            total += order.getTotalPrice();
+        }
+        return total;
+}
+    
+    private double calculateCost(List<Order> orders) {
+        double total = 0.0;
+        for (Order order : orders) {
+            // Here, we assume each FoodItem within an order has a method getCost() to get its cost
+            for (FoodItem item : order.getOrderBasket()) {
+                total += item.getItemCost();
+            }
+        }
+        return total;
+    }
+
+    
+    private double calculateProfit(double revenue, double costs) {
+        return revenue - costs;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -162,7 +197,7 @@ public class RevenueDashboard extends javax.swing.JFrame {
         jLabel29 = new javax.swing.JLabel();
         jLabel30 = new javax.swing.JLabel();
         jLabel31 = new javax.swing.JLabel();
-        totalOrders = new javax.swing.JLabel();
+        totalOrdersLabel = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         topFiveSellingItem = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
@@ -177,19 +212,21 @@ public class RevenueDashboard extends javax.swing.JFrame {
         fifthItem = new javax.swing.JLabel();
         timeFrame = new javax.swing.JComboBox<>();
         dateChosenLabel = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        checkButton = new javax.swing.JButton();
         jCalender = new com.toedter.calendar.JCalendar();
         jButton2 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(700, 500));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel15.setText("Total costs");
 
-        costsLabel.setText("RM 5000");
+        costsLabel.setText("RM -");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -212,10 +249,12 @@ public class RevenueDashboard extends javax.swing.JFrame {
                 .addContainerGap(31, Short.MAX_VALUE))
         );
 
+        jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(253, 176, -1, -1));
+
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel13.setText("Net profit");
 
-        netProfitLabel.setText("RM 5000");
+        netProfitLabel.setText("RM -");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -238,10 +277,12 @@ public class RevenueDashboard extends javax.swing.JFrame {
                 .addContainerGap(37, Short.MAX_VALUE))
         );
 
+        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(253, 297, -1, 109));
+
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Total revenue");
 
-        revenueLabel.setText("RM 5000");
+        revenueLabel.setText("RM -");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -264,13 +305,16 @@ public class RevenueDashboard extends javax.swing.JFrame {
                 .addContainerGap(31, Short.MAX_VALUE))
         );
 
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(253, 55, -1, -1));
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Revenue Dashboard");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 27, 232, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel5.setText("Total Orders");
 
-        totalOrders.setText("RM");
+        totalOrdersLabel.setText("-");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -284,10 +328,6 @@ public class RevenueDashboard extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel31))
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel28))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel27)
@@ -295,6 +335,10 @@ public class RevenueDashboard extends javax.swing.JFrame {
                         .addComponent(jLabel5))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel28))
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -304,7 +348,7 @@ public class RevenueDashboard extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel29)))
                         .addGap(63, 63, 63)
-                        .addComponent(totalOrders)))
+                        .addComponent(totalOrdersLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(61, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -323,25 +367,24 @@ public class RevenueDashboard extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jLabel28))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel29))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel30)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(totalOrders)))
-                .addGap(9, 9, 9)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel29))
+                    .addComponent(totalOrdersLabel, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel30))
+                .addGap(13, 13, 13)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(jLabel31))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
+
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 297, -1, -1));
 
         jPanel8.setPreferredSize(new java.awt.Dimension(200, 186));
 
@@ -358,15 +401,15 @@ public class RevenueDashboard extends javax.swing.JFrame {
 
         jLabel36.setText("5.");
 
-        firstItem.setText("Coke");
+        firstItem.setText("-");
 
-        secondItem.setText("Sprite");
+        secondItem.setText("-");
 
-        thirdItem.setText("Water");
+        thirdItem.setText("-");
 
-        fourthItem.setText("Fanta");
+        fourthItem.setText("-");
 
-        fifthItem.setText("7 Up");
+        fifthItem.setText("-");
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -374,28 +417,28 @@ public class RevenueDashboard extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(jLabel36)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fifthItem))
+                        .addComponent(fifthItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(jLabel35)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fourthItem))
+                        .addComponent(fourthItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(jLabel34)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(thirdItem))
+                        .addComponent(thirdItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(jLabel33)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(secondItem))
+                        .addComponent(secondItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(topFiveSellingItem, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addComponent(jLabel32)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(firstItem)))
+                        .addComponent(firstItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel8Layout.setVerticalGroup(
@@ -403,7 +446,7 @@ public class RevenueDashboard extends javax.swing.JFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(topFiveSellingItem)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel32)
                     .addComponent(firstItem))
@@ -423,26 +466,37 @@ public class RevenueDashboard extends javax.swing.JFrame {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel36)
                     .addComponent(fifthItem))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
+
+        jPanel1.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 55, 204, 224));
 
         timeFrame.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Daily"," Monthly", "Yearly" }));
         timeFrame.setPreferredSize(new java.awt.Dimension(78, 30));
-
-        dateChosenLabel.setText("Date Choosen:");
-
-        jButton1.setText("Check");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        timeFrame.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                timeFrameActionPerformed(evt);
             }
         });
+        jPanel1.add(timeFrame, new org.netbeans.lib.awtextra.AbsoluteConstraints(64, 277, 103, -1));
+
+        dateChosenLabel.setText("Date Choosen:");
+        jPanel1.add(dateChosenLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(66, 240, 100, -1));
+
+        checkButton.setText("Check");
+        checkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkButtonActionPerformed(evt);
+            }
+        });
+        jPanel1.add(checkButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 343, -1, -1));
 
         jCalender.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 jCalenderPropertyChange(evt);
             }
         });
+        jPanel1.add(jCalender, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 85, -1, -1));
 
         jButton2.setText("Back");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -450,75 +504,10 @@ public class RevenueDashboard extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 378, -1, -1));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(436, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(22, 22, 22)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(dateChosenLabel)
-                                    .addComponent(timeFrame, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addComponent(jButton1))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2)
-                            .addComponent(jCalender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(46, 46, 46))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(48, 48, 48)
-                .addComponent(jLabel1)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addComponent(jCalender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(24, 24, 24)
-                        .addComponent(dateChosenLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(timeFrame, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addComponent(jButton1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addGap(20, 20, 20))
-        );
+        jLabel3.setText("Select date/month/year to view details.");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 30, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -528,33 +517,47 @@ public class RevenueDashboard extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
-        
-    
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void checkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkButtonActionPerformed
+        String selectedTimeFrame = (String) timeFrame.getSelectedItem();
+        String labelDate = dateChosenLabel.getText();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parsedDate;
+
+        try {
+            // Parse the date from the label
+            parsedDate = dateFormat.parse(labelDate);
+            LocalDateTime dateTime = convertToLocalDateTime(parsedDate);
+
+            // Get the filtered orders based on the selection
+            List<Order> filteredOrders = displayFilteredOrders(selectedTimeFrame.trim(), dateTime);
+
+            // Update the dashboard view with the filtered orders
+            updateDashboardViewWithFilteredOrders(filteredOrders);
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(this, "Invalid date format.", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_checkButtonActionPerformed
 
     private void jCalenderPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jCalenderPropertyChange
         // TODO add your handling code here:
-            Date date = jCalender.getDate();
-            if (date != null) {
-                // Format the date as you prefer
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                String dateString = dateFormat.format(date);
-                // Set the formatted date string to your label
-                dateChosenLabel.setText(dateString);
-            } else {
-                // Handle the case where a date is not selected
-                dateChosenLabel.setText("No date selected");
-            }
-
-        
+        Date date = jCalender.getDate();
+        if (date != null) {
+            // Format the date as you prefer
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = dateFormat.format(date);
+            // Set the formatted date string to your label
+            dateChosenLabel.setText(dateString);
+        } else {
+            // Handle the case where a date is not selected
+            dateChosenLabel.setText("No date selected");
+        }
     }//GEN-LAST:event_jCalenderPropertyChange
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -563,13 +566,17 @@ public class RevenueDashboard extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void timeFrameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeFrameActionPerformed
+      
+    }//GEN-LAST:event_timeFrameActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton checkButton;
     private javax.swing.JLabel costsLabel;
     private javax.swing.JLabel dateChosenLabel;
     private javax.swing.JLabel fifthItem;
     private javax.swing.JLabel firstItem;
     private javax.swing.JLabel fourthItem;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private com.toedter.calendar.JCalendar jCalender;
     private javax.swing.JLabel jLabel1;
@@ -580,6 +587,7 @@ public class RevenueDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
@@ -604,7 +612,7 @@ public class RevenueDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel thirdItem;
     private javax.swing.JComboBox<String> timeFrame;
     private javax.swing.JLabel topFiveSellingItem;
-    private javax.swing.JLabel totalOrders;
+    private javax.swing.JLabel totalOrdersLabel;
     // End of variables declaration//GEN-END:variables
 
 }
