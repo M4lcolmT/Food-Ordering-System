@@ -131,10 +131,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
         foodItemTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        addButton = new javax.swing.JButton();
-        editButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        deleteButton = new javax.swing.JButton();
         nameField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         categoryField = new javax.swing.JTextField();
@@ -145,6 +142,10 @@ public class FoodItemMenu extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         costField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        editButton = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
+        viewButton = new javax.swing.JButton();
 
         jInternalFrame1.setVisible(true);
 
@@ -193,32 +194,8 @@ public class FoodItemMenu extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        addButton.setText("Add");
-        addButton.setPreferredSize(new java.awt.Dimension(75, 23));
-        addButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addButtonActionPerformed(evt);
-            }
-        });
-
-        editButton.setText("Edit");
-        editButton.setPreferredSize(new java.awt.Dimension(75, 23));
-        editButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editButtonActionPerformed(evt);
-            }
-        });
-
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel3.setText("Food Name:");
-
-        deleteButton.setText("Delete");
-        deleteButton.setPreferredSize(new java.awt.Dimension(75, 23));
-        deleteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteButtonActionPerformed(evt);
-            }
-        });
 
         nameField.setPreferredSize(new java.awt.Dimension(150, 25));
 
@@ -258,22 +235,14 @@ public class FoodItemMenu extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(costField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(categoryField, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(nameField, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
-                            .addComponent(priceField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(21, 21, 21)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(nameField, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                    .addComponent(priceField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -300,12 +269,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
                         .addGap(8, 8, 8)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(priceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
-                        .addGap(9, 9, 9)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabel5))))
                 .addContainerGap())
         );
 
@@ -313,6 +277,37 @@ public class FoodItemMenu extends javax.swing.JFrame {
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        editButton.setText("Edit");
+        editButton.setPreferredSize(new java.awt.Dimension(75, 23));
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
+
+        addButton.setText("Add");
+        addButton.setPreferredSize(new java.awt.Dimension(75, 23));
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
+
+        deleteButton.setText("Delete");
+        deleteButton.setPreferredSize(new java.awt.Dimension(75, 23));
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+
+        viewButton.setText("View");
+        viewButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewButtonActionPerformed(evt);
             }
         });
 
@@ -333,7 +328,15 @@ public class FoodItemMenu extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 617, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1))))
+                            .addComponent(jButton1)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(viewButton)))))
                 .addContainerGap(46, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -345,11 +348,17 @@ public class FoodItemMenu extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(viewButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -379,77 +388,43 @@ public class FoodItemMenu extends javax.swing.JFrame {
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         DefaultTableModel model = (DefaultTableModel) foodItemTable.getModel();
-        if (!editMode) {
-        // Enter edit mode
-            selectedRow = foodItemTable.getSelectedRow();
-            if (selectedRow != -1) {
-                // Get the current data from the selected row
-                String name = (String) model.getValueAt(selectedRow, 1);
-                String category = (String) model.getValueAt(selectedRow, 2);
-                double price = (double) model.getValueAt(selectedRow, 3);
-                String description = (String) model.getValueAt(selectedRow, 4);
-                double cost = (double) model.getValueAt(selectedRow, 5);
+        String newName = nameField.getText();
+        String newCategory = categoryField.getText();
+        String newPrice = priceField.getText();
+        String newDescription = descriptionField.getText();
+        String newCost = costField.getText();
+        double parsedPrice = Double.parseDouble(newPrice);
+        double parsedCost = Double.parseDouble(newCost);
 
-                // Set the current data in the text fields
-                nameField.setText(name);
-                categoryField.setText(category);
-                priceField.setText(Double.toString(price));
-                descriptionField.setText(description);
-                costField.setText(Double.toString(cost));
+        if (!newName.equals(model.getValueAt(selectedRow, 1)) ||
+                !newCategory.equals(model.getValueAt(selectedRow, 2)) ||
+                parsedPrice != (double) model.getValueAt(selectedRow, 3) ||
+                !newDescription.equals(model.getValueAt(selectedRow, 4)) ||
+                parsedCost != (double) model.getValueAt(selectedRow, 5)) {
 
-                editMode = true; // Switch to edit mode
-            } else {
-                JOptionPane.showMessageDialog(this, "Please select a food item to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
-            }
+            int itemID = (int) model.getValueAt(selectedRow, 0);
+            FoodItem selectedFoodItem = getFoodItem(itemID);
+            int vendorid = vendor.getVendorID();
+            selectedFoodItem.setVendorID(vendorid);
+            selectedFoodItem.setItemName(newName);
+            selectedFoodItem.setItemCategory(newCategory);
+            selectedFoodItem.setItemPrice(parsedPrice);
+            selectedFoodItem.setItemDescription(newDescription);
+            selectedFoodItem.setItemCost(parsedCost);
+            writeToFile();
+            JOptionPane.showMessageDialog(this, "Successfully edited food item", "Success", JOptionPane.INFORMATION_MESSAGE);
+            // Refresh the table with updated data
+            readVendorFoodItems();
+            loadFoodItems();
+            nameField.setText("");
+            categoryField.setText("");
+            priceField.setText("");
+            descriptionField.setText("");
+            costField.setText("");
+            editMode = false; // Switch back to view mode
         } else {
-        // Save changes
-            if (selectedRow != -1) {
-                // Get the updated data from the text fields
-                String newName = nameField.getText();
-                String newCategory = categoryField.getText();
-                double newPrice = Double.parseDouble(priceField.getText());
-                String newDescription = descriptionField.getText();
-                double newCost = Double.parseDouble(costField.getText());
-
-                // Check if changes have been made
-                if (!newName.equals(model.getValueAt(selectedRow, 1)) ||
-                        !newCategory.equals(model.getValueAt(selectedRow, 2)) ||
-                        newPrice != (double) model.getValueAt(selectedRow, 3) ||
-                        !newDescription.equals(model.getValueAt(selectedRow, 4)) ||
-                        newCost != (double) model.getValueAt(selectedRow, 5)) {
-                    
-                    int itemID = (int) model.getValueAt(selectedRow, 0);
-                    FoodItem selectedFoodItem = getFoodItem(itemID);
-                    int vendorid = vendor.getVendorID();
-                    selectedFoodItem.setVendorID(vendorid);
-                    selectedFoodItem.setItemName(newName);
-                    selectedFoodItem.setItemCategory(newCategory);
-                    selectedFoodItem.setItemPrice(newPrice);
-                    selectedFoodItem.setItemDescription(newDescription);
-                    selectedFoodItem.setItemCost(newCost);
-                    // Remove the old food item
-                    allFoodItems.removeIf(item -> item.getItemID() == selectedFoodItem.getItemID() && item.getVendorID() == vendor.getVendorID());
-                    // Add the updated food item
-                    allFoodItems.add(selectedFoodItem);
-                    // Write the updated list back to the file
-                    writeToFile();
-                    JOptionPane.showMessageDialog(this, "Successfully edited food item", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    // Refresh the table with updated data
-                    readVendorFoodItems();
-                    loadFoodItems();
-                    nameField.setText("");
-                    categoryField.setText("");
-                    priceField.setText("");
-                    descriptionField.setText("");
-                    costField.setText("");
-                    editMode = false; // Switch back to view mode
-                } else {
-                    // No changes were made
-                    JOptionPane.showMessageDialog(this, "No changes made", "No Changes", JOptionPane.INFORMATION_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Please select a food item to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
-            }
+            // No changes were made
+            JOptionPane.showMessageDialog(this, "No changes made", "No Changes", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_editButtonActionPerformed
 
@@ -500,6 +475,29 @@ public class FoodItemMenu extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void viewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewButtonActionPerformed
+        DefaultTableModel model = (DefaultTableModel) foodItemTable.getModel();
+
+        selectedRow = foodItemTable.getSelectedRow();
+        if (selectedRow != -1) {
+            // Get the current data from the selected row
+            String name = (String) model.getValueAt(selectedRow, 1);
+            String category = (String) model.getValueAt(selectedRow, 2);
+            double price = (double) model.getValueAt(selectedRow, 3);
+            String description = (String) model.getValueAt(selectedRow, 4);
+            double cost = (double) model.getValueAt(selectedRow, 5);
+
+            // Set the current data in the text fields
+            nameField.setText(name);
+            categoryField.setText(category);
+            priceField.setText(Double.toString(price));
+            descriptionField.setText(description);
+            costField.setText(Double.toString(cost));
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a food item to edit", "Empty input", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_viewButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JTextField categoryField;
@@ -523,6 +521,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nameField;
     private javax.swing.JTextField priceField;
+    private javax.swing.JButton viewButton;
     // End of variables declaration//GEN-END:variables
 
 }

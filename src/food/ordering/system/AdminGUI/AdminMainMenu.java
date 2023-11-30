@@ -222,6 +222,7 @@ public class AdminMainMenu extends javax.swing.JFrame {
         if (confirmationResult == JOptionPane.YES_OPTION) {
             AdminLogin page = new AdminLogin();
             page.setVisible(true);
+            this.dispose();
         }    
     }//GEN-LAST:event_logOutButtonActionPerformed
 

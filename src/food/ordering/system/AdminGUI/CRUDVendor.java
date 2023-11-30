@@ -9,11 +9,9 @@ import food.ordering.system.VendorGUI.Vendor;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -28,11 +26,6 @@ public class CRUDVendor extends javax.swing.JFrame {
     List<Vendor> vendors;
     public int userRequestVendorID = 0;
     private List<Notification> notifications;
-
-    private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
-    private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final String DIGITS = "0123456789";
-    private static final String SPECIAL_CHARACTERS = "!@#$%^&*()-_+=<>?";
     
     TextFilePaths path = new TextFilePaths();
     String vendorTextFile = path.getVendorTextFile();
@@ -132,26 +125,11 @@ public class CRUDVendor extends javax.swing.JFrame {
         emailField.setText("");
         passwordField.setText("");
         descriptionField.setText("");
+        categoryComboBox.setSelectedIndex(0);
     }
     
     private boolean isEmpty(String str) {
         return str.trim().isEmpty();
-    }
-    
-    // Password generator
-    public static String generatePassword(int length) {
-        StringBuilder password = new StringBuilder();
-        Random random = new SecureRandom();
-
-        String allCharacters = LOWERCASE + UPPERCASE + DIGITS + SPECIAL_CHARACTERS;
-
-        for (int i = 0; i < length; i++) {
-            int randomIndex = random.nextInt(allCharacters.length());
-            char randomChar = allCharacters.charAt(randomIndex);
-            password.append(randomChar);
-        }
-
-        return password.toString();
     }
     
     public int getUserRequestVendorID() {
@@ -195,7 +173,6 @@ public class CRUDVendor extends javax.swing.JFrame {
         startDayComboBox = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
         passwordField = new javax.swing.JTextField();
-        generatePasswordButton = new javax.swing.JButton();
         categoryComboBox = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -272,13 +249,6 @@ public class CRUDVendor extends javax.swing.JFrame {
 
         jLabel11.setText("Password:");
 
-        generatePasswordButton.setText("generate");
-        generatePasswordButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                generatePasswordButtonActionPerformed(evt);
-            }
-        });
-
         categoryComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Category", "Non-Halal", "Fast Food", "Western", "Korean", "Chinese", "Malay" }));
 
         jLabel5.setText("Category:");
@@ -296,13 +266,10 @@ public class CRUDVendor extends javax.swing.JFrame {
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(phoneNumberField)
+                    .addComponent(phoneNumberField, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
                     .addComponent(emailField)
                     .addComponent(nameField, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(generatePasswordButton)))
+                    .addComponent(passwordField))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -373,10 +340,9 @@ public class CRUDVendor extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(generatePasswordButton)
                     .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         vendorTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -417,7 +383,7 @@ public class CRUDVendor extends javax.swing.JFrame {
                                 .addComponent(jScrollPane1)
                                 .addComponent(jLabel1)
                                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -441,7 +407,7 @@ public class CRUDVendor extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 706, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -475,20 +441,26 @@ public class CRUDVendor extends javax.swing.JFrame {
                 !newOperationHours.equals("") ||
                 !newOperationDays.equals("") ||
                 !newCategory.equals("")){
-
-            Vendor selectedVendor = getVendor(getUserRequestVendorID());
-            selectedVendor.setName(newName);
-            selectedVendor.setPhoneNumber(newPhoneNumber);
-            selectedVendor.setEmail(newEmail);
-            selectedVendor.setPassword(newPassword);
-            selectedVendor.setDescription(newDescription);
-            selectedVendor.setOperationHours(newOperationHours);
-            selectedVendor.setCategory(newCategory);
-            createNewVendors();
-            Notification newNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.USERPROFILE, selectedVendor.getVendorID(), Notification.NotifUserType.VENDOR, 0, "Your profile is updated!", LocalDateTime.now());
-            notifications.add(newNotif);
-            writeNotificationToFile();
-            JOptionPane.showMessageDialog(this, "Successfully edited Vendor Details", "Success", JOptionPane.INFORMATION_MESSAGE);
+            
+            int id = getUserRequestVendorID();
+            if (id!=-1) { // Check if the selected user is an existing user
+                Vendor selectedVendor = getVendor(id);
+                selectedVendor.setName(newName);
+                selectedVendor.setPhoneNumber(newPhoneNumber);
+                selectedVendor.setEmail(newEmail);
+                selectedVendor.setPassword(newPassword);
+                selectedVendor.setDescription(newDescription);
+                selectedVendor.setOperationHours(newOperationHours);
+                selectedVendor.setCategory(newCategory);
+                createNewVendors();
+                Notification newNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.USERPROFILE, selectedVendor.getVendorID(), Notification.NotifUserType.VENDOR, 0, "Your profile is updated!", LocalDateTime.now());
+                notifications.add(newNotif);
+                writeNotificationToFile();
+                JOptionPane.showMessageDialog(this, "Successfully edited Vendor Details", "Success", JOptionPane.INFORMATION_MESSAGE);
+                userRequestVendorID = 0;
+            } else {
+                JOptionPane.showMessageDialog(this, "New user found, please select the add button instead.", "Error", JOptionPane.INFORMATION_MESSAGE);
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Proceed to Manage User Requests page to edit user profile details.", "Error", JOptionPane.INFORMATION_MESSAGE);
         }        
@@ -509,16 +481,20 @@ public class CRUDVendor extends javax.swing.JFrame {
         String endDay = String.valueOf(endDayComboBox.getSelectedItem());
         String newOperationDays = startDay+"-"+endDay;
         
-        // Validate input fields
-        if (isEmpty(name) || isEmpty(phoneNumber) || isEmpty(email) || isEmpty(password) || category.equals("Select Category")) {
-            JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
-            return; 
+        if (!name.equals("") ||
+                        !phoneNumber.equals("") ||
+                        !email.equals ("") ||
+                        !password.equals("") ||
+                        !category.equals("Select Category") ||
+                        !description.equals("")) {
+            Vendor item = new Vendor(vendorID, name, phoneNumber, email, password, 0, category, "Bukit Jalil", description, newOperationHours, newOperationDays);
+            vendors.add(item);
+            JOptionPane.showMessageDialog(this, "Successfully added the new Vendor!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            createNewVendors();
+            userRequestVendorID = 0;
+        } else {
+            JOptionPane.showMessageDialog(this, "Proceed to Manage User Requests page to add new users.", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
-        
-        Vendor item = new Vendor(vendorID, name, phoneNumber, email, password, 0, category, "Bukit Jalil", description, newOperationHours, newOperationDays);
-        vendors.add(item);
-        JOptionPane.showMessageDialog(this, "Successfully added the new Vendor!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        createNewVendors();
     }//GEN-LAST:event_addActionPerformed
 
     private void startHourComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startHourComboBoxActionPerformed
@@ -526,29 +502,16 @@ public class CRUDVendor extends javax.swing.JFrame {
     }//GEN-LAST:event_startHourComboBoxActionPerformed
 
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
-        DefaultTableModel model = (DefaultTableModel) vendorTable.getModel();
-        int selectedRow = vendorTable.getSelectedRow();
-        if (selectedRow != -1) {
-            int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to delete Vendor Details?", "Delete Confirmation", JOptionPane.YES_NO_OPTION);        
-            if (confirmationResult == JOptionPane.YES_OPTION) {
-                int vendorID = (int) model.getValueAt(selectedRow, 0);
-                Vendor selectedVendor = getVendor(vendorID);
-                vendors.removeIf(item -> item.getVendorID() == selectedVendor.getVendorID());
-                writeVendorToFile();
-                ReadFiles reader = new ReadFiles();
-                vendors = reader.readVendors();
-                loadVendors();
-            } else {
-                JOptionPane.showMessageDialog(this, "Action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-            }
+        int id = getUserRequestVendorID();
+        if (id!=-1) {
+            Vendor selectedVendor = getVendor(id);
+            vendors.removeIf(item -> item.getVendorID() == selectedVendor.getVendorID());
+            createNewVendors();
+            userRequestVendorID = 0;
+        } else {
+            JOptionPane.showMessageDialog(this, "Proceed to Manage User Requests page to delete users.", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_deleteActionPerformed
-
-    private void generatePasswordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatePasswordButtonActionPerformed
-        int passwordLength = 9;
-        String generatedPassword = generatePassword(passwordLength);
-        passwordField.setText(generatedPassword);
-    }//GEN-LAST:event_generatePasswordButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         AdminMainMenu page = new AdminMainMenu(admin);
@@ -565,7 +528,6 @@ public class CRUDVendor extends javax.swing.JFrame {
     public javax.swing.JTextField emailField;
     public javax.swing.JComboBox<String> endDayComboBox;
     public javax.swing.JComboBox<String> endHourComboBox;
-    private javax.swing.JButton generatePasswordButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

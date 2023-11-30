@@ -31,7 +31,6 @@ public class ReadFiles {
     String runnerTextFilePath = filePaths.getRunnerTextFile();
     String adminTextFilePath = filePaths.getAdminTextFile();
     String userRequestsTextFilePath = filePaths.getUserCRUDrequestTextFile();
-    String notificationFilePath = filePaths.getNotificationsTextFile();
     String topUpRequestsTextFilePath = filePaths.getTopUpRequestsTextFile();
     String notificationsTextFilePath = filePaths.getNotificationsTextFile();
     String tasksTextFilePath = filePaths.getRunnerTasksTextFile();
@@ -236,10 +235,11 @@ public class ReadFiles {
         String email = parts[6];
         String password = parts[7];
         String address = parts[8];
-        String description = parts[9];
-        String operationHours = parts[10];
-        String operationDays = parts[11];
-        return new VendorRequest(requestID, userID, userType, requestType, name, phoneNumber, email, password, address, description, operationHours, operationDays);
+        String category = parts[9];
+        String description = parts[10];
+        String operationHours = parts[11];
+        String operationDays = parts[12];
+        return new VendorRequest(requestID, userID, userType, requestType, name, phoneNumber, email, password, address, category, description, operationHours, operationDays);
     }
 
     private static RunnerRequest processRunner(String[] parts) {

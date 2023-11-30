@@ -4,7 +4,6 @@
  */
 package food.ordering.system.AdminGUI;
 
-import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.CustomerGUI.CustomerRequest;
 import food.ordering.system.RunnerGUI.RunnerRequest;
 import food.ordering.system.VendorGUI.VendorRequest;
@@ -88,6 +87,24 @@ public class ManageUserRequest extends javax.swing.JFrame {
     
     private CustomerRequest findCustomerRequest(int requestID){
         for (CustomerRequest i : customerRequests) {
+            if (i.getUserRequestID() == requestID) {
+                return i;
+            }
+        }
+        return null;
+    }
+    
+    private VendorRequest findVendorRequest(int requestID){
+        for (VendorRequest i : vendorRequests) {
+            if (i.getUserRequestID() == requestID) {
+                return i;
+            }
+        }
+        return null;
+    }
+    
+    private RunnerRequest findRunnerRequest(int requestID){
+        for (RunnerRequest i : runnerRequests) {
             if (i.getUserRequestID() == requestID) {
                 return i;
             }
@@ -233,8 +250,9 @@ public class ManageUserRequest extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        AdminMainMenu menu = new AdminMainMenu(admin);
-        menu.setVisible(true);
+        AdminMainMenu page = new AdminMainMenu(admin);
+        page.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void runnerCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_runnerCheckBoxItemStateChanged
@@ -258,28 +276,94 @@ public class ManageUserRequest extends javax.swing.JFrame {
             UserRequest.UserType userType = (UserRequest.UserType) model.getValueAt(selectedRow, 3);
             switch (userType.name()) {
                 case "CUSTOMER":
-                    CustomerRequest selectedRequest = findCustomerRequest(requestID);
-                    CRUDCustomer page = new CRUDCustomer(admin);
-                    page.nameField.setText(selectedRequest.getName());
-                    page.phoneNumberField.setText(selectedRequest.getPhoneNumber());
-                    page.emailField.setText(selectedRequest.getEmail());
-                    page.passwordField.setText(selectedRequest.getPassword());
-                    page.addressField.setText(selectedRequest.getAddress());
-                    String city = selectedRequest.getCity().trim().toLowerCase();
-                    for (int i = 0; i < page.cityComboBox.getItemCount(); i++) {
-                        if (city.equals(page.cityComboBox.getItemAt(i).trim().toLowerCase())) {
-                            page.cityComboBox.setSelectedIndex(i);
+                    CustomerRequest selectedCustomerRequest = findCustomerRequest(requestID);
+                    CRUDCustomer customerPage = new CRUDCustomer(admin);
+                    customerPage.nameField.setText(selectedCustomerRequest.getName());
+                    customerPage.phoneNumberField.setText(selectedCustomerRequest.getPhoneNumber());
+                    customerPage.emailField.setText(selectedCustomerRequest.getEmail());
+                    customerPage.passwordField.setText(selectedCustomerRequest.getPassword());
+                    customerPage.addressField.setText(selectedCustomerRequest.getAddress());
+                    String city = selectedCustomerRequest.getCity().trim().toLowerCase();
+                    for (int i = 0; i < customerPage.cityComboBox.getItemCount(); i++) {
+                        if (city.equals(customerPage.cityComboBox.getItemAt(i).trim().toLowerCase())) {
+                            customerPage.cityComboBox.setSelectedIndex(i);
                             break;
                         }
                     }
-                    page.userRequestCustomerID = selectedRequest.getUserID();
-                    page.setVisible(true);
+                    customerPage.userRequestCustomerID = selectedCustomerRequest.getUserID();
+                    customerPage.setVisible(true);
                     this.dispose();
-                    allRequests.remove(selectedRequest);
+                    allRequests.remove(selectedCustomerRequest);
                     writeRequests();
+                    break;
+                case "VENDOR":
+                    VendorRequest selectedVendorRequest = findVendorRequest(requestID);
+                    CRUDVendor vendorPage = new CRUDVendor(admin);
+                    vendorPage.nameField.setText(selectedVendorRequest.getName());
+                    vendorPage.phoneNumberField.setText(selectedVendorRequest.getPhoneNumber());
+                    vendorPage.emailField.setText(selectedVendorRequest.getEmail());
+                    vendorPage.passwordField.setText(selectedVendorRequest.getPassword());
+                    vendorPage.descriptionField.setText(selectedVendorRequest.getDescription());
+                    vendorPage.categoryComboBox.setSelectedItem(selectedVendorRequest.getCategory());
+
+                    String[] hourParts = selectedVendorRequest.getOperationHours().split("-");
+                    for (int i = 0; i < vendorPage.startHourComboBox.getItemCount(); i++) {
+                        if (hourParts[0].equals(vendorPage.startHourComboBox.getItemAt(i))) {
+                            vendorPage.startHourComboBox.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < vendorPage.endHourComboBox.getItemCount(); i++) {
+                        if (hourParts[1].equals(vendorPage.endHourComboBox.getItemAt(i))) {
+                            vendorPage.endHourComboBox.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+
+                    String[] dayParts = selectedVendorRequest.getOperationDays().split("-");
+                    for (int i = 0; i < vendorPage.startDayComboBox.getItemCount(); i++) {
+                        if (dayParts[0].equals(vendorPage.startDayComboBox.getItemAt(i))) {
+                            vendorPage.startDayComboBox.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < vendorPage.endDayComboBox.getItemCount(); i++) {
+                        if (dayParts[1].equals(vendorPage.endDayComboBox.getItemAt(i))) {
+                            vendorPage.endDayComboBox.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                    vendorPage.userRequestVendorID = selectedVendorRequest.getUserID();
+                    vendorPage.setVisible(true);
+                    this.dispose();
+                    allRequests.remove(selectedVendorRequest);
+                    writeRequests();
+                    break;
+                case "RUNNER":
+                    RunnerRequest selectedRunnerRequest = findRunnerRequest(requestID);
+                    CRUDRunner runnerPage = new CRUDRunner(admin);
+                    runnerPage.nameField.setText(selectedRunnerRequest.getName());
+                    runnerPage.phoneNumberField.setText(selectedRunnerRequest.getPhoneNumber());
+                    runnerPage.emailField.setText(selectedRunnerRequest.getEmail());
+                    runnerPage.passwordField.setText(selectedRunnerRequest.getPassword());
+                    String runnerCity = selectedRunnerRequest.getAddress().trim().toLowerCase();
+                    for (int i = 0; i < runnerPage.cityComboBox.getItemCount(); i++) {
+                        if (runnerCity.equals(runnerPage.cityComboBox.getItemAt(i).trim().toLowerCase())) {
+                            runnerPage.cityComboBox.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                    runnerPage.vehiclePlateField.setText(selectedRunnerRequest.getPlateNumber());
+                    runnerPage.vehicleModelField.setText(selectedRunnerRequest.getVehicleModel());
+                    runnerPage.userRequestRunnerID = selectedRunnerRequest.getUserID();
+                    runnerPage.setVisible(true);
+                    this.dispose();
+                    allRequests.remove(selectedRunnerRequest);
+                    writeRequests();
+                    break;
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Please select a customer to edit.", "Manage Customer", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a user request to process.", "Manage User Request", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_processButtonActionPerformed
 

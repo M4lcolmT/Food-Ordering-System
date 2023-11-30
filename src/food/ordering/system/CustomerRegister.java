@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package food.ordering.system.CustomerGUI;
+package food.ordering.system;
 
+import food.ordering.system.CustomerGUI.*;
 import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.AdminGUI.UserRequest;
 import java.io.FileWriter;
@@ -17,27 +18,13 @@ import textFiles.TextFilePaths;
  *
  * @author LENOVO
  */
-public class CustomerUserProfile extends javax.swing.JFrame {
-    private Customer customer;
+public class CustomerRegister extends javax.swing.JFrame {
     private List<Integer> requestIDs;
     TextFilePaths path = new TextFilePaths();
     String userRequestTextFile  = path.getUserCRUDrequestTextFile();
     
-    public CustomerUserProfile(Customer customer) {
+    public CustomerRegister() {
         initComponents();
-        this.customer = customer;
-        
-        nameField.setText(customer.getName());
-        emailField.setText(customer.getEmail());
-        phoneNumberField.setText(customer.getPhoneNumber());
-        streetAddressField.setText(customer.getStreetAddress());
-        String customerCity = customer.getCity().trim().toLowerCase();
-        for (int i = 0; i < cityComboBox.getItemCount(); i++) {
-            if (customerCity.equals(cityComboBox.getItemAt(i).trim().toLowerCase())) {
-                cityComboBox.setSelectedIndex(i);
-                break;
-            }
-        }
         
         ReadFiles reader = new ReadFiles();
         requestIDs = reader.readUserRequestID();
@@ -58,10 +45,10 @@ public class CustomerUserProfile extends javax.swing.JFrame {
         return maxID + 1;
     }
     
-    private boolean saveRequest(UserRequest.RequestType requestType, String name, String phoneNumber, String email, String password, String streetAddress, String city) {
+    private boolean saveRequest(String name, String phoneNumber, String email, String password, String streetAddress, String city) {
         int userRequestID = checkMaxID(requestIDs);
-        CustomerRequest newRequest = new CustomerRequest(userRequestID, customer.getCustomerID(),
- UserRequest.UserType.CUSTOMER, requestType, 
+        CustomerRequest newRequest = new CustomerRequest(userRequestID, 0,
+ UserRequest.UserType.CUSTOMER, UserRequest.RequestType.NEWPROFILE, 
         name, phoneNumber,
         email, password, streetAddress, city);
         
@@ -74,13 +61,43 @@ public class CustomerUserProfile extends javax.swing.JFrame {
         return true;
     }
     
+    // Helper method to check if the password contains at least one uppercase letter
+    private boolean containsUppercase(String password) {
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Helper method to check if the password contains at least one digit
+    private boolean containsNumber(String password) {
+        for (char c : password.toCharArray()) {
+            if (Character.isDigit(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Helper method to check if the password contains at least one symbol
+    private boolean containsSymbol(String password) {
+        String symbols = "!@#$%^&*()-_=+[]{}|;:'\",.<>/?";
+        for (char c : password.toCharArray()) {
+            if (symbols.contains(Character.toString(c))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        changePassword = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         streetAddressField = new javax.swing.JTextField();
@@ -94,7 +111,8 @@ public class CustomerUserProfile extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         emailField = new javax.swing.JTextField();
         cityComboBox = new javax.swing.JComboBox<>();
-        deleteAccountButton = new javax.swing.JButton();
+        passwordField = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -102,16 +120,7 @@ public class CustomerUserProfile extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(674, 350));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("Edit User Profile");
-
-        changePassword.setFont(new java.awt.Font("Segoe UI", 2, 13)); // NOI18N
-        changePassword.setForeground(new java.awt.Color(51, 153, 255));
-        changePassword.setText("Change password");
-        changePassword.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                changePasswordMouseClicked(evt);
-            }
-        });
+        jLabel1.setText(" Register new account");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -156,6 +165,11 @@ public class CustomerUserProfile extends javax.swing.JFrame {
         cityComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select City", "Shah Alam", "Petaling Jaya", "Subang Jaya", "Klang", "Puchong", "Ampang", "Kajang", "Cyberjaya", "Seri Kembangan", "Hulu Langat", "Bukit Jalil" }));
         cityComboBox.setPreferredSize(new java.awt.Dimension(120, 25));
 
+        passwordField.setMinimumSize(new java.awt.Dimension(64, 25));
+        passwordField.setPreferredSize(new java.awt.Dimension(64, 25));
+
+        jLabel6.setText("Password");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -169,12 +183,17 @@ public class CustomerUserProfile extends javax.swing.JFrame {
                             .addComponent(phoneNumberField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(37, 37, 37)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
+                            .addComponent(cityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(cityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())))
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(206, 206, 206)
@@ -183,13 +202,16 @@ public class CustomerUserProfile extends javax.swing.JFrame {
                                 .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(37, 37, 37)
                                 .addComponent(streetAddressField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel4)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4))
+                                .addGap(37, 37, 37)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addGap(0, 0, Short.MAX_VALUE)))))
                         .addGap(0, 6, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
@@ -221,53 +243,42 @@ public class CustomerUserProfile extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(12, 12, 12)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(2, 2, 2)
-                        .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
-
-        deleteAccountButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        deleteAccountButton.setForeground(new java.awt.Color(255, 51, 51));
-        deleteAccountButton.setText("Delete Account");
-        deleteAccountButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteAccountButtonActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(changePassword)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(deleteAccountButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel1)))
                 .addContainerGap(69, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(changePassword)
-                    .addComponent(deleteAccountButton))
-                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
+                .addGap(2, 2, 2)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -290,6 +301,7 @@ public class CustomerUserProfile extends javax.swing.JFrame {
         String email = emailField.getText();
         String city = String.valueOf(cityComboBox.getSelectedItem());
         String streetAddress = streetAddressField.getText();
+        String password = passwordField.getText();
         
         if (isEmpty(name) || isEmpty(phoneNumber) || isEmpty(email) || isEmpty(streetAddress) || isEmpty(city))  {
            JOptionPane.showMessageDialog(this, "Please fill in all inputs.", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -306,13 +318,19 @@ public class CustomerUserProfile extends javax.swing.JFrame {
            return;
         }
         
+        // Password validation criteria
+        if (password.length() < 8 || !containsUppercase(password) || !containsNumber(password) || !containsSymbol(password)) {
+            JOptionPane.showMessageDialog(this, "Password must be at least 8 characters long and include at least one uppercase letter, one number, and one symbol.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed with the new changes?", "Edit Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
-            if (saveRequest(UserRequest.RequestType.UPDATEPROFILE, name, phoneNumber, email, customer.getPassword(), streetAddress, city)) {
-                JOptionPane.showMessageDialog(this, "Successfully sent user profile changes request to admin!");
-                CustomerMainMenu menu = new CustomerMainMenu(customer);
-                menu.setVisible(true);
+            if (saveRequest(name, phoneNumber, email, password, streetAddress, city)) {
+                JOptionPane.showMessageDialog(this, "Successfully sent user profile changes request to admin! Please wait for admin to approve.");
+                CustomerLogin page = new CustomerLogin();
+                page.setVisible(true);
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to send user profile changes request to admin, please revalidate your inputs", "Validation Error", JOptionPane.ERROR_MESSAGE);
@@ -322,55 +340,31 @@ public class CustomerUserProfile extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    private void changePasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changePasswordMouseClicked
-        CustomerChangePassword page = new CustomerChangePassword(customer);
-        page.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_changePasswordMouseClicked
-
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Unsaved changes, proceed to cancel?", "Cancel Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
-            CustomerMainMenu menu = new CustomerMainMenu(customer);
-            menu.setVisible(true);
+            CustomerLogin page = new CustomerLogin();
+            page.setVisible(true);
             this.dispose();
         }
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void deleteAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAccountButtonActionPerformed
-        int confirmationResult = JOptionPane.showConfirmDialog(this, "Do you wish to delete your account? This request is irreversible!", "Delete Confirmation", JOptionPane.YES_NO_OPTION);        
-
-        if (confirmationResult == JOptionPane.YES_OPTION) {
-            if (saveRequest(UserRequest.RequestType.DELETEPROFILE, customer.getName(), customer.getPhoneNumber(), 
-                    customer.getEmail(), customer.getPassword(), customer.getStreetAddress(), customer.getCity())) {
-                JOptionPane.showMessageDialog(this, "Successfully sent user profile delete request to admin!");
-                CustomerMainMenu menu = new CustomerMainMenu(customer);
-                menu.setVisible(true);
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Failed to send user profile changes request to admin, please revalidate your inputs", "Validation Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "User edit process is cancelled", "Changes Cancelled", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }//GEN-LAST:event_deleteAccountButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
-    private javax.swing.JLabel changePassword;
     public javax.swing.JComboBox<String> cityComboBox;
-    private javax.swing.JButton deleteAccountButton;
     private javax.swing.JTextField emailField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField nameField;
+    private javax.swing.JTextField passwordField;
     private javax.swing.JTextField phoneNumberField;
     private javax.swing.JButton saveButton;
     private javax.swing.JTextField streetAddressField;

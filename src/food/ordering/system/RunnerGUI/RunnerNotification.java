@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package food.ordering.system.VendorGUI;
+package food.ordering.system.RunnerGUI;
 
+import food.ordering.system.CustomerGUI.*;
 import food.ordering.system.AdminGUI.Notification;
 import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.AdminGUI.UserProfileNotificationPanel;
@@ -17,21 +18,21 @@ import javax.swing.JOptionPane;
 import textFiles.TextFilePaths;
 
 
-public class VendorNotification extends javax.swing.JFrame {
-    private Vendor vendor;
+public class RunnerNotification extends javax.swing.JFrame {
+    private Runner runner;
     private List<Notification> allNotifications;
-    private List<Notification> vendNotifications;
+    private List<Notification> runnNotifications;
     
     TextFilePaths path = new TextFilePaths();
     String notificationTextFile = path.getNotificationsTextFile();
     
-    public VendorNotification(Vendor vendor) {
+    public RunnerNotification(Runner runner) {
         initComponents();
-        this.vendor = vendor;
+        this.runner = runner;
         
         ReadFiles reader = new ReadFiles();
         allNotifications = reader.readNotifications();
-        vendNotifications = getNotifications();
+        runnNotifications = getNotifications();
         populateInnerPanel();
     }
     
@@ -39,7 +40,7 @@ public class VendorNotification extends javax.swing.JFrame {
         List<Notification> notifs = new ArrayList<>();
         
         for (Notification item : allNotifications) {
-            if (item.getUserType().name().equals("VENDOR") && item.getUserID() == vendor.getVendorID()) {
+            if (item.getUserType().name().equals("RUNNER") && item.getUserID() == runner.getRunnerID()) {
                 notifs.add(item);
             }
         }
@@ -48,13 +49,13 @@ public class VendorNotification extends javax.swing.JFrame {
     
     private void populateInnerPanel() {
         innerScrollPanel.removeAll();
-        for (Notification item : vendNotifications) {
+        for (Notification item : runnNotifications) {
             String notifType = item.getNotifType().name();
             String updateDesc = item.getUpdateDescription();
             LocalDateTime dateTime = item.getDateTime();
             switch(notifType) {
                 case "ORDER":
-                    VendorOrderNotificationPanel orderPanel = new VendorOrderNotificationPanel(vendor, item.getTransactionID(), updateDesc, dateTime);
+                    RunnerOrderNotificationPanel orderPanel = new RunnerOrderNotificationPanel(runner, item.getTransactionID(), updateDesc, dateTime);
                     innerScrollPanel.add(orderPanel);
                     break;
                 case "USERPROFILE":
@@ -153,7 +154,7 @@ public class VendorNotification extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        VendorMainMenu page = new VendorMainMenu(vendor);
+        RunnerMainMenu page = new RunnerMainMenu(runner);
         page.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_backButtonActionPerformed
@@ -165,7 +166,7 @@ public class VendorNotification extends javax.swing.JFrame {
             try {
                 List<Notification> customerNotifs = getNotifications();
                 allNotifications.removeAll(customerNotifs);
-                vendNotifications.clear();
+                runnNotifications.clear();
 
                 try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFile, false))) {
                     for (Notification notif : allNotifications) {

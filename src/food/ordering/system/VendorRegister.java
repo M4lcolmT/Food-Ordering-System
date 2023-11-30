@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package food.ordering.system.VendorGUI;
+package food.ordering.system;
 
+import food.ordering.system.VendorGUI.*;
 import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.AdminGUI.UserRequest;
 import java.io.FileWriter;
@@ -17,55 +18,20 @@ import textFiles.TextFilePaths;
  *
  * @author LENOVO
  */
-public class VendorUserProfile extends javax.swing.JFrame {
-    private Vendor vendor;
+public class VendorRegister extends javax.swing.JFrame {
     private List<Integer> requestIDs;
     
     TextFilePaths path = new TextFilePaths();
     String userRequestTextFile  = path.getUserCRUDrequestTextFile();
     
-    public VendorUserProfile(Vendor vendor) {
+    public VendorRegister() {
         initComponents();
-        this.vendor = vendor;
-        
-        nameField.setText(vendor.getName());
-        emailField.setText(vendor.getEmail());
-        phoneNumberField.setText(vendor.getPhoneNumber());
-        
-        String operationHours = vendor.getOperationHours();
-        String[] hourParts = operationHours.split("-");
-        for (int i = 0; i < startHourComboBox.getItemCount(); i++) {
-            if (hourParts[0].equals(startHourComboBox.getItemAt(i))) {
-                startHourComboBox.setSelectedIndex(i);
-                break;
-            }
-        }
-        for (int i = 0; i < endHourComboBox.getItemCount(); i++) {
-            if (hourParts[1].equals(endHourComboBox.getItemAt(i))) {
-                endHourComboBox.setSelectedIndex(i);
-                break;
-            }
-        }
-        
-        String operationDays = vendor.getOperationDays();
-        String[] dayParts = operationDays.split("-");
-        for (int i = 0; i < startDayComboBox.getItemCount(); i++) {
-            if (dayParts[0].equals(startDayComboBox.getItemAt(i))) {
-                startDayComboBox.setSelectedIndex(i);
-                break;
-            }
-        }
-        for (int i = 0; i < endDayComboBox.getItemCount(); i++) {
-            if (dayParts[1].equals(endDayComboBox.getItemAt(i))) {
-                endDayComboBox.setSelectedIndex(i);
-                break;
-            }
-        }
         
         ReadFiles reader = new ReadFiles();
         requestIDs = reader.readUserRequestID();
     }
     
+    //Check if string is empty
     private boolean isEmpty(String s) {
         return s == null || s.trim().isEmpty();
     }
@@ -81,12 +47,12 @@ public class VendorUserProfile extends javax.swing.JFrame {
         return maxID + 1;
     }
     
-    private boolean saveRequest(UserRequest.RequestType requestType, String name, String phoneNumber, String email, String password, String category, String description, String operationHours, String operationDays) {
+    private boolean saveRequest(String name, String phoneNumber, String email, String password, String category, String description, String operationHours, String operationDays) {
         int userRequestID = checkMaxID(requestIDs);
-        VendorRequest newRequest = new VendorRequest(userRequestID, vendor.getVendorID(),
- UserRequest.UserType.VENDOR, requestType, 
+        VendorRequest newRequest = new VendorRequest(userRequestID, 0,
+ UserRequest.UserType.VENDOR, UserRequest.RequestType.NEWPROFILE, 
         name, phoneNumber,
-        email, password, vendor.getCity(), category, description, operationHours, operationDays);
+        email, password, "Bukit Jalil", category, description, operationHours, operationDays);
         
         try (PrintWriter pw = new PrintWriter(new FileWriter(userRequestTextFile, true))) {
             pw.println(newRequest.toString());
@@ -97,6 +63,37 @@ public class VendorUserProfile extends javax.swing.JFrame {
         return true;
     }
     
+    // Helper method to check if the password contains at least one uppercase letter
+    private boolean containsUppercase(String password) {
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Helper method to check if the password contains at least one digit
+    private boolean containsNumber(String password) {
+        for (char c : password.toCharArray()) {
+            if (Character.isDigit(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Helper method to check if the password contains at least one symbol
+    private boolean containsSymbol(String password) {
+        String symbols = "!@#$%^&*()-_=+[]{}|;:'\",.<>/?";
+        for (char c : password.toCharArray()) {
+            if (symbols.contains(Character.toString(c))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -104,7 +101,6 @@ public class VendorUserProfile extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        changePassword = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         descriptionField = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
@@ -122,31 +118,22 @@ public class VendorUserProfile extends javax.swing.JFrame {
         endDayComboBox = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
         startDayComboBox = new javax.swing.JComboBox<>();
-        categoryComboBox = new javax.swing.JComboBox<>();
+        passwordField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        cancelButton = new javax.swing.JButton();
+        categoryComboBox = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
         saveButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        deleteAccountButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         jTextField1.setText("jTextField1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setPreferredSize(new java.awt.Dimension(600, 350));
+        jPanel1.setPreferredSize(new java.awt.Dimension(674, 350));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("Edit User Profile");
-
-        changePassword.setFont(new java.awt.Font("Segoe UI", 2, 13)); // NOI18N
-        changePassword.setForeground(new java.awt.Color(51, 153, 255));
-        changePassword.setText("Change password");
-        changePassword.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                changePasswordMouseClicked(evt);
-            }
-        });
+        jLabel1.setText("Register new account");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -198,25 +185,13 @@ public class VendorUserProfile extends javax.swing.JFrame {
         startDayComboBox.setMinimumSize(new java.awt.Dimension(11, 22));
         startDayComboBox.setPreferredSize(new java.awt.Dimension(120, 22));
 
+        passwordField.setMinimumSize(new java.awt.Dimension(64, 25));
+
+        jLabel5.setText("Password");
+
         categoryComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Category", "Non-Halal", "Fast Food", "Western", "Korean", "Chinese", "Malay" }));
 
-        jLabel5.setText("Category");
-
-        cancelButton.setText("Cancel");
-        cancelButton.setPreferredSize(new java.awt.Dimension(100, 25));
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-
-        saveButton.setText("Save");
-        saveButton.setPreferredSize(new java.awt.Dimension(100, 25));
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
+        jLabel6.setText("Category");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -225,9 +200,6 @@ public class VendorUserProfile extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -261,13 +233,12 @@ public class VendorUserProfile extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
                             .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
                         .addGap(34, 34, 34)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel6)
+                            .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel10)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(startDayComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -280,7 +251,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(1, 1, 1)
+                .addGap(2, 2, 2)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel8))
@@ -315,33 +286,29 @@ public class VendorUserProfile extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addGap(2, 2, 2)
                         .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6))
+                .addGap(2, 2, 2)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        jButton1.setText("Back");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        saveButton.setText("Save");
+        saveButton.setPreferredSize(new java.awt.Dimension(100, 25));
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                saveButtonActionPerformed(evt);
             }
         });
 
-        deleteAccountButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        deleteAccountButton.setForeground(new java.awt.Color(255, 51, 51));
-        deleteAccountButton.setText("Delete Account");
-        deleteAccountButton.addActionListener(new java.awt.event.ActionListener() {
+        cancelButton.setText("Cancel");
+        cancelButton.setPreferredSize(new java.awt.Dimension(100, 25));
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteAccountButtonActionPerformed(evt);
+                cancelButtonActionPerformed(evt);
             }
         });
 
@@ -350,43 +317,39 @@ public class VendorUserProfile extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changePassword)
-                        .addGap(141, 141, 141)
-                        .addComponent(deleteAccountButton))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(33, 33, 33)
-                            .addComponent(jButton1))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(63, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(95, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(changePassword)
-                    .addComponent(deleteAccountButton))
+                .addGap(25, 25, 25)
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 632, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -400,6 +363,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
         String name = nameField.getText();
         String phoneNumber = phoneNumberField.getText();
         String email = emailField.getText();
+        String password = passwordField.getText();
         String description = descriptionField.getText();
         String startHour = String.valueOf(startHourComboBox.getSelectedItem());
         String endHour = String.valueOf(endHourComboBox.getSelectedItem());
@@ -424,13 +388,19 @@ public class VendorUserProfile extends javax.swing.JFrame {
            return;
         }
         
+        // Password validation criteria
+        if (password.length() < 8 || !containsUppercase(password) || !containsNumber(password) || !containsSymbol(password)) {
+            JOptionPane.showMessageDialog(this, "Password must be at least 8 characters long and include at least one uppercase letter, one number, and one symbol.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed with the new changes?", "Edit Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
-            if (saveRequest(UserRequest.RequestType.UPDATEPROFILE, name, phoneNumber, email, vendor.getPassword(), category, description, operationHours, operationDays)) {
+            if (saveRequest(name, phoneNumber, email, password, category, description, operationHours, operationDays)) {
                 JOptionPane.showMessageDialog(this, "Successfully sent user profile changes request to admin!");
-                VendorMainMenu menu = new VendorMainMenu(vendor);
-                menu.setVisible(true);
+                VendorLogin page = new VendorLogin();
+                page.setVisible(true);
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to send user profile changes request to admin, please revalidate your inputs", "Validation Error", JOptionPane.ERROR_MESSAGE);
@@ -440,18 +410,12 @@ public class VendorUserProfile extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    private void changePasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changePasswordMouseClicked
-        VendorChangePassword page = new VendorChangePassword(vendor);
-        page.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_changePasswordMouseClicked
-
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Unsaved changes, proceed to cancel?", "Cancel Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
-            VendorMainMenu menu = new VendorMainMenu(vendor);
-            menu.setVisible(true);
+            VendorLogin page = new VendorLogin();
+            page.setVisible(true);
             this.dispose();
         }
     }//GEN-LAST:event_cancelButtonActionPerformed
@@ -460,40 +424,13 @@ public class VendorUserProfile extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_endHourComboBoxActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        VendorMainMenu page = new VendorMainMenu(vendor);
-        page.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void deleteAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAccountButtonActionPerformed
-        int confirmationResult = JOptionPane.showConfirmDialog(this, "Do you wish to delete your account? This request is irreversible!", "Delete Confirmation", JOptionPane.YES_NO_OPTION);        
-
-        if (confirmationResult == JOptionPane.YES_OPTION) {
-            if (saveRequest(UserRequest.RequestType.DELETEPROFILE, vendor.getName(), vendor.getPhoneNumber(), 
-                    vendor.getEmail(), vendor.getPassword(), vendor.getCategory(), vendor.getDescription(), vendor.getOperationHours(), vendor.getOperationDays())) {
-                JOptionPane.showMessageDialog(this, "Successfully sent user profile delete request to admin!");
-                VendorMainMenu menu = new VendorMainMenu(vendor);
-                menu.setVisible(true);
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Failed to send user profile changes request to admin, please revalidate your inputs", "Validation Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "User edit process is cancelled", "Changes Cancelled", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }//GEN-LAST:event_deleteAccountButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     public javax.swing.JComboBox<String> categoryComboBox;
-    private javax.swing.JLabel changePassword;
-    private javax.swing.JButton deleteAccountButton;
     private javax.swing.JTextField descriptionField;
     private javax.swing.JTextField emailField;
     private javax.swing.JComboBox<String> endDayComboBox;
     private javax.swing.JComboBox<String> endHourComboBox;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -501,6 +438,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -508,6 +446,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField nameField;
+    private javax.swing.JTextField passwordField;
     private javax.swing.JTextField phoneNumberField;
     private javax.swing.JButton saveButton;
     private javax.swing.JComboBox<String> startDayComboBox;

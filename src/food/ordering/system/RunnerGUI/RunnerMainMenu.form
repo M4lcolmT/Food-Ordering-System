@@ -63,7 +63,7 @@
                       <Component id="jButton4" max="32767" attributes="0"/>
                       <Component id="jButton5" alignment="1" max="32767" attributes="0"/>
                       <Component id="jButton3" alignment="1" max="32767" attributes="0"/>
-                      <Component id="jButton2" alignment="1" max="32767" attributes="0"/>
+                      <Component id="manageTaskButton" alignment="1" max="32767" attributes="0"/>
                       <Component id="logOutButton" min="-2" pref="171" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -79,7 +79,7 @@
                       <Component id="profileButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
-                  <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                  <Component id="manageTaskButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jButton3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -102,10 +102,13 @@
             <Property name="text" type="java.lang.String" value="Runner Main Menu"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton2">
+        <Component class="javax.swing.JButton" name="manageTaskButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Manage Task"/>
+            <Property name="text" type="java.lang.String" value="View Tasks"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="manageTaskButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton3">
           <Properties>

@@ -52,7 +52,7 @@ public class Menu extends javax.swing.JFrame {
         return vendor.getName();
     }
     
-    public List<FoodItem> readFoodItemsFromFile() {
+    private List<FoodItem> readFoodItemsFromFile() {
         menu.clear();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(vendorMenuFilePath))) {
@@ -84,7 +84,7 @@ public class Menu extends javax.swing.JFrame {
         return menu;
     }
     
-    public void populateInnerPanel(List<FoodItem> menu) {
+    private void populateInnerPanel(List<FoodItem> menu) {
         innerScrollPanel.removeAll();
         for (FoodItem item : menu) {
             FoodItemPanel foodItemPanel = new FoodItemPanel(item, basket, this);

@@ -1,2 +1,0 @@
-3;1;VENDOR;UPDATEPROFILE;McDonalds;0128883332;mcd@gmail.com;1;Bukit Jalil;Best Food Eva;9:00am-9:00pm;Tuesday-Sunday
-2;1;RUNNER;UPDATEPROFILE;Khoo;0134569873;khoo@gmail.com;k123;Petaling Jaya;VJC2908;Toyota Motorcycle

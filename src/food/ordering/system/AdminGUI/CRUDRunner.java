@@ -8,11 +8,9 @@ import food.ordering.system.RunnerGUI.Runner;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -25,13 +23,8 @@ import textFiles.TextFilePaths;
 public class CRUDRunner extends javax.swing.JFrame {
     private Admin admin;
     List<Runner> runners;
-    private int userRequestRunnerID = 0;
+    public int userRequestRunnerID = 0;
     private List<Notification> notifications;
-
-    private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
-    private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final String DIGITS = "0123456789";
-    private static final String SPECIAL_CHARACTERS = "!@#$%^&*()-_+=<>?";
     
     TextFilePaths path = new TextFilePaths();
     String runnerTextFile = path.getRunnerTextFile();
@@ -64,10 +57,9 @@ public class CRUDRunner extends javax.swing.JFrame {
                     , runner.getPassword(), runner.getCity(), runner.getPlateNumber(), runner.getVehicleModel()};
             model.addRow(rowData);
         }
-        
-     
     }
-     private Runner getRunner(int id) {
+    
+    private Runner getRunner(int id) {
         for (Runner item : runners) {
             if (id == item.getRunnerID()) {
                 return item;
@@ -139,22 +131,6 @@ public class CRUDRunner extends javax.swing.JFrame {
         return str.trim().isEmpty();
     }
     
-    // Password generator
-    public static String generatePassword(int length) {
-        StringBuilder password = new StringBuilder();
-        Random random = new SecureRandom();
-
-        String allCharacters = LOWERCASE + UPPERCASE + DIGITS + SPECIAL_CHARACTERS;
-
-        for (int i = 0; i < length; i++) {
-            int randomIndex = random.nextInt(allCharacters.length());
-            char randomChar = allCharacters.charAt(randomIndex);
-            password.append(randomChar);
-        }
-
-        return password.toString();
-    }
-    
     public int getUserRequestRunnerID() {
         DefaultTableModel model = (DefaultTableModel) runnerTable.getModel();
         int rowCount = model.getRowCount();
@@ -188,7 +164,6 @@ public class CRUDRunner extends javax.swing.JFrame {
         emailField = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         passwordField = new javax.swing.JTextField();
-        generatePasswordButton = new javax.swing.JButton();
         cityComboBox = new javax.swing.JComboBox<>();
         add = new javax.swing.JButton();
         edit = new javax.swing.JButton();
@@ -204,6 +179,8 @@ public class CRUDRunner extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Manage Runner Details");
 
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
         jLabel2.setText("Name:");
 
         jLabel3.setText("Phone Number:");
@@ -218,13 +195,6 @@ public class CRUDRunner extends javax.swing.JFrame {
         jLabel7.setText("City:");
 
         jLabel8.setText("Password:");
-
-        generatePasswordButton.setText("Generate");
-        generatePasswordButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                generatePasswordButtonActionPerformed(evt);
-            }
-        });
 
         cityComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select City", "Shah Alam", "Petaling Jaya", "Subang Jaya", "Klang", "Puchong", "Ampang", "Kajang", "Cyberjaya", "Seri Kembangan", "Hulu Langat", "Bukit Jalil" }));
         cityComboBox.addItemListener(new java.awt.event.ItemListener() {
@@ -251,18 +221,15 @@ public class CRUDRunner extends javax.swing.JFrame {
                     .addComponent(vehicleModelField)
                     .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(emailField, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
-                            .addComponent(phoneNumberField)
-                            .addComponent(cityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(generatePasswordButton))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(emailField, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                    .addComponent(phoneNumberField)
+                    .addComponent(cityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(41, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -289,9 +256,8 @@ public class CRUDRunner extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(generatePasswordButton))
-                .addContainerGap(8, Short.MAX_VALUE))
+                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         add.setText("Add");
@@ -337,22 +303,19 @@ public class CRUDRunner extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
-                            .addComponent(jLabel1)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(add)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(edit)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(delete))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton1)))
+                    .addComponent(jButton1)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(add)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(edit)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(delete))))
                 .addContainerGap(35, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -398,16 +361,21 @@ public class CRUDRunner extends javax.swing.JFrame {
         String vehicleModel = vehicleModelField.getText();
         String city = String.valueOf(cityComboBox.getSelectedItem());
 
-        // Validate input fields
-        if (isEmpty(name) || isEmpty(phoneNumber) || isEmpty(email) || isEmpty(password) || city.equals("Select City") || isEmpty(vehicleNum) || isEmpty(vehicleModel)) {
-            JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
-            return; 
+        if (!name.equals("") ||
+                        !phoneNumber.equals("") ||
+                        !email.equals ("") ||
+                        !password.equals("") ||
+                        !city.equals("Select City") ||
+                        !vehicleNum.equals("") ||
+                        !vehicleModel.equals("")) {
+            Runner item = new Runner(runnerID, true, name, phoneNumber, email, password, city, vehicleNum, vehicleModel);
+            runners.add(item);
+            JOptionPane.showMessageDialog(this, "Successfully added the new Runner!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            createNewRunners();
+            userRequestRunnerID = 0;
+        } else {
+            JOptionPane.showMessageDialog(this, "Proceed to Manage User Requests page to add new users.", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
-        
-        Runner item = new Runner(runnerID, true, name, phoneNumber, email, password, city, vehicleNum, vehicleModel);
-        runners.add(item);
-        JOptionPane.showMessageDialog(this, "Successfully added the new Runner!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        createNewRunners();
     }//GEN-LAST:event_addActionPerformed
 
     private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
@@ -428,53 +396,45 @@ public class CRUDRunner extends javax.swing.JFrame {
                 !newCity.equals("") ||
                 !newVehiclePlate.equals("") ||
                 !newVehicleModel.equals("")) {
-            Runner selectedRunner = getRunner(getUserRequestRunnerID());
-            selectedRunner.setName(newName);
-            selectedRunner.setPhoneNumber(newPhoneNumber);
-            selectedRunner.setEmail(newEmail);
-            selectedRunner.setPassword(newPassword);
-            selectedRunner.setCity(newCity);
-            selectedRunner.setPlateNumber(newVehiclePlate);
-            selectedRunner.setVehicleModel(newVehicleModel);
-            createNewRunners();
-            Notification newNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.USERPROFILE, selectedRunner.getRunnerID(), Notification.NotifUserType.CUSTOMER, 0, "Your profile is updated!", LocalDateTime.now());
-            notifications.add(newNotif);
-            writeNotificationToFile();
-            JOptionPane.showMessageDialog(this, "Successfully edited Runner Details", "Success", JOptionPane.INFORMATION_MESSAGE);
+            int id = getUserRequestRunnerID();
+            if (id!=-1) {
+                Runner selectedRunner = getRunner(id);
+                selectedRunner.setName(newName);
+                selectedRunner.setPhoneNumber(newPhoneNumber);
+                selectedRunner.setEmail(newEmail);
+                selectedRunner.setPassword(newPassword);
+                selectedRunner.setCity(newCity);
+                selectedRunner.setPlateNumber(newVehiclePlate);
+                selectedRunner.setVehicleModel(newVehicleModel);
+                createNewRunners();
+                Notification newNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.USERPROFILE, selectedRunner.getRunnerID(), Notification.NotifUserType.RUNNER, 0, "Your profile is updated!", LocalDateTime.now());
+                notifications.add(newNotif);
+                writeNotificationToFile();
+                JOptionPane.showMessageDialog(this, "Successfully edited Runner Details", "Success", JOptionPane.INFORMATION_MESSAGE);
+                userRequestRunnerID = 0;
+            } else {
+                JOptionPane.showMessageDialog(this, "New user found, please select the add button instead.", "Error", JOptionPane.INFORMATION_MESSAGE);
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Proceed to Manage User Requests page to edit user profile details.", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_editActionPerformed
 
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
-        DefaultTableModel model = (DefaultTableModel) runnerTable.getModel();
-        int selectedRow = runnerTable.getSelectedRow();
-        if (selectedRow != -1) {
-            int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to delete Runner Details?", "Delete Confirmation", JOptionPane.YES_NO_OPTION);        
-            if (confirmationResult == JOptionPane.YES_OPTION) {
-                int runnerID = (int) model.getValueAt(selectedRow, 0);
-                Runner selectedRunner = getRunner(runnerID);
-                runners.removeIf(item -> item.getRunnerID() == selectedRunner.getRunnerID());
-                writeRunnerToFile();
-                ReadFiles reader = new ReadFiles();
-                runners = reader.readRunners();
-                loadRunners();
-            } else {
-                JOptionPane.showMessageDialog(this, "Action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-            }
+        int id = getUserRequestRunnerID();
+        if (id!=-1) {
+            Runner selectedRunner = getRunner(id);
+            runners.removeIf(item -> item.getRunnerID() == selectedRunner.getRunnerID());
+            createNewRunners();
+            userRequestRunnerID = 0;
+        } else {
+            JOptionPane.showMessageDialog(this, "Proceed to Manage User Requests page to delete users.", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
-             
     }//GEN-LAST:event_deleteActionPerformed
 
     private void cityComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cityComboBoxItemStateChanged
         
     }//GEN-LAST:event_cityComboBoxItemStateChanged
-
-    private void generatePasswordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatePasswordButtonActionPerformed
-        int passwordLength = 9;
-        String generatedPassword = generatePassword(passwordLength);
-        passwordField.setText(generatedPassword);
-    }//GEN-LAST:event_generatePasswordButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         AdminMainMenu page = new AdminMainMenu(admin);
@@ -484,11 +444,10 @@ public class CRUDRunner extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton add;
-    private javax.swing.JComboBox<String> cityComboBox;
+    public javax.swing.JComboBox<String> cityComboBox;
     private javax.swing.JButton delete;
     private javax.swing.JButton edit;
-    private javax.swing.JTextField emailField;
-    private javax.swing.JButton generatePasswordButton;
+    public javax.swing.JTextField emailField;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -501,11 +460,11 @@ public class CRUDRunner extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField nameField;
-    private javax.swing.JTextField passwordField;
-    private javax.swing.JTextField phoneNumberField;
+    public javax.swing.JTextField nameField;
+    public javax.swing.JTextField passwordField;
+    public javax.swing.JTextField phoneNumberField;
     private javax.swing.JTable runnerTable;
-    private javax.swing.JTextField vehicleModelField;
-    private javax.swing.JTextField vehiclePlateField;
+    public javax.swing.JTextField vehicleModelField;
+    public javax.swing.JTextField vehiclePlateField;
     // End of variables declaration//GEN-END:variables
 }

@@ -17,11 +17,13 @@ import java.util.List;
 public class VendorPanel extends javax.swing.JPanel {
     private Vendor vendor;
     private Customer customer;
+    private OrderMenu orderMenu;
     
-    public VendorPanel(Vendor vendor, Customer customer) {
+    public VendorPanel(OrderMenu orderMenu, Vendor vendor, Customer customer) {
         initComponents();
         this.vendor = vendor;
         this.customer = customer;
+        this.orderMenu = orderMenu;
         
         vendorName.setText(vendor.getName());
         vendorRating.setText(Double.toString((double) vendor.getRating()));
@@ -30,6 +32,7 @@ public class VendorPanel extends javax.swing.JPanel {
         
         calculateDistance(customer.getCity().trim().toLowerCase(), vendor.getCity().trim().toLowerCase());
     }
+    
     
     private void calculateDistance(String customerAddress, String vendorAddress) {
         Location customerLocation = Location.locationMap.get(customerAddress);
@@ -151,6 +154,7 @@ public class VendorPanel extends javax.swing.JPanel {
         List<FoodItem> basket = new ArrayList<>();
         Menu vendorMenu = new Menu(vendor, customer, basket);
         vendorMenu.setVisible(true);
+        orderMenu.dispose();
     }//GEN-LAST:event_orderButtonActionPerformed
 
 

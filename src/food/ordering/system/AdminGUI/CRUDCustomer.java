@@ -8,11 +8,9 @@ import food.ordering.system.CustomerGUI.Customer;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -27,11 +25,6 @@ public class CRUDCustomer extends javax.swing.JFrame {
     private List<Customer> customers;
     public int userRequestCustomerID = 0;
     private List<Notification> notifications;
-    
-    private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
-    private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final String DIGITS = "0123456789";
-    private static final String SPECIAL_CHARACTERS = "!@#$%^&*()-_+=<>?";
     
     TextFilePaths path = new TextFilePaths();
     String customerTextFile = path.getCustomerTextFile();    
@@ -134,26 +127,6 @@ public class CRUDCustomer extends javax.swing.JFrame {
         cityComboBox.setSelectedIndex(0);
     }
     
-    private boolean isEmpty(String str) {
-        return str.trim().isEmpty();
-    }
-    
-    // Password generator
-    public static String generatePassword(int length) {
-        StringBuilder password = new StringBuilder();
-        Random random = new SecureRandom();
-
-        String allCharacters = LOWERCASE + UPPERCASE + DIGITS + SPECIAL_CHARACTERS;
-
-        for (int i = 0; i < length; i++) {
-            int randomIndex = random.nextInt(allCharacters.length());
-            char randomChar = allCharacters.charAt(randomIndex);
-            password.append(randomChar);
-        }
-
-        return password.toString();
-    }
-    
     public int getUserRequestCustomerID() {
         DefaultTableModel model = (DefaultTableModel) customerTable.getModel();
         int rowCount = model.getRowCount();
@@ -164,7 +137,6 @@ public class CRUDCustomer extends javax.swing.JFrame {
                 return customerId; // Return the customer ID if ID matches
             }
         }
-
         return -1; // Return -1 if no matching ID is found
     }
     
@@ -187,7 +159,6 @@ public class CRUDCustomer extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        generatePasswordButton = new javax.swing.JButton();
         passwordField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         cityComboBox = new javax.swing.JComboBox<>();
@@ -234,13 +205,6 @@ public class CRUDCustomer extends javax.swing.JFrame {
 
         jLabel11.setText("Password:");
 
-        generatePasswordButton.setText("generate");
-        generatePasswordButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                generatePasswordButtonActionPerformed(evt);
-            }
-        });
-
         jLabel6.setText("City:");
 
         cityComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select City", "Shah Alam", "Petaling Jaya", "Subang Jaya", "Klang", "Puchong", "Ampang", "Kajang", "Cyberjaya", "Seri Kembangan", "Hulu Langat", "Bukit Jalil" }));
@@ -257,12 +221,9 @@ public class CRUDCustomer extends javax.swing.JFrame {
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(phoneNumberField)
+                    .addComponent(phoneNumberField, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                     .addComponent(nameField, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(generatePasswordButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, Short.MAX_VALUE)))
+                    .addComponent(passwordField))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel4)
@@ -273,7 +234,7 @@ public class CRUDCustomer extends javax.swing.JFrame {
                     .addComponent(addressField)
                     .addComponent(emailField, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
                     .addComponent(cityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -303,7 +264,6 @@ public class CRUDCustomer extends javax.swing.JFrame {
                         .addComponent(cityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(generatePasswordButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel11)))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
@@ -361,7 +321,7 @@ public class CRUDCustomer extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -393,18 +353,24 @@ public class CRUDCustomer extends javax.swing.JFrame {
                         !newPassword.equals("") ||
                         !newAddress.equals("") ||
                         !newCity.equals("Select City")) {
-            Customer selectedCustomer = getCustomer(getUserRequestCustomerID());
-            selectedCustomer.setName(newName);
-            selectedCustomer.setPhoneNumber(newPhoneNumber);
-            selectedCustomer.setEmail(newEmail);
-            selectedCustomer.setPassword(newPassword);
-            selectedCustomer.setStreetAddress(newAddress);
-            selectedCustomer.setCity(newCity);
-            createNewCustomers();
-            Notification newNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.USERPROFILE, selectedCustomer.getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "Your profile is updated!", LocalDateTime.now());
-            notifications.add(newNotif);
-            writeNotificationToFile();
-            JOptionPane.showMessageDialog(this, "Successfully edited Customer Details", "Success", JOptionPane.INFORMATION_MESSAGE);
+            int id = getUserRequestCustomerID();
+            if (id!=-1) { // Check if the selected user is an existing user
+                Customer selectedCustomer = getCustomer(id);
+                selectedCustomer.setName(newName);
+                selectedCustomer.setPhoneNumber(newPhoneNumber);
+                selectedCustomer.setEmail(newEmail);
+                selectedCustomer.setPassword(newPassword);
+                selectedCustomer.setStreetAddress(newAddress);
+                selectedCustomer.setCity(newCity);
+                createNewCustomers();
+                Notification newNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.USERPROFILE, selectedCustomer.getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "Your profile is updated!", LocalDateTime.now());
+                notifications.add(newNotif);
+                writeNotificationToFile();
+                JOptionPane.showMessageDialog(this, "Successfully edited Customer Details", "Success", JOptionPane.INFORMATION_MESSAGE);
+                userRequestCustomerID = 0;
+            } else {
+                JOptionPane.showMessageDialog(this, "New user found, please select the add button instead.", "Error", JOptionPane.INFORMATION_MESSAGE);
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Proceed to Manage User Requests page to edit user profile details.", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -418,50 +384,40 @@ public class CRUDCustomer extends javax.swing.JFrame {
         String password = passwordField.getText();
         String address = addressField.getText();
         String city = String.valueOf(cityComboBox.getSelectedItem());
-
-        // Validate input fields
-        if (isEmpty(name) || isEmpty(phoneNumber) || isEmpty(email) || isEmpty(password) || isEmpty(address) || city.equals("Select City")) {
-            JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
-            return; 
+        
+        if (!name.equals("") ||
+                        !phoneNumber.equals("") ||
+                        !email.equals ("") ||
+                        !password.equals("") ||
+                        !address.equals("") ||
+                        !city.equals("Select City")) {
+            Customer item = new Customer(customerID, name, phoneNumber, email, password, address, city);
+            customers.add(item);
+            JOptionPane.showMessageDialog(this, "Successfully added the new Customer!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            createNewCustomers();
+            userRequestCustomerID = 0;
+        } else {
+            JOptionPane.showMessageDialog(this, "Proceed to Manage User Requests page to add new users.", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
-
-        Customer item = new Customer(customerID, name, phoneNumber, email, password, address, city);
-        customers.add(item);
-        JOptionPane.showMessageDialog(this, "Successfully added the new Customer!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        createNewCustomers();
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        DefaultTableModel model = (DefaultTableModel) customerTable.getModel();
-        int selectedRow = customerTable.getSelectedRow();
-        if (selectedRow != -1) {
-            int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to delete Customer Details?", "Delete Confirmation", JOptionPane.YES_NO_OPTION);        
-            if (confirmationResult == JOptionPane.YES_OPTION) {
-                int customerID = (int) model.getValueAt(selectedRow, 0);
-                Customer selectedCustomer = getCustomer(customerID);
-                customers.removeIf(item -> item.getCustomerID() == selectedCustomer.getCustomerID());
-                writeCustomerToFile();
-                ReadFiles reader = new ReadFiles();
-                customers = reader.readCustomers();
-                loadCustomers();
-            } else {
-                JOptionPane.showMessageDialog(this, "Action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-            }
+        int id = getUserRequestCustomerID();
+        if (id!=-1) {
+            Customer selectedCustomer = getCustomer(id);
+            customers.removeIf(item -> item.getCustomerID() == selectedCustomer.getCustomerID());
+            createNewCustomers();
+            userRequestCustomerID = 0;
+        } else {
+            JOptionPane.showMessageDialog(this, "Proceed to Manage User Requests page to delete users.", "Error", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
-
-    private void generatePasswordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatePasswordButtonActionPerformed
-        int passwordLength = 9;
-        String generatedPassword = generatePassword(passwordLength);
-        passwordField.setText(generatedPassword);
-    }//GEN-LAST:event_generatePasswordButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         AdminMainMenu page = new AdminMainMenu(admin);
         page.setVisible(true);
         this.dispose();
-        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -472,7 +428,6 @@ public class CRUDCustomer extends javax.swing.JFrame {
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton editButton;
     public javax.swing.JTextField emailField;
-    private javax.swing.JButton generatePasswordButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;

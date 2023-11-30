@@ -5,7 +5,6 @@
 package food.ordering.system.CustomerGUI;
 
 import food.ordering.system.AdminGUI.Notification;
-import food.ordering.system.AdminGUI.OrderNotificationPanel;
 import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.AdminGUI.UserProfileNotificationPanel;
 import java.io.FileWriter;
@@ -55,7 +54,7 @@ public class CustomerNotification extends javax.swing.JFrame {
             LocalDateTime dateTime = item.getDateTime();
             switch(notifType) {
                 case "ORDER":
-                    OrderNotificationPanel orderPanel = new OrderNotificationPanel(item.getTransactionID(), updateDesc, dateTime);
+                    CustomerOrderNotificationPanel orderPanel = new CustomerOrderNotificationPanel(item.getTransactionID(), updateDesc, dateTime);
                     innerScrollPanel.add(orderPanel);
                     break;
                 case "USERPROFILE":

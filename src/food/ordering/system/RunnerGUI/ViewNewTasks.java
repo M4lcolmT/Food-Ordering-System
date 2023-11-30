@@ -1,5 +1,17 @@
 package food.ordering.system.RunnerGUI;
 
+import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.CustomerGUI.Customer;
+import food.ordering.system.CustomerGUI.Order;
+import food.ordering.system.CustomerGUI.OrderManager;
+import food.ordering.system.Location;
+import food.ordering.system.VendorGUI.Vendor;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.swing.table.DefaultTableModel;
+
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -12,12 +24,78 @@ package food.ordering.system.RunnerGUI;
  */
 public class ViewNewTasks extends javax.swing.JFrame {
     private Runner runner;
+    private List<Order> orders;
+    private List<Task> allTasks;
+    private List<Task> runnerTasks;
 
     public ViewNewTasks(Runner runner) {
         initComponents();
         this.runner = runner;
+        
+        ReadFiles reader = new ReadFiles();
+        allTasks = reader.readTasks();
+        runnerTasks = getRunnerTask(runner.getRunnerID());
+        
+        OrderManager manager = new OrderManager();
+        orders = manager.getOrders();
+        loadTasks();
     }
+    
+    private List<Task> getRunnerTask(int id) {
+        List<Task> runnertasks = new ArrayList<>();
+        
+        for (Task item : allTasks) {
+            if (id == item.getRunnerID()) {
+                runnertasks.add(item);
+            }
+        }
+        return runnertasks;
+    }
+    
+    private Order getOrder(int id) {
+        for (Order i : orders) {
+            if (id == i.getOrderID()) {
+                return i;
+            }
+        }
+        return null;
+    }
+    
+    private double calculateDistance(String customerCity, String vendorCity) {
+        double distance = 0;
+        
+        Location customerLocation = Location.locationMap.get(customerCity);
+        Location vendorLocation = Location.locationMap.get(vendorCity);
 
+        if (customerLocation != null && vendorLocation != null) {
+            distance = Location.calculateDistance(customerLocation,vendorLocation);
+        } else {
+            System.out.println("Unknown location");
+        }
+        return distance;
+    }
+    
+    //Load tasks into the table
+    private void loadTasks() {
+        DefaultTableModel model = (DefaultTableModel) tasksTable.getModel();
+        
+        List<Task> filteredTasks = runnerTasks.stream()
+                .collect(Collectors.toList());
+        // Sort the filtered items by ID
+        filteredTasks.sort(Comparator.comparingInt(Task::getTaskID));
+
+        // Clear existing rows
+        model.setRowCount(0);
+        
+        for (Task task : filteredTasks) {
+            Order order = getOrder(task.getOrderID());
+            Customer orderCustomer = order.getCustomer();
+            Vendor orderVendor = order.getVendor();
+            double distance = calculateDistance(orderCustomer.getCity().trim().toLowerCase(), orderVendor.getCity().trim().toLowerCase());
+            Object[] rowData = { task.getTaskID(), orderVendor.getName(), distance, orderCustomer.getName(), orderCustomer.getCity(), task.getTaskStatus()};
+            model.addRow(rowData);
+        }
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -26,7 +104,7 @@ public class ViewNewTasks extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tasksTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
@@ -42,7 +120,7 @@ public class ViewNewTasks extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tasksTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -50,10 +128,13 @@ public class ViewNewTasks extends javax.swing.JFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Vendor Name", "Vendor Location", "Distance", "Customer Name", "Customer Location", "Status"
+                "ID ", "Vendor Name", "Distance", "Customer Name", "Customer Location", "Status"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tasksTable);
+        if (tasksTable.getColumnModel().getColumnCount() > 0) {
+            tasksTable.getColumnModel().getColumn(0).setPreferredWidth(5);
+        }
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -116,19 +197,16 @@ public class ViewNewTasks extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(63, 63, 63)
+                .addGap(43, 43, 43)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2))
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton1)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jButton1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 91, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -136,15 +214,16 @@ public class ViewNewTasks extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(27, 27, 27)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addGap(96, 96, 96))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -200,7 +279,7 @@ public class ViewNewTasks extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tasksTable;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -27,7 +27,7 @@ public class RunnerMainMenu extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        manageTaskButton = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -43,7 +43,12 @@ public class RunnerMainMenu extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Runner Main Menu");
 
-        jButton2.setText("Manage Task");
+        manageTaskButton.setText("View Tasks");
+        manageTaskButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                manageTaskButtonActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Notification");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -96,7 +101,7 @@ public class RunnerMainMenu extends javax.swing.JFrame {
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(manageTaskButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -108,7 +113,7 @@ public class RunnerMainMenu extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(profileButton))
                 .addGap(46, 46, 46)
-                .addComponent(jButton2)
+                .addComponent(manageTaskButton)
                 .addGap(18, 18, 18)
                 .addComponent(jButton3)
                 .addGap(18, 18, 18)
@@ -164,15 +169,21 @@ public class RunnerMainMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void manageTaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageTaskButtonActionPerformed
+        ViewNewTasks page = new ViewNewTasks(runner);
+        page.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_manageTaskButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton logOutButton;
+    private javax.swing.JButton manageTaskButton;
     private javax.swing.JButton profileButton;
     // End of variables declaration//GEN-END:variables
 }

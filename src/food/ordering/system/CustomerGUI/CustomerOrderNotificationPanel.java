@@ -2,10 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package food.ordering.system.AdminGUI;
+package food.ordering.system.CustomerGUI;
 
-import food.ordering.system.CustomerGUI.Order;
-import food.ordering.system.CustomerGUI.OrderManager;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -15,13 +13,13 @@ import javax.swing.JOptionPane;
  *
  * @author LENOVO
  */
-public class OrderNotificationPanel extends javax.swing.JPanel {
+public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
     private List<Order> orders;
     private int orderID;
     private String updateDescription;
     private LocalDateTime dateTime;
     
-    public OrderNotificationPanel(int orderID, String updateDescription, LocalDateTime dateTime) {
+    public CustomerOrderNotificationPanel(int orderID, String updateDescription, LocalDateTime dateTime) {
         initComponents();
         this.updateDescription = updateDescription;
         this.dateTime = dateTime;
