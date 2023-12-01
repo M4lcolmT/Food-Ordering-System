@@ -4,13 +4,11 @@
  */
 package food.ordering.system.RunnerGUI;
 
-import food.ordering.system.VendorGUI.*;
 import food.ordering.system.CustomerGUI.Order;
 import food.ordering.system.CustomerGUI.OrderManager;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -30,7 +28,7 @@ public class RunnerOrderNotificationPanel extends javax.swing.JPanel {
         this.dateTime = dateTime;
         this.orderID = orderID;
         
-        statusLabel.setText(updateDescription+"!");
+        statusLabel.setText(updateDescription);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm");
         String formattedDateTime = dateTime.format(formatter);
         dateTimeLabel.setText(formattedDateTime);

@@ -391,7 +391,7 @@ public class CRUDCustomer extends javax.swing.JFrame {
                         !password.equals("") ||
                         !address.equals("") ||
                         !city.equals("Select City")) {
-            Customer item = new Customer(customerID, name, phoneNumber, email, password, address, city);
+            Customer item = new Customer(customerID, name, phoneNumber, email, password, address, city, 0);
             customers.add(item);
             JOptionPane.showMessageDialog(this, "Successfully added the new Customer!", "Success", JOptionPane.INFORMATION_MESSAGE);
             createNewCustomers();

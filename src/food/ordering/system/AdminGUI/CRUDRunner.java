@@ -127,10 +127,6 @@ public class CRUDRunner extends javax.swing.JFrame {
         vehicleModelField.setText("");
     }
     
-    private boolean isEmpty(String str) {
-        return str.trim().isEmpty();
-    }
-    
     public int getUserRequestRunnerID() {
         DefaultTableModel model = (DefaultTableModel) runnerTable.getModel();
         int rowCount = model.getRowCount();
@@ -368,7 +364,7 @@ public class CRUDRunner extends javax.swing.JFrame {
                         !city.equals("Select City") ||
                         !vehicleNum.equals("") ||
                         !vehicleModel.equals("")) {
-            Runner item = new Runner(runnerID, true, name, phoneNumber, email, password, city, vehicleNum, vehicleModel);
+            Runner item = new Runner(runnerID, true, name, phoneNumber, email, password, city, vehicleNum, vehicleModel, 0);
             runners.add(item);
             JOptionPane.showMessageDialog(this, "Successfully added the new Runner!", "Success", JOptionPane.INFORMATION_MESSAGE);
             createNewRunners();

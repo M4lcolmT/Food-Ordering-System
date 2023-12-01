@@ -15,13 +15,13 @@ import java.util.List;
  * @author jiasi
  */
 public class OrderHistoryPanel extends javax.swing.JPanel {
-
     private Order order;
     private Customer customer;
+    private OrderHistory page;
     
-    
-    public OrderHistoryPanel(Order order, Customer customer) {
+    public OrderHistoryPanel(OrderHistory page, Order order, Customer customer) {
         initComponents();
+        this.page = page;
         this.order = order;
         this.customer = customer;
         Vendor vendor = order.getVendor();       
@@ -142,6 +142,7 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
         
             OrderSummary summary = new OrderSummary(specificOrder, basket);
             summary.loadBasketItems(basket);
+            page.dispose();
         }
     }//GEN-LAST:event_reorderButtonActionPerformed
 

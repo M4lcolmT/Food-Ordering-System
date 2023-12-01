@@ -24,7 +24,6 @@ public class CustomerMainMenu extends javax.swing.JFrame {
         
         OrderManager orderManager = new OrderManager();
         allOrders = orderManager.getOrders();
-        orderNotificationPanel.setVisible(false);
     }
 
     private List<Order> retrieveCustomerOrders() {
@@ -50,10 +49,6 @@ public class CustomerMainMenu extends javax.swing.JFrame {
         orderFoodButton = new javax.swing.JButton();
         topUpButton = new javax.swing.JButton();
         notificationButton = new javax.swing.JButton();
-        orderNotificationPanel = new javax.swing.JPanel();
-        orderStatusLabel = new javax.swing.JLabel();
-        orderETA = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
         orderHistoryButton = new javax.swing.JButton();
         profileButton = new javax.swing.JButton();
         logOutButton = new javax.swing.JButton();
@@ -85,47 +80,6 @@ public class CustomerMainMenu extends javax.swing.JFrame {
             }
         });
 
-        orderStatusLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        orderStatusLabel.setText("Order is on the way!");
-
-        orderETA.setText("Estimated time for arrival: 5mins");
-
-        jButton4.setText("View");
-        jButton4.setPreferredSize(new java.awt.Dimension(72, 30));
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout orderNotificationPanelLayout = new javax.swing.GroupLayout(orderNotificationPanel);
-        orderNotificationPanel.setLayout(orderNotificationPanelLayout);
-        orderNotificationPanelLayout.setHorizontalGroup(
-            orderNotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(orderNotificationPanelLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addGroup(orderNotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(orderETA)
-                    .addComponent(orderStatusLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 378, Short.MAX_VALUE)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
-        );
-        orderNotificationPanelLayout.setVerticalGroup(
-            orderNotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(orderNotificationPanelLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(orderNotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(orderNotificationPanelLayout.createSequentialGroup()
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(orderNotificationPanelLayout.createSequentialGroup()
-                        .addComponent(orderStatusLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(orderETA)
-                        .addGap(15, 15, 15))))
-        );
-
         orderHistoryButton.setText("Order History");
         orderHistoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -155,19 +109,14 @@ public class CustomerMainMenu extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(orderNotificationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(242, 242, 242)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(orderFoodButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(topUpButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(orderHistoryButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
-                            .addComponent(notificationButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(logOutButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addGap(242, 242, 242)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(orderFoodButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(topUpButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(orderHistoryButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                    .addComponent(notificationButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(logOutButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(276, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addComponent(jLabel1)
@@ -192,9 +141,7 @@ public class CustomerMainMenu extends javax.swing.JFrame {
                 .addComponent(orderHistoryButton)
                 .addGap(18, 18, 18)
                 .addComponent(logOutButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addComponent(orderNotificationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addContainerGap(117, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -216,10 +163,6 @@ public class CustomerMainMenu extends javax.swing.JFrame {
         orderMenu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_orderFoodButtonActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
 
     private void orderHistoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orderHistoryButtonActionPerformed
         List<Order> customerOrders = retrieveCustomerOrders();
@@ -263,16 +206,12 @@ public class CustomerMainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_notificationButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton logOutButton;
     private javax.swing.JButton notificationButton;
-    private javax.swing.JLabel orderETA;
     private javax.swing.JButton orderFoodButton;
     private javax.swing.JButton orderHistoryButton;
-    public javax.swing.JPanel orderNotificationPanel;
-    public javax.swing.JLabel orderStatusLabel;
     private javax.swing.JButton profileButton;
     private javax.swing.JButton topUpButton;
     // End of variables declaration//GEN-END:variables

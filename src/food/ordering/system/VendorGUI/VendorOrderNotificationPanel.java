@@ -9,7 +9,6 @@ import food.ordering.system.CustomerGUI.OrderManager;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,9 +20,11 @@ public class VendorOrderNotificationPanel extends javax.swing.JPanel {
     private int orderID;
     private String updateDescription;
     private LocalDateTime dateTime;
+    private VendorNotification page;
     
-    public VendorOrderNotificationPanel(Vendor vendor, int orderID, String updateDescription, LocalDateTime dateTime) {
+    public VendorOrderNotificationPanel(VendorNotification page, Vendor vendor, int orderID, String updateDescription, LocalDateTime dateTime) {
         initComponents();
+        this.page = page;
         this.vendor = vendor;
         this.updateDescription = updateDescription;
         this.dateTime = dateTime;
@@ -102,8 +103,9 @@ public class VendorOrderNotificationPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void viewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewButtonActionPerformed
-        ViewOrders page = new ViewOrders(vendor, orders);
-        page.setVisible(true);
+        ViewOrders viewOrder = new ViewOrders(vendor, orders);
+        viewOrder.setVisible(true);
+        page.dispose();
     }//GEN-LAST:event_viewButtonActionPerformed
 
 

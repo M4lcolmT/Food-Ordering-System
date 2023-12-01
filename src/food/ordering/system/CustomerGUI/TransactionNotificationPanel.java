@@ -20,9 +20,11 @@ public class TransactionNotificationPanel extends javax.swing.JPanel {
     private List<TopUpRequests> requests;
     private TopUpRequests request;
     private LocalDateTime dateTime;
+    private CustomerNotification page;
 
-    public TransactionNotificationPanel(Customer customer, int transactionID, LocalDateTime dateTime) {
+    public TransactionNotificationPanel(CustomerNotification page, Customer customer, int transactionID, LocalDateTime dateTime) {
         initComponents();
+        this.page = page;
         this.customer = customer;
         this.transactionID = transactionID;
         this.dateTime = dateTime;
@@ -122,8 +124,9 @@ public class TransactionNotificationPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void viewReceiptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewReceiptButtonActionPerformed
-        TransactionSummary page = new TransactionSummary(customer, request.getAmount(), request.getRemarks(), request.getDateTime());
-        page.setVisible(true);
+        TransactionSummary summary = new TransactionSummary(customer, request.getAmount(), request.getRemarks(), request.getDateTime());
+        summary.setVisible(true);
+        page.dispose();
     }//GEN-LAST:event_viewReceiptButtonActionPerformed
 
 

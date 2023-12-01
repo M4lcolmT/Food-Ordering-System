@@ -4,7 +4,11 @@
  */
 package food.ordering.system.AdminGUI;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import textFiles.TextFilePaths;
 
 /**
  *
@@ -18,7 +22,10 @@ public class Notification {
     private int transactionID;
     private String updateDescription;
     private LocalDateTime dateTime;
-
+    
+    TextFilePaths path = new TextFilePaths();
+    String notificationTextFilePath = path.getNotificationsTextFile();
+    
     public enum NotifUserType{
         CUSTOMER,
         RUNNER,
@@ -91,6 +98,14 @@ public class Notification {
     
     public LocalDateTime getDateTime() {
         return dateTime;
+    }
+    
+    public void saveNotification(Notification newNotification) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFilePath, true))) {
+            pw.println(newNotification.toString());                    
+        } catch (IOException ex) {
+            System.out.println("Failed to save!");
+        }
     }
     
     @Override

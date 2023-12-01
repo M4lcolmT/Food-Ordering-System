@@ -29,10 +29,6 @@ public class RevenueDashboard extends javax.swing.JFrame {
     private Vendor vendor;
     private List<Order> orders;
     private List<Order> vendorOrders;
-    private List<FoodItem> menu;
-    private double revenue;
-    private double cost;
-    private double profit;
     
     
     public RevenueDashboard(Vendor vendor) {
@@ -67,7 +63,8 @@ public class RevenueDashboard extends javax.swing.JFrame {
     private List<Order> filterOrdersByDate(LocalDateTime startDateTime, LocalDateTime endDateTime) {
         List<Order> filteredOrders = new ArrayList<>();
         for (Order order : vendorOrders) {
-            LocalDateTime orderDateTime = order.getDateTime(); // Assuming getDateTime() returns a LocalDateTime
+            LocalDateTime orderDateTime = order.getDateTime();
+            System.out.println(orderDateTime);
             if ((orderDateTime.isAfter(startDateTime) || orderDateTime.isEqual(startDateTime)) &&
                     orderDateTime.isBefore(endDateTime)) {
                 filteredOrders.add(order);
@@ -590,10 +587,12 @@ public class RevenueDashboard extends javax.swing.JFrame {
             // Parse the date from the label
             parsedDate = dateFormat.parse(labelDate);
             LocalDateTime dateTime = convertToLocalDateTime(parsedDate);
-
+            System.out.println("date"+dateTime);
             // Get the filtered orders based on the selection
             List<Order> filteredOrders = displayFilteredOrders(selectedTimeFrame.trim(), dateTime);
-
+            for(Order i : filteredOrders){
+                System.out.println("order:"+i.getDateTime());
+            }
             // Update the dashboard view with the filtered orders
             updateDashboardViewWithFilteredOrders(filteredOrders);
         } catch (ParseException e) {

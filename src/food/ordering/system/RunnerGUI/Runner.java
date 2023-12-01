@@ -24,18 +24,19 @@ public class Runner extends User{
     private String city;
     private String plateNumber;
     private String vehicleModel;
-    private List<Task> tasks;
+    private double ratings;
     
     TextFilePaths path = new TextFilePaths();
     String runnerTextFilePath = path.getRunnerTextFile();
 
-    public Runner(int runnerID, boolean runnerAvailability, String name, String phoneNumber, String email, String password, String city, String plateNumber, String vehicleModel) {
+    public Runner(int runnerID, boolean runnerAvailability, String name, String phoneNumber, String email, String password, String city, String plateNumber, String vehicleModel, double ratings) {
         super(name, phoneNumber, email, password);
         this.runnerID = runnerID;
         this.runnerAvailability = runnerAvailability;
         this.city = city;
         this.plateNumber = plateNumber;
         this.vehicleModel = vehicleModel;
+        this.ratings = ratings;
     }
     
     public int getRunnerID() {
@@ -76,6 +77,14 @@ public class Runner extends User{
 
     public void setVehicleModel(String vehicleModel) {
         this.vehicleModel = vehicleModel;
+    }
+
+    public double getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(double ratings) {
+        this.ratings = ratings;
     }
     
     public void updateRunnerStatus(Runner availableRunner, List<Runner> runners, boolean availability) {

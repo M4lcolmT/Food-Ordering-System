@@ -275,26 +275,39 @@ public class ViewOrders extends javax.swing.JFrame {
             String time = (String) model.getValueAt(selectedRow, 2);
             String date = (String) model.getValueAt(selectedRow, 3);
             Order.OrderStatus status = (Order.OrderStatus) model.getValueAt(selectedRow, 4);
-            if (status.name().trim().equals("PENDING")) {
-                ManageOrder page = new ManageOrder(vendor, orderID);
-                page.orderIDLabel.setText(Integer.toString(orderID));
-                page.timeLabel.setText(time);
-                page.dateLabel.setText(date);
-                page.acceptButton.setVisible(true);
-                page.rejectButton.setVisible(true);
-                page.readyButton.setVisible(false);
-                page.setVisible(true);
-                this.dispose();
-            } else if (status.name().trim().equals("CONFIRMED")) {
-                ManageOrder page = new ManageOrder(vendor, orderID);
-                page.orderIDLabel.setText(Integer.toString(orderID));
-                page.timeLabel.setText(time);
-                page.dateLabel.setText(date);
-                page.acceptButton.setVisible(false);
-                page.rejectButton.setVisible(false);
-                page.readyButton.setVisible(true);
-                page.setVisible(true);
-                this.dispose();
+            switch (status.name().trim()) {
+                case "PENDING":
+                    {
+                        ManageOrder page = new ManageOrder(vendor, orderID);
+                        page.orderIDLabel.setText(Integer.toString(orderID));
+                        page.timeLabel.setText(time);
+                        page.dateLabel.setText(date);
+                        page.acceptButton.setVisible(true);
+                        page.rejectButton.setVisible(true);
+                        page.readyButton.setVisible(false);
+                        page.setVisible(true);
+                        this.dispose();
+                        break;
+                    }
+                case "CONFIRMED":
+                case "PREPARING":
+                    {
+                        ManageOrder page = new ManageOrder(vendor, orderID);
+                        page.orderIDLabel.setText(Integer.toString(orderID));
+                        page.timeLabel.setText(time);
+                        page.dateLabel.setText(date);
+                        page.acceptButton.setVisible(false);
+                        page.rejectButton.setVisible(false);
+                        page.readyButton.setVisible(true);
+                        page.setVisible(true);
+                        this.dispose();
+                        break;
+                    }
+                case "READY_FOR_PICKUP":
+                    JOptionPane.showMessageDialog(this, "Order is ready for pick up.", "Ready Order", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                default:
+                    break;
             }
         } else {
             JOptionPane.showMessageDialog(this, "Please select an order to view.", "View Order", JOptionPane.ERROR_MESSAGE);

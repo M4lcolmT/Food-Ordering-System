@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -36,6 +37,7 @@ public class ManageOrder extends javax.swing.JFrame {
     private List<Order> allOrders;
     private List<Runner> runners;
     private List<Notification> notifications;
+    private final OrderManager manager = new OrderManager();
     
     TextFilePaths path = new TextFilePaths();
     String orderTextFilePath = path.getOrderTextFile();
@@ -46,23 +48,13 @@ public class ManageOrder extends javax.swing.JFrame {
         this.vendor = vendor;
         this.orderID = orderID;
         
-        OrderManager manager = new OrderManager();
         allOrders = manager.getOrders();
-        specificOrder = findOrder();
+        specificOrder = manager.findOrder(orderID);
         loadOrder();
         
         ReadFiles reader = new ReadFiles();
         notifications = reader.readNotifications();
         runners = reader.readRunners();
-    }
-    
-    private Order findOrder() {
-        for (Order item : allOrders) {
-            if (item.getOrderID() == orderID) {
-                return item;
-            }
-        }
-        return null;
     }
         
     private void loadOrder() {
@@ -113,15 +105,12 @@ public class ManageOrder extends javax.swing.JFrame {
         return maxID + 1;
     }
     
-    //Check runner avaliability
-    private Runner checkRunner() {
-        for (Runner item : runners) {
-            if (item.isRunnerAvailability() == true) {
-                System.out.println("id:"+item.getRunnerID());
-                return item;
-            }
-        }
-        return null;
+    private LocalDateTime getDateTime() {
+        LocalDateTime originalDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        String formattedDateTimeStr = originalDateTime.format(formatter);
+        LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTimeStr, formatter);
+        return parsedDateTime;
     }
     
     @SuppressWarnings("unchecked")
@@ -140,6 +129,7 @@ public class ManageOrder extends javax.swing.JFrame {
         readyButton = new javax.swing.JButton();
         dateLabel = new javax.swing.JLabel();
         timeLabel = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -208,6 +198,13 @@ public class ManageOrder extends javax.swing.JFrame {
         timeLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         timeLabel.setText("Time");
 
+        jButton1.setText("Back");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -216,20 +213,25 @@ public class ManageOrder extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(orderIDLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE))
-                .addGap(26, 26, 26)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(acceptButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rejectButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(readyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26))
+                        .addComponent(jButton1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(orderIDLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE))
+                        .addGap(26, 26, 26)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(acceptButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(rejectButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(readyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(26, 26, 26))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -247,16 +249,18 @@ public class ManageOrder extends javax.swing.JFrame {
                             .addComponent(timeLabel))))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(76, 76, 76)
                         .addComponent(acceptButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(rejectButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(readyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(30, Short.MAX_VALUE))
+                        .addComponent(readyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1)
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -274,27 +278,21 @@ public class ManageOrder extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
-        Order selectedOrder = findOrder();
-       
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to accept order?", "Accept Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
             JOptionPane.showMessageDialog(this, "Order is accepted, proceed to prepare.", "Accept Order", JOptionPane.INFORMATION_MESSAGE);
-            specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.CONFIRMED);
+            specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.PREPARING);
             //Send notif to customer
-            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "Your order is preparing", LocalDateTime.now());
-            try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFilePath, true))) {
-                pw.println(newNotif.toString());
-            } catch (IOException ex) {
-                System.out.println("Failed to save!");
-            }
+            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, specificOrder.getOrderID(), "Your order is preparing!", getDateTime());
+            newNotif.saveNotification(newNotif);
             //Save updated order status
             try (PrintWriter writer = new PrintWriter(new FileWriter(orderTextFilePath))) {
                 for (Order item : allOrders) {
                     writer.println(item.toString());
                 }
             } catch (IOException e) {
-                e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
+                e.printStackTrace();
             }
             //Set button visibility
             acceptButton.setVisible(false);
@@ -304,20 +302,14 @@ public class ManageOrder extends javax.swing.JFrame {
     }//GEN-LAST:event_acceptButtonActionPerformed
 
     private void rejectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rejectButtonActionPerformed
-        Order selectedOrder = findOrder();
-
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to reject order?", "Reject Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
             JOptionPane.showMessageDialog(this, "Order is rejected.", "Reject Order", JOptionPane.INFORMATION_MESSAGE);
             specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.CANCELLED);
             //Sent notif to customer
-            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "Your order is cancelled", LocalDateTime.now());
-            try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFilePath, true))) {
-                pw.println(newNotif.toString());
-            } catch (IOException ex) {
-                System.out.println("Failed to save!");
-            }
+            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "Your order is cancelled", getDateTime());
+            newNotif.saveNotification(newNotif);
             //Save updated order status
             try (PrintWriter writer = new PrintWriter(new FileWriter(orderTextFilePath))) {
                 for (Order item : allOrders) {
@@ -333,24 +325,26 @@ public class ManageOrder extends javax.swing.JFrame {
     }//GEN-LAST:event_rejectButtonActionPerformed
 
     private void readyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readyButtonActionPerformed
-        Order selectedOrder = findOrder();
-
         JOptionPane.showMessageDialog(this, "Order is ready.", "Finisihed Order", JOptionPane.INFORMATION_MESSAGE);
         specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.READY_FOR_PICKUP);
         //Sent notif to customer
-        Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "picked up!", LocalDateTime.now());
-        try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFilePath, true))) {
-            pw.println(newNotif.toString());
-        } catch (IOException ex) {
-            System.out.println("Failed to save!");
-        }
-        // Check if runner accepted the order or not. If accepted then changed the order status to OUT_FOR_DELIVERY, otherwise search for another available runner
-        
+        Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "Your order is ready, waiting for pick up!", getDateTime());
+        newNotif.saveNotification(newNotif);
+        ViewOrders page = new ViewOrders(vendor, allOrders);
+        page.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_readyButtonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ViewOrders page = new ViewOrders(vendor, allOrders);
+        page.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton acceptButton;
     public javax.swing.JLabel dateLabel;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

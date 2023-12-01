@@ -22,7 +22,7 @@ public class OrderHistory extends javax.swing.JFrame {
     private void populateInnerPanel() {
         innerScrollPanel.removeAll();
         for (Order item : custOrders) {
-            OrderHistoryPanel panel = new OrderHistoryPanel(item,  customer);
+            OrderHistoryPanel panel = new OrderHistoryPanel(this, item,  customer);
             innerScrollPanel.add(panel);
         }
         // Repaint and revalidate innerPanel to reflect the changes

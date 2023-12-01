@@ -1,16 +1,21 @@
 package food.ordering.system.RunnerGUI;
 
+import food.ordering.system.AdminGUI.Notification;
 import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.CustomerGUI.Order;
 import food.ordering.system.CustomerGUI.OrderManager;
 import food.ordering.system.Location;
 import food.ordering.system.VendorGUI.Vendor;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import textFiles.TextFilePaths;
 
 
 /*
@@ -27,7 +32,14 @@ public class ViewNewTasks extends javax.swing.JFrame {
     private List<Order> orders;
     private List<Task> allTasks;
     private List<Task> runnerTasks;
+    private List<Runner> runners;
+    private List<Notification> notifications;
+    private final OrderManager manager = new OrderManager();
 
+
+    TextFilePaths path = new TextFilePaths();
+    String taskTextFilePath = path.getRunnerTasksTextFile();
+    
     public ViewNewTasks(Runner runner) {
         initComponents();
         this.runner = runner;
@@ -35,10 +47,19 @@ public class ViewNewTasks extends javax.swing.JFrame {
         ReadFiles reader = new ReadFiles();
         allTasks = reader.readTasks();
         runnerTasks = getRunnerTask(runner.getRunnerID());
+        runners = reader.readRunners();
+        notifications = reader.readNotifications();
         
-        OrderManager manager = new OrderManager();
         orders = manager.getOrders();
         loadTasks();
+    }
+    
+    private LocalDateTime getDateTime() {
+        LocalDateTime originalDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        String formattedDateTimeStr = originalDateTime.format(formatter);
+        LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTimeStr, formatter);
+        return parsedDateTime;
     }
     
     private List<Task> getRunnerTask(int id) {
@@ -52,9 +73,9 @@ public class ViewNewTasks extends javax.swing.JFrame {
         return runnertasks;
     }
     
-    private Order getOrder(int id) {
-        for (Order i : orders) {
-            if (id == i.getOrderID()) {
+    private Task getTask(int id) {
+        for (Task i : runnerTasks) {
+            if (id == i.getTaskID()) {
                 return i;
             }
         }
@@ -88,13 +109,46 @@ public class ViewNewTasks extends javax.swing.JFrame {
         model.setRowCount(0);
         
         for (Task task : filteredTasks) {
-            Order order = getOrder(task.getOrderID());
+            Order order = manager.findOrder(task.getOrderID());
             Customer orderCustomer = order.getCustomer();
             Vendor orderVendor = order.getVendor();
             double distance = calculateDistance(orderCustomer.getCity().trim().toLowerCase(), orderVendor.getCity().trim().toLowerCase());
             Object[] rowData = { task.getTaskID(), orderVendor.getName(), distance, orderCustomer.getName(), orderCustomer.getCity(), task.getTaskStatus()};
             model.addRow(rowData);
         }
+    }
+    
+    //Check runner avaliability
+    private Runner checkRunner() {
+        for (Runner item : runners) {
+            if (item.getRunnerID() != runner.getRunnerID() && item.isRunnerAvailability() == true) {
+                System.out.println("id:"+item.getRunnerID());
+                return item;
+            }
+        }
+        return null;
+    }
+    
+    private int checkMaxNotificationID() {
+        int maxID = 0;
+        for (Notification notification : notifications) {
+            if (notification.getNotificationID() > maxID) {
+                maxID = notification.getNotificationID();
+            }
+        }
+        // Increment the maximum ID
+        return maxID + 1;
+    }
+    
+    private int checkMaxTaskID() {
+        int maxID = 0;
+        for (Task task : allTasks) {
+            if (task.getTaskID() > maxID) {
+                maxID = task.getTaskID();
+            }
+        }
+        // Increment the maximum ID
+        return maxID + 1;
     }
     
     @SuppressWarnings("unchecked")
@@ -107,9 +161,10 @@ public class ViewNewTasks extends javax.swing.JFrame {
         tasksTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jButton4 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        acceptButton = new javax.swing.JButton();
+        rejectButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        manageButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -138,24 +193,32 @@ public class ViewNewTasks extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        jButton4.setText("Accept");
-        jButton4.setPreferredSize(new java.awt.Dimension(100, 25));
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        acceptButton.setText("Accept");
+        acceptButton.setPreferredSize(new java.awt.Dimension(100, 25));
+        acceptButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                acceptButtonActionPerformed(evt);
             }
         });
 
-        jButton6.setText("Reject");
-        jButton6.setPreferredSize(new java.awt.Dimension(100, 25));
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        rejectButton.setText("Reject");
+        rejectButton.setPreferredSize(new java.awt.Dimension(100, 25));
+        rejectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                rejectButtonActionPerformed(evt);
             }
         });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("New Task List");
+
+        manageButton.setText("Manage");
+        manageButton.setPreferredSize(new java.awt.Dimension(100, 25));
+        manageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                manageButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -164,14 +227,16 @@ public class ViewNewTasks extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(166, 166, 166)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(41, 41, 41)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(225, 225, 225)
-                        .addComponent(jLabel1)))
-                .addContainerGap(189, Short.MAX_VALUE))
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(92, 92, 92)
+                        .addComponent(acceptButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(41, 41, 41)
+                        .addComponent(rejectButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36)
+                        .addComponent(manageButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(127, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,8 +245,9 @@ public class ViewNewTasks extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(acceptButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rejectButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(manageButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -206,7 +272,7 @@ public class ViewNewTasks extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 91, Short.MAX_VALUE))
+                .addGap(0, 42, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -254,31 +320,99 @@ public class ViewNewTasks extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+    private void rejectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rejectButtonActionPerformed
+        DefaultTableModel model = (DefaultTableModel) tasksTable.getModel();
+        int selectedRow = tasksTable.getSelectedRow();
+        int id = (int) model.getValueAt(selectedRow, 0);
+        Task selectedTask = getTask(id);
+        Order selectedOrder = manager.findOrder(selectedTask.getOrderID());
+        
+        if (selectedRow != -1) {
+            Runner availableRunner = checkRunner();
+            // Check for another available runner
+            if (availableRunner != null) { 
+                // Send notification to the newly available runner
+                Notification runnerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, availableRunner.getRunnerID(), Notification.NotifUserType.RUNNER, selectedTask.getOrderID(), "New task!", getDateTime());
+                runnerNotif.saveNotification(runnerNotif);
+                // Change the task status to rejected
+                selectedTask.updateTaskStatus(selectedTask, allTasks, Task.TaskStatus.DECLINED);
+                ReadFiles reader = new ReadFiles();
+                allTasks = reader.readTasks();
+                runnerTasks = getRunnerTask(runner.getRunnerID());
+                loadTasks();
+                // Create a new task for the newly available runner
+                Task newTask = new Task(checkMaxTaskID(), availableRunner.getRunnerID(), selectedTask.getOrderID(), Task.TaskStatus.PENDING, selectedTask.getDeliveryFee(), getDateTime());
+                newTask.createTask(newTask);
+            } else {
+                // Send a notification to prompt the customer notification to choose dine-in/take-away
+                Notification customerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "No runners are available! Please choose to dine in or take away.", getDateTime());
+                customerNotif.saveNotification(customerNotif);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a row to reject.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_rejectButtonActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add- your andling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
+        DefaultTableModel model = (DefaultTableModel) tasksTable.getModel();
+        int selectedRow = tasksTable.getSelectedRow();
+        int id = (int) model.getValueAt(selectedRow, 0);
+        Task selectedTask = getTask(id);
+        Order selectedOrder = manager.findOrder(selectedTask.getOrderID());
+        
+        if (selectedRow != -1) {
+            // Send notification to the customer that their order is accepted
+            Notification customerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "A runner accepted your order!", getDateTime());
+            customerNotif.saveNotification(customerNotif);
+            // Change the task status to accepted
+            selectedTask.updateTaskStatus(selectedTask, allTasks, Task.TaskStatus.ACCEPTED);
+            runner.updateRunnerStatus(runner, runners, false);
+            ReadFiles reader = new ReadFiles();
+            allTasks = reader.readTasks();
+            runnerTasks = getRunnerTask(runner.getRunnerID());
+            loadTasks();
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a row to accept.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_acceptButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         RunnerMainMenu page = new RunnerMainMenu(runner);
         page.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void manageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageButtonActionPerformed
+        DefaultTableModel model = (DefaultTableModel) tasksTable.getModel();
+        int selectedRow = tasksTable.getSelectedRow();
+        
+        if (selectedRow != -1) {
+            int id = (int) model.getValueAt(selectedRow, 0);
+            Task.TaskStatus status = (Task.TaskStatus) model.getValueAt(selectedRow, 5);
+            Task selectedTask = getTask(id);
+            if (status.name().equals("ACCEPTED") || status.name().equals("PICKED_UP") || status.name().equals("ON_THE_WAY")) {
+                ManageTaskPage page = new ManageTaskPage(runner, selectedTask);
+                page.setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Please accept to task to manage.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a row to manage.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_manageButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton acceptButton;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton manageButton;
+    private javax.swing.JButton rejectButton;
     private javax.swing.JTable tasksTable;
     // End of variables declaration//GEN-END:variables
 

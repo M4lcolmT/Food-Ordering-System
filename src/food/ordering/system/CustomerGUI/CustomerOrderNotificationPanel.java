@@ -4,47 +4,104 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.AdminGUI.Notification;
+import food.ordering.system.AdminGUI.ReadFiles;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import textFiles.TextFilePaths;
 
 /**
  *
  * @author LENOVO
  */
 public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
+    private Customer customer;
     private List<Order> orders;
     private int orderID;
     private String updateDescription;
     private LocalDateTime dateTime;
+    private List<Notification> allNotifications;
+    private final OrderManager manager = new OrderManager();
     
-    public CustomerOrderNotificationPanel(int orderID, String updateDescription, LocalDateTime dateTime) {
+    TextFilePaths path = new TextFilePaths();
+    String notificationTextFile = path.getNotificationsTextFile();
+    
+    public CustomerOrderNotificationPanel(Customer customer, int orderID, String updateDescription, LocalDateTime dateTime) {
         initComponents();
         this.updateDescription = updateDescription;
         this.dateTime = dateTime;
         this.orderID = orderID;
+        this.customer = customer;
         
-        statusLabel.setText(updateDescription+"!");
+        ReadFiles reader = new ReadFiles();
+        allNotifications = reader.readNotifications();
+        
+        statusLabel.setText(updateDescription);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm");
         String formattedDateTime = dateTime.format(formatter);
         dateTimeLabel.setText(formattedDateTime);
+        receivedButton.setVisible(false);
         takeAwayButton.setVisible(false);
         dineInButton.setVisible(false);
+        cancelButton.setVisible(false);
         
-        OrderManager manager = new OrderManager();
         orders = manager.getOrders();
+        checkOrderStatus();
     }
     
     private void checkOrderStatus() {
-        for (Order i : orders) {
-            if (i.getOrderID() == orderID) {
-                if (i.getStatus().name().trim().equals("READY_FOR_PICKUP")) {
-                    takeAwayButton.setVisible(false);
-                    dineInButton.setVisible(false);
-                }
+        switch (updateDescription) {
+            case "Your order is processing!" -> {
+                takeAwayButton.setVisible(false);
+                dineInButton.setVisible(false);
+                receivedButton.setVisible(false);
+                cancelButton.setVisible(true);
+            }
+            case "Your order is preparing!", "A runner accepted your order!", "Your order is on the way." -> {
+                receivedButton.setVisible(false);
+                takeAwayButton.setVisible(false);
+                dineInButton.setVisible(false);
+                cancelButton.setVisible(false);
+            }
+            case "No runners are available! Please choose to dine in or take away." -> {
+                receivedButton.setVisible(false);
+                takeAwayButton.setVisible(true);
+                dineInButton.setVisible(true);
+                cancelButton.setVisible(false);
+            }
+            case "Order arrived! Click to receive order." -> {
+                receivedButton.setVisible(true);
+                takeAwayButton.setVisible(false);
+                dineInButton.setVisible(false);
+                cancelButton.setVisible(false);
+            }
+            default -> {
+                System.out.println("Customer Notif Order Status Error!");
+                receivedButton.setVisible(false);
+                takeAwayButton.setVisible(false);
+                dineInButton.setVisible(false);
+                cancelButton.setVisible(false);
             }
         }
+    }
+    
+    private List<Notification> getOrderNotifications() {
+        List<Notification> notifs = new ArrayList<>();
+        
+        for (Notification item : allNotifications) {
+            if (item.getUserType().name().equals("CUSTOMER") && item.getUserID() == customer.getCustomerID() && item.getTransactionID() == orderID) {
+                notifs.add(item);
+            }
+        }
+        return notifs;
     }
     
     @SuppressWarnings("unchecked")
@@ -67,8 +124,18 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
         statusLabel.setText("-");
 
         takeAwayButton.setText("Take Away");
+        takeAwayButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                takeAwayButtonActionPerformed(evt);
+            }
+        });
 
         dineInButton.setText("Dine In");
+        dineInButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dineInButtonActionPerformed(evt);
+            }
+        });
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -137,6 +204,9 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to cancel order?", "Cancel Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
+            Order selectedOrder = manager.findOrder(orderID);
+            orders.removeIf(item -> item.getOrderID() == selectedOrder.getOrderID());
+            manager.writeOrdersToFile();
         }
     }//GEN-LAST:event_cancelButtonActionPerformed
 
@@ -144,8 +214,26 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Order received?", "Order Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
+            List<Notification> customerNotifs = getOrderNotifications();
+                allNotifications.removeAll(customerNotifs);
+
+                try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFile, false))) {
+                    for (Notification notif : allNotifications) {
+                        pw.println(notif.toString());                
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(CustomerOrderNotificationPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
         }
     }//GEN-LAST:event_receivedButtonActionPerformed
+
+    private void takeAwayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_takeAwayButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_takeAwayButtonActionPerformed
+
+    private void dineInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dineInButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dineInButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

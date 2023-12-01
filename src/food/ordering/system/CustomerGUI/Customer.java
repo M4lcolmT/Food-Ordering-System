@@ -16,13 +16,15 @@ public class Customer extends User{
     private int customerID;
     private String city;
     private String streetAddress;
+    private double credit;
     private List<Order> orders = new ArrayList<>();
  
-    public Customer (int customerID, String name, String phoneNumber, String email, String password, String streetAddress, String city){
+    public Customer (int customerID, String name, String phoneNumber, String email, String password, String streetAddress, String city, double credit){
         super(name, phoneNumber, email, password);
         this.customerID = customerID;
         this.streetAddress = streetAddress;
         this.city = city;
+        this.credit = credit;
     }
     
     public List<Order> getOrders() {
@@ -49,9 +51,17 @@ public class Customer extends User{
         this.city = city;
     }
 
+    public double getCredit() {
+        return credit;
+    }
+
+    public void setCredit(double credit) {
+        this.credit = credit;
+    }
+
     @Override
     public String toString() {
         String delimiter = ";";
-        return customerID + delimiter + super.toString() + delimiter + streetAddress + delimiter + city;
+        return customerID + delimiter + super.toString() + delimiter + streetAddress + delimiter + city + delimiter + credit;
     }
 }

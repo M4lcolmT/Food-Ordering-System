@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -40,19 +41,20 @@ public class OrderSummary extends javax.swing.JFrame {
     private double distance;
     private double deliveryFee;
     private double totalPrice;
+    private double credit;
     private List<FoodItem> orderBasket;
     private List<Runner> runners;
     private List<Task> tasks;
     private List<Notification> notifications;
+    private List<Order> orders = new ArrayList<>();
     private OrderType newOrderType;
+    private final OrderManager orderManager = new OrderManager();
 
     
     DecimalFormat df = new DecimalFormat("#.#");
     
     TextFilePaths path = new TextFilePaths();
     String orderTextFilePath = path.getOrderTextFile();
-    String taskTextFilePath = path.getRunnerTasksTextFile();
-    String notificationTextFilePath = path.getNotificationsTextFile();
     
     public OrderSummary(Order order, List<FoodItem> orderBasket) {
         initComponents();
@@ -75,6 +77,7 @@ public class OrderSummary extends javax.swing.JFrame {
             }
         }
         
+        credit = customer.getCredit();
         subtotal = order.getTotalPrice();
         subtotalLabel.setText("RM"+Double.toString((double)subtotal));
         taxLabel.setText("RM"+Double.toString((double)calculateTax()));
@@ -86,6 +89,7 @@ public class OrderSummary extends javax.swing.JFrame {
         tasks = reader.readTasks();
         notifications = reader.readNotifications();
         availableRunner = checkRunner();
+        orders = orderManager.getOrders();
     }
     
     public void loadBasketItems(List<FoodItem> items) {
@@ -165,7 +169,6 @@ public class OrderSummary extends javax.swing.JFrame {
     private Runner checkRunner() {
         for (Runner item : runners) {
             if (item.isRunnerAvailability() == true) {
-                System.out.println("id:"+item.getRunnerID());
                 return item;
             }
         }
@@ -205,31 +208,21 @@ public class OrderSummary extends javax.swing.JFrame {
         return maxID + 1;
     }
     
-    // Create a new order instance
-    private void createOrder(OrderType orderType, List<Order> orders, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, Order.OrderStatus status) {
+    private LocalDateTime getDateTime() {
         LocalDateTime originalDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
         String formattedDateTimeStr = originalDateTime.format(formatter);
         LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTimeStr, formatter);
-        
+        return parsedDateTime;
+    }
+    
+    // Create a new order instance
+    private void createOrder(OrderType orderType, List<Order> orders, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, Order.OrderStatus status) {
         int newOrderID = checkMaxOrderID(orders);
-        Order newOrder = new Order(newOrderID, orderType, customer, vendor, orderBasket, totalPrice, status, parsedDateTime);
+        Order newOrder = new Order(newOrderID, orderType, customer, vendor, orderBasket, totalPrice, status, getDateTime());
 
         orders.add(newOrder);
         saveOrder(newOrder);
-    }
-    
-    private void createTask() {
-        LocalDateTime originalDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-        String formattedDateTimeStr = originalDateTime.format(formatter);
-        LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTimeStr, formatter);
-        Task newTask = new Task(checkMaxTaskID(), availableRunner.getRunnerID(), order.getOrderID(), Task.TaskStatus.PENDING, deliveryFee, parsedDateTime);
-        try (PrintWriter pw = new PrintWriter(new FileWriter(taskTextFilePath, true))) {
-            pw.println(newTask.toString());
-        } catch (IOException ex) {
-            System.out.println("Failed to save!");
-        }
     }
     
     // Save order into text file
@@ -241,10 +234,8 @@ public class OrderSummary extends javax.swing.JFrame {
         }
     }
     
-
     private void placeOrder() {
-        Vendor vendor = order.getVendor();
-        OrderManager orderManager = new OrderManager();
+        Vendor selectedVendor = order.getVendor();
         
         Menu menu = new Menu(vendor, customer, orderBasket);
         menu.resetTotalPrice();
@@ -252,24 +243,35 @@ public class OrderSummary extends javax.swing.JFrame {
         if (availableRunner == null) {
             // No delivery fees and recalculate total price
             deliveryFee = 0;
-            createOrder(newOrderType, orderManager.getOrders(), vendor, orderBasket, 
+            createOrder(newOrderType, orders, selectedVendor, orderBasket, 
                     calculateTotal(), Order.OrderStatus.PENDING);
         } else {
-            createOrder(newOrderType, orderManager.getOrders(), vendor, orderBasket, 
+            createOrder(newOrderType, orders, selectedVendor, orderBasket, 
                     calculateTotal(), Order.OrderStatus.PENDING);
-            // Change runner availability to false once an order is assigned to him (Not sure)
-            // availableRunner.updateRunnerStatus(availableRunner, runners, true);
             // New Runner task
-            createTask();
+            Task newTask = new Task(checkMaxTaskID(), availableRunner.getRunnerID(), checkMaxOrderID(orders)-1, Task.TaskStatus.PENDING, deliveryFee, getDateTime());
+            newTask.createTask(newTask);
         }
         orderBasket.clear();
         this.dispose();
         
         CustomerMainMenu mainMenu = new CustomerMainMenu(customer);
-        mainMenu.orderNotificationPanel.setVisible(true);
-        mainMenu.orderStatusLabel.setText("Your order is processing...");
         mainMenu.setVisible(true);
+        this.dispose();
     }
+    
+    private boolean checkCustomerCredit() {
+        if (credit < calculateTotal()) {
+            // Prompt customer to top up
+            TopUpPage page = new TopUpPage(customer);
+            page.setVisible(true);
+            this.dispose();
+            return false; // Customer does not have sufficient credit
+        } else {
+            return true; // Customer has sufficient credit
+        }
+    }
+
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -573,51 +575,54 @@ public class OrderSummary extends javax.swing.JFrame {
         customer.setStreetAddress(newstreetAddress);
         customer.setCity(newCity);
         ordermanager.saveUpdatedCustomerInfo(customer);
-        
-        if (checkRunner() != null) {
-            newOrderType = OrderType.DELIVERY;
-            placeOrder();
-            LocalDateTime originalDateTime = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
-            String formattedDateTimeStr = originalDateTime.format(formatter);
-            LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTimeStr, formatter);
-            //Send notif to vendor
-            Notification vendorNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", parsedDateTime);
-            //Send notif to runner
-            Notification runnerNotif = new Notification(checkMaxNotificationID()+1, Notification.NotifType.ORDER, availableRunner.getRunnerID(), Notification.NotifUserType.RUNNER, order.getOrderID(), "New order!", parsedDateTime);
-            notifications.add(vendorNotif);
-            notifications.add(runnerNotif);
-            try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFilePath))) {
-                for (Notification i : notifications) {
-                    pw.println(i.toString());                    
+        if (checkCustomerCredit()) {
+            if (checkRunner() != null) {
+                newOrderType = OrderType.DELIVERY;
+                placeOrder();
+                //Send notif to vendor
+                Notification vendorNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, vendor.getVendorID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
+                vendorNotif.saveNotification(vendorNotif);
+                //Send notif to runner
+                Notification runnerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, availableRunner.getRunnerID(), Notification.NotifUserType.RUNNER, order.getOrderID(), "New task!", getDateTime());
+                runnerNotif.saveNotification(runnerNotif);
+                //Send notif to customer
+                Notification customerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.CUSTOMER, order.getOrderID(), "Your order is processing!", getDateTime());
+                customerNotif.saveNotification(customerNotif);
+            } else {
+                int result = JOptionPane.showOptionDialog(this, "There is no available runners. Would you like to dine in or take away instead?", "No runners", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+                switch (result) {
+                    case JOptionPane.YES_OPTION:
+                        // User clicked on "Take Away"
+                        newOrderType = OrderType.TAKEAWAY;
+                        placeOrder();
+                        //Send notif to vendor
+                        Notification takeAwayNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
+                        takeAwayNotif.saveNotification(takeAwayNotif);
+                        break;
+                    case JOptionPane.NO_OPTION:
+                        // User clicked on "Dine In"
+                        newOrderType = OrderType.DINEIN;
+                        placeOrder();
+                        Notification dineInNotif;
+                        dineInNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
+                        dineInNotif.saveNotification(dineInNotif);
+                        break;
+                    case JOptionPane.CLOSED_OPTION:
+                        // User click the x button to close the dialog
+                        break;
+                    default:
+                        // User selected "Cancel Order"
+                        newOrderType = OrderType.DELIVERY; // Pass in placeholder/Temp since cannot be null
+                        CustomerMainMenu page = new CustomerMainMenu(customer);
+                        page.setVisible(true);
+                        this.dispose();
+                        break;
                 }
-            } catch (IOException ex) {
-                System.out.println("Failed to save!");
             }
         } else {
-            int result = JOptionPane.showOptionDialog(this, "There is no available runners. Would you like to dine in or take away instead?", "No runners", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-            switch (result) {
-                case JOptionPane.YES_OPTION:
-                    // User clicked on "Take Away"
-                    newOrderType = OrderType.TAKEAWAY;
-                    placeOrder();
-                    break;
-                case JOptionPane.NO_OPTION:
-                    // User clicked on "Dine In"
-                    newOrderType = OrderType.DINEIN;
-                    placeOrder();
-                    break;
-                case JOptionPane.CLOSED_OPTION:
-                    // User click the x button to close the dialog
-                    break;
-                default:
-                    // User selected "Cancel Order"
-                    newOrderType = OrderType.DELIVERY; // Pass in placeholder/Temp since cannot be null
-                    CustomerMainMenu page = new CustomerMainMenu(customer);
-                    page.setVisible(true);
-                    this.dispose();
-                    break;
-            }
+            // Customer does not have enough credit
+            double difference = credit - calculateTotal();
+            JOptionPane.showMessageDialog(this, "You are short of RM" + df.format(difference) + ". Please top up before placing an order.", "Insufficient credit", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_confirmButtonActionPerformed
   
@@ -705,7 +710,6 @@ public class OrderSummary extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Please select a row to edit.", "No Row Selected", JOptionPane.WARNING_MESSAGE);
         }
-
     }//GEN-LAST:event_updateItemCountActionPerformed
 
     private void addressBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addressBoxActionPerformed

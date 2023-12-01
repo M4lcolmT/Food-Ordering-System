@@ -10,7 +10,9 @@ import food.ordering.system.VendorGUI.Vendor;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -47,8 +49,9 @@ public class OrderManager {
                         String password = parts[4];
                         String streetAddress = parts[5];
                         String city = parts[6];
+                        double credit = Double.parseDouble(parts[7]);
 
-                        Customer customerItem = new Customer(id, name, phoneNumber, email, password, streetAddress, city);
+                        Customer customerItem = new Customer(id, name, phoneNumber, email, password, streetAddress, city, credit);
                         customer = customerItem;
                     }
                 } else {
@@ -160,6 +163,25 @@ public class OrderManager {
         }
         System.out.println("orders: "+orders.size());
         return orders;
+    }
+    
+    public Order findOrder(int orderID) {
+        for (Order item : getOrders()) {
+            if (item.getOrderID() == orderID) {
+                return item;
+            }
+        }
+        return null;
+    }
+    
+    public void writeOrdersToFile() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(orderTextFilePath))) {
+            for (Order item : getOrders()) {
+                writer.println(item.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
+        }
     }
     
     public void saveUpdatedCustomerInfo(Customer customer) {

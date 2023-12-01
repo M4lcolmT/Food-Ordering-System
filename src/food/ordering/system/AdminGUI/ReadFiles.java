@@ -43,7 +43,7 @@ public class ReadFiles {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 7) {
+                if (parts.length == 8) {
                     int id = Integer.parseInt(parts[0]);
                     String name = parts[1];
                     String phoneNumber = parts[2];
@@ -51,8 +51,9 @@ public class ReadFiles {
                     String password = parts[4];
                     String streetAddress = parts[5];
                     String city = parts[6];
+                    double credit = Double.parseDouble(parts[7]);
                     
-                    Customer customerItem = new Customer(id, name, phoneNumber, email, password, streetAddress, city);
+                    Customer customerItem = new Customer(id, name, phoneNumber, email, password, streetAddress, city, credit);
                     customers.add(customerItem);
                 } else {
                     System.out.println("Skipping a line with an incorrect number of parts");
@@ -107,7 +108,7 @@ public class ReadFiles {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 9) {
+                if (parts.length == 10) {
                     int id = Integer.parseInt(parts[0]);
                     boolean availability = Boolean.parseBoolean(parts[1]); 
                     String name = parts[2];
@@ -117,8 +118,9 @@ public class ReadFiles {
                     String address = parts[6];
                     String plateNo = parts[7];
                     String vehicleModel = parts[8];
+                    double rating = Double.parseDouble(parts[9]);
                     
-                    Runner runnerItem = new Runner(id, availability, name, phoneNumber, email, password, address, plateNo, vehicleModel);
+                    Runner runnerItem = new Runner(id, availability, name, phoneNumber, email, password, address, plateNo, vehicleModel, rating);
                     runners.add(runnerItem);
                 } else {
                     System.out.println("Skipping a line with an incorrect number of parts");
