@@ -5,6 +5,7 @@
 package food.ordering.system.CustomerGUI;
 
 import food.ordering.system.CustomerGUI.Order.OrderType;
+import food.ordering.system.RunnerGUI.Task;
 import food.ordering.system.VendorGUI.FoodItem;
 import food.ordering.system.VendorGUI.Vendor;
 import java.io.BufferedReader;
@@ -33,6 +34,7 @@ public class OrderManager {
     String orderTextFilePath = filePaths.getOrderTextFile();
     String customerTextFilePath = filePaths.getCustomerTextFile();
     String vendorTextFilePath = filePaths.getVendorTextFile();
+    String tasksTextFilePath = filePaths.getRunnerTasksTextFile();
     
     //Parsing the customer based on the order customer ID
     public Customer parseOrderCustomer(int orderCustomerID) {
@@ -40,7 +42,7 @@ public class OrderManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 7) {
+                if (parts.length == 8) {
                     int id = Integer.parseInt(parts[0]);
                     if (orderCustomerID == id) {
                         String name = parts[1];
@@ -55,7 +57,7 @@ public class OrderManager {
                         customer = customerItem;
                     }
                 } else {
-                    System.out.println("Skipping a line with an incorrect number of parts");
+                    System.out.println("Order Customer: Skipping a line with an incorrect number of parts");
                 }
             }
         } catch (IOException e) {
@@ -89,7 +91,7 @@ public class OrderManager {
                         vendor = vendorItem;
                     }
                 } else {
-                    System.out.println("Incomplete vendor data!");
+                    System.out.println("Order Vendor: Skipping a line with an incorrect number of parts");
                 }
             }
         } catch (IOException e) {
@@ -153,7 +155,7 @@ public class OrderManager {
                     Order newOrder = new Order(id, orderType, orderCustomer, orderVendor, basket, orderTotalPrice, orderStatus, orderDateTime);
                     orders.add(newOrder);
                 } else {
-                    System.out.println("Skipping a line with an incorrect number of parts: " + line);
+                    System.out.println("Order Manager - order: Skipping a line with an incorrect number of parts: " + line);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -174,6 +176,16 @@ public class OrderManager {
         return null;
     }
     
+    public void writeTasksToFile(List<Task> tasks) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(tasksTextFilePath))) {
+            for (Task item : tasks) {
+                writer.println(item.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
+        }
+    }
+    
     public void writeOrdersToFile() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(orderTextFilePath))) {
             for (Order item : getOrders()) {
@@ -192,7 +204,7 @@ public class OrderManager {
                 int id = Integer.parseInt(parts[0]);
                 if (id == customer.getCustomerID()) {
                     // Update the address and city for the matching customer
-                    lines.set(i, customer.getCustomerID() + ";" + customer.getName() + ";" + customer.getPhoneNumber() + ";" + customer.getEmail() + ";" + customer.getPassword() + ";" + customer.getStreetAddress() + ";" + customer.getCity());
+                    lines.set(i, customer.getCustomerID() + ";" + customer.getName() + ";" + customer.getPhoneNumber() + ";" + customer.getEmail() + ";" + customer.getPassword() + ";" + customer.getStreetAddress() + ";" + customer.getCity() + ";" + customer.getCredit());
                     break;
                 }
             }

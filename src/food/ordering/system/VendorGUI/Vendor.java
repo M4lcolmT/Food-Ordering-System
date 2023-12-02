@@ -4,6 +4,14 @@
  */
 package food.ordering.system.VendorGUI;
 import food.ordering.system.User;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import textFiles.TextFilePaths;
 
 /**
  *
@@ -17,6 +25,9 @@ public class Vendor extends User{
     private String description;
     private String operationHours;
     private String operationDays;
+    
+    TextFilePaths path = new TextFilePaths();
+    String vendorTextFilePath = path.getVendorTextFile();
     
     public Vendor(int vendorID, String name, String phoneNumber, String email, String password, double rating, String category, String city, String description, String operationHours, String operationDays) {
         super(name, phoneNumber, email, password);
@@ -79,6 +90,36 @@ public class Vendor extends User{
 
     public void setOperationDays(String operationDays) {
         this.operationDays = operationDays;
+    }
+    
+    private void saveVendor(List<Vendor> vendors) {
+        // Filter and sort the data
+        List<Vendor> filteredItems = vendors.stream()
+                .collect(Collectors.toList());
+
+        // Sort the filtered items by ID
+        Collections.sort(filteredItems, Comparator.comparingInt(Vendor::getVendorID));
+
+        // Update the file with the new runner status
+        try (PrintWriter writer = new PrintWriter(new FileWriter(vendorTextFilePath))) {
+            // Write each runner item to the file
+            for (Vendor vendorItem : filteredItems) {
+                writer.println(vendorItem.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateVendorRating(Vendor vendor, List<Vendor> vendors, double rating) {
+        int vendorId = vendor.getVendorID();
+
+        for (Vendor i : vendors) {
+            if (vendorId == i.getVendorID()) {
+                vendor.setRating(rating);
+            }
+        }
+        saveVendor(vendors);
     }
     
     @Override

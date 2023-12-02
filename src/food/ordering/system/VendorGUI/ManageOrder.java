@@ -6,13 +6,13 @@ package food.ordering.system.VendorGUI;
 
 import food.ordering.system.AdminGUI.Notification;
 import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.CustomerGUI.Order;
 import food.ordering.system.CustomerGUI.Order.OrderStatus;
 import food.ordering.system.CustomerGUI.OrderManager;
 import food.ordering.system.RunnerGUI.Runner;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import food.ordering.system.RunnerGUI.Task;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import textFiles.TextFilePaths;
 
 /**
  *
@@ -36,13 +35,12 @@ public class ManageOrder extends javax.swing.JFrame {
     private OrderStatus orderStatus;
     private List<Order> allOrders;
     private List<Runner> runners;
+    private List<Task> allTasks;
     private List<Notification> notifications;
     private final OrderManager manager = new OrderManager();
     
-    TextFilePaths path = new TextFilePaths();
-    String orderTextFilePath = path.getOrderTextFile();
-    String notificationTextFilePath = path.getNotificationsTextFile();
-    
+    DecimalFormat df = new DecimalFormat("#.#");
+
     public ManageOrder(Vendor vendor, int orderID) {
         initComponents();
         this.vendor = vendor;
@@ -55,6 +53,7 @@ public class ManageOrder extends javax.swing.JFrame {
         ReadFiles reader = new ReadFiles();
         notifications = reader.readNotifications();
         runners = reader.readRunners();
+        allTasks = reader.readTasks();
     }
         
     private void loadOrder() {
@@ -111,6 +110,24 @@ public class ManageOrder extends javax.swing.JFrame {
         String formattedDateTimeStr = originalDateTime.format(formatter);
         LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTimeStr, formatter);
         return parsedDateTime;
+    }
+    
+    private void refundCredit() {
+        Customer selectedCustomer = specificOrder.getCustomer();
+        double credit = selectedCustomer.getCredit();
+        double orderPrice = specificOrder.getTotalPrice();
+        credit = credit + orderPrice;
+        selectedCustomer.setCredit(Double.parseDouble(df.format(credit)));
+        manager.saveUpdatedCustomerInfo(selectedCustomer);
+    }
+    
+    private Task findTask(int orderID) {
+        for (Task i : allTasks) {
+            if (i.getOrderID() == orderID) {
+                return i;
+            }
+        }
+        return null;
     }
     
     @SuppressWarnings("unchecked")
@@ -282,18 +299,11 @@ public class ManageOrder extends javax.swing.JFrame {
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
             JOptionPane.showMessageDialog(this, "Order is accepted, proceed to prepare.", "Accept Order", JOptionPane.INFORMATION_MESSAGE);
+            //Save updated order status
             specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.PREPARING);
             //Send notif to customer
             Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, specificOrder.getOrderID(), "Your order is preparing!", getDateTime());
             newNotif.saveNotification(newNotif);
-            //Save updated order status
-            try (PrintWriter writer = new PrintWriter(new FileWriter(orderTextFilePath))) {
-                for (Order item : allOrders) {
-                    writer.println(item.toString());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             //Set button visibility
             acceptButton.setVisible(false);
             rejectButton.setVisible(false);
@@ -302,22 +312,21 @@ public class ManageOrder extends javax.swing.JFrame {
     }//GEN-LAST:event_acceptButtonActionPerformed
 
     private void rejectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rejectButtonActionPerformed
+        Task selectedTask = findTask(orderID);
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to reject order?", "Reject Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
             JOptionPane.showMessageDialog(this, "Order is rejected.", "Reject Order", JOptionPane.INFORMATION_MESSAGE);
+            //Refund credit to customer
+            refundCredit();
+            //Delete task from runner
+            allTasks.removeIf(item -> item.getTaskID() == selectedTask.getTaskID());
+            manager.writeTasksToFile(allTasks);
+            //Save updated order status
             specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.CANCELLED);
             //Sent notif to customer
-            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "Your order is cancelled", getDateTime());
+            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, specificOrder.getOrderID(), "Your order is cancelled", getDateTime());
             newNotif.saveNotification(newNotif);
-            //Save updated order status
-            try (PrintWriter writer = new PrintWriter(new FileWriter(orderTextFilePath))) {
-                for (Order item : allOrders) {
-                    writer.println(item.toString());
-                }
-            } catch (IOException e) {
-                e.printStackTrace(); // Handle the exception appropriately (e.g., show an error message)
-            }
             ViewOrders page = new ViewOrders(vendor, allOrders);
             page.setVisible(true);
             this.dispose();
@@ -328,7 +337,7 @@ public class ManageOrder extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Order is ready.", "Finisihed Order", JOptionPane.INFORMATION_MESSAGE);
         specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.READY_FOR_PICKUP);
         //Sent notif to customer
-        Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "Your order is ready, waiting for pick up!", getDateTime());
+        Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, specificOrder.getOrderID(), "Your order is ready, waiting for pick up!", getDateTime());
         newNotif.saveNotification(newNotif);
         ViewOrders page = new ViewOrders(vendor, allOrders);
         page.setVisible(true);

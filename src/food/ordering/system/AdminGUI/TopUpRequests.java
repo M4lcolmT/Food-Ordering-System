@@ -4,7 +4,6 @@
  */
 package food.ordering.system.AdminGUI;
 
-import food.ordering.system.RunnerGUI.Runner;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -37,8 +36,7 @@ public class TopUpRequests {
 
     public enum TransactionStatus {
         PENDING,
-        APPROVED,
-        REJECTED
+        APPROVED
     }
     
     public TopUpRequests(int requestID, int customerID, int amount, String bankType, long cardNumber, YearMonth cardExpiryDate, int cvv, String remarks, LocalDateTime dateTime, TransactionStatus transactionStatus) {

@@ -505,7 +505,9 @@ public class RevenueDashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        // TODO add your handling code here:
+        RunnerMainMenu page = new RunnerMainMenu(runner);
+        page.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void calanderPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_calanderPropertyChange

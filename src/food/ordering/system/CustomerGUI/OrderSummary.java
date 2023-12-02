@@ -12,9 +12,6 @@ import food.ordering.system.RunnerGUI.Runner;
 import food.ordering.system.RunnerGUI.Task;
 import food.ordering.system.VendorGUI.Vendor;
 import food.ordering.system.VendorGUI.FoodItem;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +22,6 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import textFiles.TextFilePaths;
 
 /**
  *
@@ -35,7 +31,7 @@ public class OrderSummary extends javax.swing.JFrame {
     private Order order;
     private Vendor vendor;
     private Customer customer;
-    private Runner availableRunner;
+    private final Runner availableRunner;
     private double subtotal;
     private double tax;
     private double distance;
@@ -43,18 +39,14 @@ public class OrderSummary extends javax.swing.JFrame {
     private double totalPrice;
     private double credit;
     private List<FoodItem> orderBasket;
-    private List<Runner> runners;
-    private List<Task> tasks;
-    private List<Notification> notifications;
+    private final List<Runner> runners;
+    private final List<Task> tasks;
+    private final List<Notification> notifications;
     private List<Order> orders = new ArrayList<>();
     private OrderType newOrderType;
     private final OrderManager orderManager = new OrderManager();
 
-    
     DecimalFormat df = new DecimalFormat("#.#");
-    
-    TextFilePaths path = new TextFilePaths();
-    String orderTextFilePath = path.getOrderTextFile();
     
     public OrderSummary(Order order, List<FoodItem> orderBasket) {
         initComponents();
@@ -175,17 +167,6 @@ public class OrderSummary extends javax.swing.JFrame {
         return null;
     }
     
-    private int checkMaxOrderID(List<Order> orders) {
-        int maxID = 0;
-        for (Order i : orders) {
-            if (i.getOrderID() > maxID) {
-                maxID = i.getOrderID();
-            }
-        }
-        // Increment the maximum ID
-        return maxID + 1;
-    }
-    
     private int checkMaxTaskID() {
         int maxID = 0;
         for (Task task : tasks) {
@@ -216,42 +197,31 @@ public class OrderSummary extends javax.swing.JFrame {
         return parsedDateTime;
     }
     
-    // Create a new order instance
-    private void createOrder(OrderType orderType, List<Order> orders, Vendor vendor, List<FoodItem> orderBasket, double totalPrice, Order.OrderStatus status) {
-        int newOrderID = checkMaxOrderID(orders);
-        Order newOrder = new Order(newOrderID, orderType, customer, vendor, orderBasket, totalPrice, status, getDateTime());
-
-        orders.add(newOrder);
-        saveOrder(newOrder);
-    }
-    
-    // Save order into text file
-    private void saveOrder(Order newOrder) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(orderTextFilePath, true))) {
-            pw.println(newOrder.toString());
-        } catch (IOException ex) {
-            System.out.println("Failed to save!");
-        }
+    private void saveOrder(OrderType orderType) {
+        order.setOrderType(orderType);
+        order.setDateTime(getDateTime());
+        orders.add(order);
+        order.saveOrder(orders);
     }
     
     private void placeOrder() {
-        Vendor selectedVendor = order.getVendor();
-        
         Menu menu = new Menu(vendor, customer, orderBasket);
         menu.resetTotalPrice();
         
         if (availableRunner == null) {
             // No delivery fees and recalculate total price
             deliveryFee = 0;
-            createOrder(newOrderType, orders, selectedVendor, orderBasket, 
-                    calculateTotal(), Order.OrderStatus.PENDING);
+            saveOrder(newOrderType);
         } else {
-            createOrder(newOrderType, orders, selectedVendor, orderBasket, 
-                    calculateTotal(), Order.OrderStatus.PENDING);
+            saveOrder(newOrderType);
             // New Runner task
-            Task newTask = new Task(checkMaxTaskID(), availableRunner.getRunnerID(), checkMaxOrderID(orders)-1, Task.TaskStatus.PENDING, deliveryFee, getDateTime());
+            Task newTask;
+            newTask = new Task(checkMaxTaskID(), availableRunner.getRunnerID(),order.getOrderID(), Task.TaskStatus.PENDING, deliveryFee, getDateTime());
             newTask.createTask(newTask);
         }
+        credit = deductCredit();
+        customer.setCredit(credit);
+        orderManager.saveUpdatedCustomerInfo(customer);
         orderBasket.clear();
         this.dispose();
         
@@ -261,15 +231,12 @@ public class OrderSummary extends javax.swing.JFrame {
     }
     
     private boolean checkCustomerCredit() {
-        if (credit < calculateTotal()) {
-            // Prompt customer to top up
-            TopUpPage page = new TopUpPage(customer);
-            page.setVisible(true);
-            this.dispose();
-            return false; // Customer does not have sufficient credit
-        } else {
-            return true; // Customer has sufficient credit
-        }
+        return credit >= calculateTotal();
+    }
+    
+    private double deductCredit() {
+        credit = credit - calculateTotal();
+        return Double.parseDouble(df.format(credit));
     }
 
     
@@ -565,7 +532,6 @@ public class OrderSummary extends javax.swing.JFrame {
         Object[] options = {"Take Away", "Dine In", "Cancel Order"};
         String newstreetAddress = addressBox.getText();
         String newCity = String.valueOf(cityComboBox.getSelectedItem());
-        OrderManager ordermanager = new OrderManager();
                 
         if (newCity.equals("City")){
             JOptionPane.showMessageDialog(this, "Please select a city", "Invalid Input", JOptionPane.ERROR_MESSAGE);
@@ -574,7 +540,7 @@ public class OrderSummary extends javax.swing.JFrame {
         
         customer.setStreetAddress(newstreetAddress);
         customer.setCity(newCity);
-        ordermanager.saveUpdatedCustomerInfo(customer);
+        orderManager.saveUpdatedCustomerInfo(customer);
         if (checkCustomerCredit()) {
             if (checkRunner() != null) {
                 newOrderType = OrderType.DELIVERY;
@@ -621,8 +587,13 @@ public class OrderSummary extends javax.swing.JFrame {
             }
         } else {
             // Customer does not have enough credit
+            Menu menu = new Menu(order.getVendor(), order.getCustomer(), orderBasket);
+            menu.resetTotalPrice();
             double difference = credit - calculateTotal();
             JOptionPane.showMessageDialog(this, "You are short of RM" + df.format(difference) + ". Please top up before placing an order.", "Insufficient credit", JOptionPane.ERROR_MESSAGE);
+            TopUpPage page = new TopUpPage(customer);
+            page.setVisible(true);
+            this.dispose();
         }
     }//GEN-LAST:event_confirmButtonActionPerformed
   
@@ -660,10 +631,8 @@ public class OrderSummary extends javax.swing.JFrame {
                         // User canceled the input
                         return;
                     }
-
                     // Attempt to parse the input as an integer
                     newValue = Integer.valueOf(result.toString());
-
                     // Input is valid if no exception is thrown
                     validInput = true;
                 } catch (NumberFormatException e) {
@@ -675,17 +644,13 @@ public class OrderSummary extends javax.swing.JFrame {
             // Update the model with the new value
             if (newValue != null) {
                 model.setValueAt(newValue, selectedRowIndex, 0);
-
                 // Update the orderBasket based on the new value
                 Iterator<FoodItem> iterator = orderBasket.iterator();
-
                 while (iterator.hasNext()) {
                     FoodItem item = iterator.next();
-
                     // Check if the item name matches
                     if (itemName.equals(item.getItemName())) {
                         int quantityDifference = newValue - currentValue;
-
                         if (quantityDifference > 0) {
                             // If the new quantity is greater, add items to the orderBasket
                             for (int i = 0; i < quantityDifference; i++) {
@@ -720,6 +685,9 @@ public class OrderSummary extends javax.swing.JFrame {
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to cancel order?", "Cancel Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
+            Menu menu = new Menu(order.getVendor(), order.getCustomer(), orderBasket);
+            menu.resetTotalPrice();
+            System.out.println("subtotal"+order.getTotalPrice());
             CustomerMainMenu page = new CustomerMainMenu(customer);
             page.setVisible(true);
             this.dispose();

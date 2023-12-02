@@ -29,6 +29,8 @@ public class Menu extends javax.swing.JFrame {
     private FoodItem foodItem;
     public static double totalPrice = 0.0;
     public static int basketCount = 0;
+    private List<Order> orders;
+    private final OrderManager manager = new OrderManager();
 
     DecimalFormat df = new DecimalFormat("#.#");
 
@@ -46,6 +48,7 @@ public class Menu extends javax.swing.JFrame {
         readFoodItemsFromFile();
         populateInnerPanel(menu);
         checkEmptyBasket();
+        orders = manager.getOrders();
     }
     
     public String showName(){
@@ -135,6 +138,17 @@ public class Menu extends javax.swing.JFrame {
         totalPrice = 0;
     }
     
+    private int checkMaxOrderID() {
+        int maxID = 0;
+        for (Order i : orders) {
+            if (i.getOrderID() > maxID) {
+                maxID = i.getOrderID();
+            }
+        }
+        // Increment the maximum ID
+        return maxID + 1;
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -174,6 +188,11 @@ public class Menu extends javax.swing.JFrame {
         jScrollPane1.setViewportView(innerScrollPanel);
 
         jButton1.setText("Reviews");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         confirmBasket.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -280,17 +299,25 @@ public class Menu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void confirmBasketMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmBasketMouseClicked
-        Order order = new Order(0, Order.OrderType.DELIVERY, customer, vendor, basket, totalPrice, OrderStatus.PENDING, LocalDateTime.now());
+        Order order = new Order(checkMaxOrderID(), Order.OrderType.DELIVERY, customer, vendor, basket, totalPrice, OrderStatus.PENDING, LocalDateTime.now());
         OrderSummary orderSummary = new OrderSummary(order, basket);
         orderSummary.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_confirmBasketMouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        CustomerMainMenu page = new CustomerMainMenu(customer);
+        basket.clear();
+        resetTotalPrice();
+        OrderMenu page = new OrderMenu(customer);
         page.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        VendorReviews page = new VendorReviews(this, vendor);
+        page.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

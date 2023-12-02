@@ -118,7 +118,6 @@ public class TopUpPage extends javax.swing.JFrame {
         twoHundredButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         amountUpdateField = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
 
         jButton5.setText("Reload");
 
@@ -242,13 +241,6 @@ public class TopUpPage extends javax.swing.JFrame {
         amountUpdateField.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jPanel2.add(amountUpdateField, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 40, -1, -1));
 
-        jButton6.setText("Back");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -283,9 +275,7 @@ public class TopUpPage extends javax.swing.JFrame {
                 .addGap(0, 208, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton6)
-                    .addComponent(jLabel4))
+                .addComponent(jLabel4)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -317,9 +307,7 @@ public class TopUpPage extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(reloadButton)
                     .addComponent(cancelButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addComponent(jButton6)
-                .addGap(19, 19, 19))
+                .addContainerGap(76, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -431,12 +419,6 @@ public class TopUpPage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cvvFieldActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        CustomerMainMenu page = new CustomerMainMenu(customer);
-        page.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButton6ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel amountUpdateField;
     private javax.swing.JComboBox<String> banks;
@@ -451,7 +433,6 @@ public class TopUpPage extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

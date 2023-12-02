@@ -109,12 +109,14 @@ public class ViewNewTasks extends javax.swing.JFrame {
         model.setRowCount(0);
         
         for (Task task : filteredTasks) {
-            Order order = manager.findOrder(task.getOrderID());
-            Customer orderCustomer = order.getCustomer();
-            Vendor orderVendor = order.getVendor();
-            double distance = calculateDistance(orderCustomer.getCity().trim().toLowerCase(), orderVendor.getCity().trim().toLowerCase());
-            Object[] rowData = { task.getTaskID(), orderVendor.getName(), distance, orderCustomer.getName(), orderCustomer.getCity(), task.getTaskStatus()};
-            model.addRow(rowData);
+            if (task.getTaskStatus() != Task.TaskStatus.DECLINED) {
+                Order order = manager.findOrder(task.getOrderID());
+                Customer orderCustomer = order.getCustomer();
+                Vendor orderVendor = order.getVendor();
+                double distance = calculateDistance(orderCustomer.getCity().trim().toLowerCase(), orderVendor.getCity().trim().toLowerCase());
+                Object[] rowData = { task.getTaskID(), orderVendor.getName(), distance, orderCustomer.getName(), orderCustomer.getCity(), task.getTaskStatus()};
+                model.addRow(rowData);
+            }
         }
     }
     
@@ -347,6 +349,12 @@ public class ViewNewTasks extends javax.swing.JFrame {
                 // Send a notification to prompt the customer notification to choose dine-in/take-away
                 Notification customerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "No runners are available! Please choose to dine in or take away.", getDateTime());
                 customerNotif.saveNotification(customerNotif);
+                // Change the task status to rejected
+                selectedTask.updateTaskStatus(selectedTask, allTasks, Task.TaskStatus.DECLINED);
+                ReadFiles reader = new ReadFiles();
+                allTasks = reader.readTasks();
+                runnerTasks = getRunnerTask(runner.getRunnerID());
+                loadTasks();
             }
         } else {
             JOptionPane.showMessageDialog(this, "Please select a row to reject.", "Error", JOptionPane.ERROR_MESSAGE);

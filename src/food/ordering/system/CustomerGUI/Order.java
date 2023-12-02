@@ -84,6 +84,10 @@ public class Order {
         return orderBasket;
     }
     
+    public void setOrderBasket(List<FoodItem> orderBasket) {
+        this.orderBasket = orderBasket;
+    }
+    
     public double getTotalPrice() {
         return totalPrice;
     }
@@ -108,15 +112,7 @@ public class Order {
         this.dateTime = dateTime;
     }
     
-    public void updateOrderStatus(Order specificOrder, List<Order> orders, OrderStatus orderStatus) {
-        int orderid = specificOrder.getOrderID();
-        for (Order item : orders) {
-            if (orderid == item.getOrderID()) {
-                // Update the order status
-                item.setStatus(orderStatus);
-            }
-        }
-
+    public void saveOrder(List<Order> orders) {
         // Filter and sort the data
         List<Order> filteredItems = orders.stream()
                 .collect(Collectors.toList());
@@ -134,8 +130,18 @@ public class Order {
             e.printStackTrace();
         }
     }
-
     
+    public void updateOrderStatus(Order specificOrder, List<Order> orders, OrderStatus orderStatus) {
+        int orderid = specificOrder.getOrderID();
+        for (Order item : orders) {
+            if (orderid == item.getOrderID()) {
+                // Update the order status
+                item.setStatus(orderStatus);
+            }
+        }
+        saveOrder(orders);
+    }
+
     @Override
     public String toString() {
         String delimiter = ";";

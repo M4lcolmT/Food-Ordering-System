@@ -15,8 +15,7 @@ public class TextFilePaths {
     public final String orderTextFile = "src/textFiles/orders.txt";
     public final String adminTextFile = "src/textFiles/admin.txt";
     public final String runnerTextFile = "src/textFiles/runner.txt";
-    public final String vendorReviewsTextFile = "src/textFiles/vendor_reviews.txt";
-    public final String runnerReviewsTextFile = "src/textFiles/runner_reviews.txt";
+    public final String reviewsTextFile = "src/textFiles/reviews.txt";
     public final String topUpRequestsTextFile = "src/textFiles/top_up_requests.txt";
     public final String userCRUDrequestTextFile = "src/textFiles/user_crud_requests.txt";
     public final String notificationsTextFile = "src/textFiles/notifications.txt";
@@ -39,12 +38,8 @@ public class TextFilePaths {
         return orderTextFile;
     }
     
-    public String getVendorReviewsTextFile() {
-        return vendorReviewsTextFile;
-    }
-
-    public String getRunnerReviewsTextFile() {
-        return runnerReviewsTextFile;
+    public String getReviewsTextFile() {
+        return reviewsTextFile;
     }
     
     public String getAdminTextFile() {

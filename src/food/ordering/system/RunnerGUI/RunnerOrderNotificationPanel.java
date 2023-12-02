@@ -20,9 +20,11 @@ public class RunnerOrderNotificationPanel extends javax.swing.JPanel {
     private int orderID;
     private String updateDescription;
     private LocalDateTime dateTime;
+    private RunnerNotification page;
     
-    public RunnerOrderNotificationPanel(Runner runner, int orderID, String updateDescription, LocalDateTime dateTime) {
+    public RunnerOrderNotificationPanel(RunnerNotification page, Runner runner, int orderID, String updateDescription, LocalDateTime dateTime) {
         initComponents();
+        this.page = page;
         this.runner = runner;
         this.updateDescription = updateDescription;
         this.dateTime = dateTime;
@@ -101,8 +103,9 @@ public class RunnerOrderNotificationPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void viewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewButtonActionPerformed
-        ViewNewTasks page = new ViewNewTasks(runner);
-        page.setVisible(true);
+        ViewNewTasks newPage = new ViewNewTasks(runner);
+        newPage.setVisible(true);
+        page.dispose();
     }//GEN-LAST:event_viewButtonActionPerformed
 
 

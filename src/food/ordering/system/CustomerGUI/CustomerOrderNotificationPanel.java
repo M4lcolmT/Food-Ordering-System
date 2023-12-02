@@ -6,9 +6,11 @@ package food.ordering.system.CustomerGUI;
 
 import food.ordering.system.AdminGUI.Notification;
 import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.RunnerGUI.Task;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -29,13 +31,17 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
     private String updateDescription;
     private LocalDateTime dateTime;
     private List<Notification> allNotifications;
+    private List<Task> allTasks;
+    private CustomerNotification custNotifPage;
     private final OrderManager manager = new OrderManager();
     
+    DecimalFormat df = new DecimalFormat("#.#");
     TextFilePaths path = new TextFilePaths();
     String notificationTextFile = path.getNotificationsTextFile();
     
-    public CustomerOrderNotificationPanel(Customer customer, int orderID, String updateDescription, LocalDateTime dateTime) {
+    public CustomerOrderNotificationPanel(CustomerNotification custNotifPage, Customer customer, int orderID, String updateDescription, LocalDateTime dateTime) {
         initComponents();
+        this.custNotifPage = custNotifPage;
         this.updateDescription = updateDescription;
         this.dateTime = dateTime;
         this.orderID = orderID;
@@ -43,6 +49,7 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
         
         ReadFiles reader = new ReadFiles();
         allNotifications = reader.readNotifications();
+        allTasks = reader.readTasks();
         
         statusLabel.setText(updateDescription);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm");
@@ -77,7 +84,7 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
                 dineInButton.setVisible(true);
                 cancelButton.setVisible(false);
             }
-            case "Order arrived! Click to receive order." -> {
+            case "Order arrived! Click to receive order.", "Your order is ready, waiting for pick up!" -> {
                 receivedButton.setVisible(true);
                 takeAwayButton.setVisible(false);
                 dineInButton.setVisible(false);
@@ -97,11 +104,62 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
         List<Notification> notifs = new ArrayList<>();
         
         for (Notification item : allNotifications) {
-            if (item.getUserType().name().equals("CUSTOMER") && item.getUserID() == customer.getCustomerID() && item.getTransactionID() == orderID) {
+            if (item.getUserType().name().equals("CUSTOMER") && item.getUserID() == customer.getCustomerID() && item.getTypeID() == orderID) {
                 notifs.add(item);
             }
         }
         return notifs;
+    }
+    
+    private void removeOrderNotifs() {
+        List<Notification> customerNotifs = getOrderNotifications();
+        allNotifications.removeAll(customerNotifs);
+
+        try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFile, false))) {
+            for (Notification notif : allNotifications) {
+                pw.println(notif.toString());                
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(CustomerOrderNotificationPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void refundCredit(Order specificOrder) {
+        Customer selectedCustomer = specificOrder.getCustomer();
+        double credit = selectedCustomer.getCredit();
+        double orderPrice = specificOrder.getTotalPrice();
+        credit = credit + orderPrice;
+        selectedCustomer.setCredit(Double.parseDouble(df.format(credit)));
+        manager.saveUpdatedCustomerInfo(selectedCustomer);
+    }
+    
+    private Task findTask(int orderID) {
+        for (Task i : allTasks) {
+            if (i.getOrderID() == orderID) {
+                return i;
+            }
+        }
+        return null;
+    }
+    
+    // Check max id in notification text file
+    private int checkMaxID() {
+        int maxID = 0;
+        for (Notification i : allNotifications) {
+            if (i.getNotificationID() > maxID) {
+                maxID = i.getNotificationID();
+            }
+        }
+        // Increment the maximum ID
+        return maxID + 1;
+    }
+    
+    private LocalDateTime getDateTime() {
+        LocalDateTime originalDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        String formattedDateTimeStr = originalDateTime.format(formatter);
+        LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTimeStr, formatter);
+        return parsedDateTime;
     }
     
     @SuppressWarnings("unchecked")
@@ -120,7 +178,7 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
 
         dateTimeLabel.setText("Date & Time");
 
-        statusLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        statusLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         statusLabel.setText("-");
 
         takeAwayButton.setText("Take Away");
@@ -158,17 +216,20 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dateTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(receivedButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(takeAwayButton, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dineInButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(dateTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                        .addComponent(receivedButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(takeAwayButton, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dineInButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,16 +237,14 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
                 .addGap(27, 27, 27)
                 .addComponent(statusLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(dateTimeLabel)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(takeAwayButton)
+                        .addComponent(dineInButton)
+                        .addComponent(cancelButton)
+                        .addComponent(receivedButton))
+                    .addComponent(dateTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(29, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(takeAwayButton)
-                    .addComponent(dineInButton)
-                    .addComponent(cancelButton)
-                    .addComponent(receivedButton))
-                .addGap(41, 41, 41))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -201,38 +260,52 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        Order selectedOrder = manager.findOrder(orderID);
+        Task selectedTask = findTask(orderID);
+        cancelButton.setEnabled(false);
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed to cancel order?", "Cancel Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
-            Order selectedOrder = manager.findOrder(orderID);
+            refundCredit(selectedOrder);
+            removeOrderNotifs();
             orders.removeIf(item -> item.getOrderID() == selectedOrder.getOrderID());
             manager.writeOrdersToFile();
+            allTasks.removeIf(item -> item.getTaskID() == selectedTask.getTaskID());
+            manager.writeTasksToFile(allTasks);
         }
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void receivedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_receivedButtonActionPerformed
+        Order selectedOrder = manager.findOrder(orderID);
+        Customer selectedCustomer = selectedOrder.getCustomer();
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Order received?", "Order Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
-            List<Notification> customerNotifs = getOrderNotifications();
-                allNotifications.removeAll(customerNotifs);
-
-                try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFile, false))) {
-                    for (Notification notif : allNotifications) {
-                        pw.println(notif.toString());                
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(CustomerOrderNotificationPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            GiveReview page = new GiveReview(selectedCustomer, orderID);
+            page.setVisible(true);
+            custNotifPage.dispose();
+            removeOrderNotifs();
         }
     }//GEN-LAST:event_receivedButtonActionPerformed
 
     private void takeAwayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_takeAwayButtonActionPerformed
-        // TODO add your handling code here:
+        Order selectedOrder = manager.findOrder(orderID);
+        if (selectedOrder.getStatus() == Order.OrderStatus.READY_FOR_PICKUP) {
+            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "Your order is ready, waiting for pick up!", getDateTime());
+            newNotif.saveNotification(newNotif);
+        } else {
+            JOptionPane.showMessageDialog(this, "Your order is not ready.", "Order still preparing", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_takeAwayButtonActionPerformed
 
     private void dineInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dineInButtonActionPerformed
-        // TODO add your handling code here:
+        Order selectedOrder = manager.findOrder(orderID);
+        if (selectedOrder.getStatus() == Order.OrderStatus.READY_FOR_PICKUP) {
+            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "Your order is ready, waiting for pick up!", getDateTime());
+            newNotif.saveNotification(newNotif);
+        } else {
+            JOptionPane.showMessageDialog(this, "Your order is not ready.", "Order still preparing", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_dineInButtonActionPerformed
 
 

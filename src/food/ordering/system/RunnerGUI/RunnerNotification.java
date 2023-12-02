@@ -4,7 +4,6 @@
  */
 package food.ordering.system.RunnerGUI;
 
-import food.ordering.system.CustomerGUI.*;
 import food.ordering.system.AdminGUI.Notification;
 import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.AdminGUI.UserProfileNotificationPanel;
@@ -55,7 +54,7 @@ public class RunnerNotification extends javax.swing.JFrame {
             LocalDateTime dateTime = item.getDateTime();
             switch(notifType) {
                 case "ORDER":
-                    RunnerOrderNotificationPanel orderPanel = new RunnerOrderNotificationPanel(runner, item.getTransactionID(), updateDesc, dateTime);
+                    RunnerOrderNotificationPanel orderPanel = new RunnerOrderNotificationPanel(this, runner, item.getTypeID(), updateDesc, dateTime);
                     innerScrollPanel.add(orderPanel);
                     break;
                 case "USERPROFILE":

@@ -33,7 +33,6 @@ public class TransactionNotificationPanel extends javax.swing.JPanel {
         requests = reader.readTopUpRequests();
         request = findTopUpRequest();
         
-        statusLabel.setText(request.getTransactionStatus().name().toLowerCase()+"!");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm");
         String formattedDateTime = dateTime.format(formatter);
         dateTimeLabel.setText(formattedDateTime);
@@ -58,12 +57,11 @@ public class TransactionNotificationPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         dateTimeLabel = new javax.swing.JLabel();
         viewReceiptButton = new javax.swing.JButton();
-        statusLabel = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(153, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("Your transaction is");
+        jLabel1.setText("Your transaction is approved!");
 
         dateTimeLabel.setText("Date & Time");
 
@@ -75,9 +73,6 @@ public class TransactionNotificationPanel extends javax.swing.JPanel {
             }
         });
 
-        statusLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        statusLabel.setText("-");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -85,12 +80,9 @@ public class TransactionNotificationPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1)
                     .addComponent(dateTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
                 .addComponent(viewReceiptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35))
         );
@@ -100,9 +92,7 @@ public class TransactionNotificationPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(27, 27, 27)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(statusLabel))
+                        .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(dateTimeLabel))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -134,7 +124,6 @@ public class TransactionNotificationPanel extends javax.swing.JPanel {
     private javax.swing.JLabel dateTimeLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel statusLabel;
     private javax.swing.JButton viewReceiptButton;
     // End of variables declaration//GEN-END:variables
 }

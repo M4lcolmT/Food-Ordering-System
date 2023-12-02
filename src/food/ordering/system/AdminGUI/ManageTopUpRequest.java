@@ -1,6 +1,7 @@
 package food.ordering.system.AdminGUI;
 
 import food.ordering.system.CustomerGUI.Customer;
+import food.ordering.system.CustomerGUI.OrderManager;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,8 +25,8 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
     private Admin admin;
     private List<TopUpRequests> requests;
     private List<Notification> notifications;
-    TextFilePaths path = new TextFilePaths();
-    String notificationTextFile = path.getNotificationsTextFile();
+    private List<Customer> allCustomers;
+    private OrderManager manager = new OrderManager();
     
     public ManageTopUpRequest(Admin admin) {
         initComponents();
@@ -34,6 +35,7 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
         ReadFiles reader = new ReadFiles();
         requests = reader.readTopUpRequests();
         notifications = reader.readNotifications();
+        allCustomers = reader.readCustomers();
         loadTopUpRequests();
     }
     
@@ -67,6 +69,15 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
         for (TopUpRequests request : requests) {
             if (id == request.getRequestID()) {
                 return request;
+            }
+        }
+        return null;
+    }
+    
+    private Customer findCustomer(int id) {
+        for (Customer i : allCustomers) {
+            if (i.getCustomerID() == id) {
+                return i;
             }
         }
         return null;
@@ -193,16 +204,18 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
             int newNotifID = checkMaxID();
             int transactionID = (int) model.getValueAt(selectedRow, 0);
             int customerID = (int) model.getValueAt(selectedRow, 2);
+            int topAmount = (int) model.getValueAt(selectedRow, 3);
+            
+            Customer selectedCustomer = findCustomer(customerID);
+            double credit = selectedCustomer.getCredit();
+            selectedCustomer.setCredit(credit+topAmount);
+            manager.saveUpdatedCustomerInfo(selectedCustomer);
             
             TopUpRequests selectedRequest = findRequest(transactionID);
             selectedRequest.updateTransactionStatus(selectedRequest, requests);
             
             Notification requestNotif = new Notification(newNotifID, Notification.NotifType.TOPUP, customerID, Notification.NotifUserType.CUSTOMER, transactionID, "", LocalDateTime.now());
-            try (PrintWriter pw = new PrintWriter(new FileWriter(notificationTextFile, true))) {
-                pw.println(requestNotif.toString());
-            } catch (IOException ex) {
-                System.out.println("Failed to save!");
-            }
+            requestNotif.saveNotification(requestNotif);
             JOptionPane.showMessageDialog(this, "Transaction has been approved.", "Transaction Success", JOptionPane.INFORMATION_MESSAGE);
             loadTopUpRequests();
         } else {

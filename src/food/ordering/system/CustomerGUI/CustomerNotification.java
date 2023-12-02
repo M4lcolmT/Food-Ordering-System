@@ -54,7 +54,7 @@ public class CustomerNotification extends javax.swing.JFrame {
             LocalDateTime dateTime = item.getDateTime();
             switch(notifType) {
                 case "ORDER":
-                    CustomerOrderNotificationPanel orderPanel = new CustomerOrderNotificationPanel(customer, item.getTransactionID(), updateDesc, dateTime);
+                    CustomerOrderNotificationPanel orderPanel = new CustomerOrderNotificationPanel(this, customer, item.getTypeID(), updateDesc, dateTime);
                     innerScrollPanel.add(orderPanel);
                     break;
                 case "USERPROFILE":
@@ -62,7 +62,7 @@ public class CustomerNotification extends javax.swing.JFrame {
                     innerScrollPanel.add(userProfilePanel);
                     break;
                 case "TOPUP":
-                    TransactionNotificationPanel transactionPanel = new TransactionNotificationPanel(this, customer, item.getTransactionID(), dateTime);
+                    TransactionNotificationPanel transactionPanel = new TransactionNotificationPanel(this, customer, item.getTypeID(), dateTime);
                     innerScrollPanel.add(transactionPanel);
                     break;
                 default:

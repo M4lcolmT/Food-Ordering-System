@@ -19,7 +19,7 @@ public class Notification {
     private NotifType notifType;
     private int userID;
     private NotifUserType userType;
-    private int transactionID;
+    private int typeID; // For order ID and top up request ID
     private String updateDescription;
     private LocalDateTime dateTime;
     
@@ -38,12 +38,12 @@ public class Notification {
         TOPUP
     }
     
-    public Notification(int notificationID, NotifType notifType, int userID, NotifUserType userType, int transactionID, String updateDescription, LocalDateTime dateTime) {
+    public Notification(int notificationID, NotifType notifType, int userID, NotifUserType userType, int typeID, String updateDescription, LocalDateTime dateTime) {
         this.notificationID = notificationID;
         this.notifType = notifType;
         this.userID = userID;
         this.userType = userType;
-        this.transactionID = transactionID;
+        this.typeID = typeID;
         this.updateDescription = updateDescription;
         this.dateTime = dateTime;
     }
@@ -88,12 +88,12 @@ public class Notification {
         this.updateDescription = updateDescription;
     }
     
-    public int getTransactionID() {
-        return transactionID;
+    public int getTypeID() {
+        return typeID;
     }
 
-    public void setTransactionID(int transactionID) {
-        this.transactionID = transactionID;
+    public void setTypeID(int typeID) {
+        this.typeID = typeID;
     }
     
     public LocalDateTime getDateTime() {
@@ -111,6 +111,6 @@ public class Notification {
     @Override
     public String toString() {
         String delimeter = ";";
-        return notificationID + delimeter + notifType + delimeter + userID + delimeter + userType + delimeter + transactionID + delimeter + updateDescription + delimeter + dateTime;
+        return notificationID + delimeter + notifType + delimeter + userID + delimeter + userType + delimeter + typeID + delimeter + updateDescription + delimeter + dateTime;
     }
 }

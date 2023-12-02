@@ -54,7 +54,7 @@ public class VendorNotification extends javax.swing.JFrame {
             LocalDateTime dateTime = item.getDateTime();
             switch(notifType) {
                 case "ORDER":
-                    VendorOrderNotificationPanel orderPanel = new VendorOrderNotificationPanel(this, vendor, item.getTransactionID(), updateDesc, dateTime);
+                    VendorOrderNotificationPanel orderPanel = new VendorOrderNotificationPanel(this, vendor, item.getTypeID(), updateDesc, dateTime);
                     innerScrollPanel.add(orderPanel);
                     break;
                 case "USERPROFILE":

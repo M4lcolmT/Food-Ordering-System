@@ -4,13 +4,14 @@
  */
 package food.ordering.system.RunnerGUI;
 
-import food.ordering.system.AdminGUI.Notification;
 import food.ordering.system.AdminGUI.ReadFiles;
 import food.ordering.system.CustomerGUI.Order;
 import food.ordering.system.CustomerGUI.OrderManager;
-import java.util.ArrayList;
+import food.ordering.system.Review;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import textFiles.TextFilePaths;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,38 +19,23 @@ import textFiles.TextFilePaths;
  */
 public class TaskHistory extends javax.swing.JFrame {
     private Runner runner;
-    private List<Order> orders;
     private List<Task> allTasks;
-    private List<Task> runnerTasks;
-    private List<Runner> runners;
+    private List<Review> allReviews;
     private final OrderManager manager = new OrderManager();
 
-
-    TextFilePaths path = new TextFilePaths();
-    String taskTextFilePath = path.getRunnerTasksTextFile();
-    
     public TaskHistory(Runner runner) {
         initComponents();
         this.runner = runner;
         
+        ratingLabel.setText(Double.toString(runner.getRatings()));
         ReadFiles reader = new ReadFiles();
         allTasks = reader.readTasks();
-        runnerTasks = getRunnerTask(runner.getRunnerID());
+        allReviews = reader.readReviews();
+        loadReviews();
     }
 
-    private List<Task> getRunnerTask(int id) {
-        List<Task> runnertasks = new ArrayList<>();
-        
-        for (Task item : allTasks) {
-            if (id == item.getRunnerID()) {
-                runnertasks.add(item);
-            }
-        }
-        return runnertasks;
-    }
-    
     private Task getTask(int id) {
-        for (Task i : runnerTasks) {
+        for (Task i : allTasks) {
             if (id == i.getTaskID()) {
                 return i;
             }
@@ -57,16 +43,39 @@ public class TaskHistory extends javax.swing.JFrame {
         return null;
     }
     
+    private void loadReviews() {
+        DefaultTableModel model = (DefaultTableModel) taskTable.getModel();
+
+        for (Review i : allReviews) {
+            int runnerID = i.getUserID();
+            Review.UserType userType = i.getUserType();
+            int taskID = i.getTypeID();
+            String content = i.getReview();
+            int rating = i.getRating();
+            if (runner.getRunnerID() == runnerID && userType.name().equals("RUNNER")) {
+                Task selectedTask = getTask(taskID);
+                Order selectedOrder = manager.findOrder(selectedTask.getOrderID());
+                LocalDateTime dateTime = selectedTask.getDate();
+                String formattedDateTime = dateTime.format(DateTimeFormatter.ofPattern("HH:MM, dd MMMM yyyy"));
+                Object[] rowData = {taskID, selectedOrder.getCustomer().getStreetAddress()+", "+selectedOrder.getCustomer().getCity(), "RM"+selectedTask.getDeliveryFee(), content, rating, formattedDateTime};
+                model.addRow(rowData);
+            } else {
+                System.out.println("Skipping unmatched runner ID reviews");
+            }
+        }
+    }
+   
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        taskTable = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        ratingLabel = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -75,20 +84,21 @@ public class TaskHistory extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("History");
 
-        jButton4.setText("Reviews");
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        taskTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "Task ID", "Customer Name", "Address", "Income", "Time/Date"
+                "Task ID", "Address", "Income", "Feedback", "Rating", "Time/Date"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(taskTable);
+        if (taskTable.getColumnModel().getColumnCount() > 0) {
+            taskTable.getColumnModel().getColumn(0).setPreferredWidth(5);
+            taskTable.getColumnModel().getColumn(2).setPreferredWidth(5);
+            taskTable.getColumnModel().getColumn(4).setPreferredWidth(5);
+            taskTable.getColumnModel().getColumn(5).setPreferredWidth(100);
+        }
 
         jButton1.setText("Back");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -96,6 +106,10 @@ public class TaskHistory extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+
+        ratingLabel.setText("-");
+
+        jLabel3.setText("Your Overall Rating");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -107,8 +121,10 @@ public class TaskHistory extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 640, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(235, 235, 235)
-                        .addComponent(jButton4)))
+                        .addGap(166, 166, 166)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ratingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(44, 44, 44))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(313, 313, 313)
@@ -118,10 +134,11 @@ public class TaskHistory extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jButton4))
+                    .addComponent(ratingLabel)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -151,10 +168,11 @@ public class TaskHistory extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JLabel ratingLabel;
+    private javax.swing.JTable taskTable;
     // End of variables declaration//GEN-END:variables
 }

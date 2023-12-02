@@ -87,16 +87,7 @@ public class Runner extends User{
         this.ratings = ratings;
     }
     
-    public void updateRunnerStatus(Runner availableRunner, List<Runner> runners, boolean availability) {
-        int runnerId = availableRunner.getRunnerID();
-
-        for (Runner runner : runners) {
-            if (runnerId == runner.getRunnerID()) {
-                // Update the runner availability directly
-                runner.setRunnerAvailability(availability);
-            }
-        }
-
+    private void saveRunner(List<Runner> runners) {
         // Filter and sort the data
         List<Runner> filteredItems = runners.stream()
                 .collect(Collectors.toList());
@@ -114,11 +105,33 @@ public class Runner extends User{
             e.printStackTrace();
         }
     }
+    
+    public void updateRunnerStatus(Runner availableRunner, List<Runner> runners, boolean availability) {
+        int runnerId = availableRunner.getRunnerID();
+
+        for (Runner runner : runners) {
+            if (runnerId == runner.getRunnerID()) {
+                runner.setRunnerAvailability(availability);
+            }
+        }
+        saveRunner(runners);
+    }
+    
+    public void updateRunnerRating(Runner runner, List<Runner> runners, double rating) {
+        int runnerId = runner.getRunnerID();
+
+        for (Runner i : runners) {
+            if (runnerId == i.getRunnerID()) {
+                runner.setRatings(rating);
+            }
+        }
+        saveRunner(runners);
+    }
 
     
     @Override
     public String toString() {
         String delimiter = ";";
-        return runnerID + delimiter + runnerAvailability + delimiter + super.toString() + delimiter + city + delimiter + plateNumber + delimiter + vehicleModel;
+        return runnerID + delimiter + runnerAvailability + delimiter + super.toString() + delimiter + city + delimiter + plateNumber + delimiter + vehicleModel + delimiter + ratings;
     }
 }

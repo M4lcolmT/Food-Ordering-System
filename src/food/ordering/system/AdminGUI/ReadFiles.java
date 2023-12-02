@@ -4,6 +4,7 @@ import food.ordering.system.AdminGUI.Notification.NotifType;
 import food.ordering.system.AdminGUI.Notification.NotifUserType;
 import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.CustomerGUI.CustomerRequest;
+import food.ordering.system.Review;
 import food.ordering.system.RunnerGUI.Runner;
 import food.ordering.system.RunnerGUI.RunnerRequest;
 import food.ordering.system.RunnerGUI.Task;
@@ -34,7 +35,8 @@ public class ReadFiles {
     String topUpRequestsTextFilePath = filePaths.getTopUpRequestsTextFile();
     String notificationsTextFilePath = filePaths.getNotificationsTextFile();
     String tasksTextFilePath = filePaths.getRunnerTasksTextFile();
-    
+    String reviewsTextFilePath = filePaths.getReviewsTextFile();
+
     //Read customers from file
     public List<Customer> readCustomers() {
         List<Customer> customers = new ArrayList<>();
@@ -56,7 +58,7 @@ public class ReadFiles {
                     Customer customerItem = new Customer(id, name, phoneNumber, email, password, streetAddress, city, credit);
                     customers.add(customerItem);
                 } else {
-                    System.out.println("Skipping a line with an incorrect number of parts");
+                    System.out.println("Customer: Skipping a line with an incorrect number of parts");
                 }
             }
         } catch (IOException e) {
@@ -91,7 +93,7 @@ public class ReadFiles {
                     description, operationHours, operationDays);
                     vendors.add(vendorItem);
                 } else {
-                    System.out.println("Incomplete vendor data!");
+                    System.out.println("Vendor: Skipping a line with an incorrect number of parts");
                 }
             }
         } catch (IOException e) {
@@ -123,7 +125,7 @@ public class ReadFiles {
                     Runner runnerItem = new Runner(id, availability, name, phoneNumber, email, password, address, plateNo, vehicleModel, rating);
                     runners.add(runnerItem);
                 } else {
-                    System.out.println("Skipping a line with an incorrect number of parts");
+                    System.out.println("Runner: Skipping a line with an incorrect number of parts");
                 }
             }
         } catch (IOException e) {
@@ -151,7 +153,7 @@ public class ReadFiles {
                     Admin adminItem = new Admin(id, name, phoneNumber, email, password);
                     admins.add(adminItem);
                 } else {
-                    System.out.println("Skipping a line with an incorrect number of parts");
+                    System.out.println("Admin: Skipping a line with an incorrect number of parts");
                 }
             }
         } catch (IOException e) {
@@ -173,7 +175,7 @@ public class ReadFiles {
                     int userRequestID = Integer.parseInt(parts[0]);
                     userRequestIDs.add(userRequestID);
                 } else {
-                    System.out.println("Skipping invalid line: " + line);
+                    System.out.println("User Request ID: Skipping invalid line: " + line);
                 }
             }
         } catch (IOException e) {
@@ -275,6 +277,7 @@ public class ReadFiles {
         }
     }
     
+    // Read top up requests for admin
     public List<TopUpRequests> readTopUpRequests() {
         List<TopUpRequests> requests = new ArrayList<>();
         
@@ -297,7 +300,7 @@ public class ReadFiles {
                     TopUpRequests requestItem = new TopUpRequests(requestID, customerID, amount, bankType, cardNumber, monthYear, cvv, remarks, datetime, status);
                     requests.add(requestItem);
                 } else {
-                    System.out.println("Skipping a line with an incorrect number of parts");
+                    System.out.println("Top Up Request: Skipping a line with an incorrect number of parts");
                 }
             }
         } catch (IOException e) {
@@ -327,7 +330,7 @@ public class ReadFiles {
                     Notification newNotification = new Notification(notificationID, notifType, userID, userType, transactionID, updateDesc, dateTime);
                     notifications.add(newNotification);
                 } else {
-                    System.out.println("Skipping a line with an incorrect number of parts");
+                    System.out.println("Notification: Skipping a line with an incorrect number of parts");
                 }
             }
         } catch (IOException e) {
@@ -336,6 +339,7 @@ public class ReadFiles {
         }
         return notifications;
     }
+    
     // Read runners' tasks from text file
     public List<Task> readTasks() {
         List<Task> tasks = new ArrayList<>();
@@ -355,7 +359,7 @@ public class ReadFiles {
                     Task newTask = new Task(taskID, runnerID, orderID, status, deliveryFee, date);
                     tasks.add(newTask);
                 } else {
-                    System.out.println("Skipping a line with an incorrect number of parts");
+                    System.out.println("Task: Skipping a line with an incorrect number of parts");
                 }
             }
         } catch (IOException e) {
@@ -365,5 +369,30 @@ public class ReadFiles {
         return tasks;
     }
     
-    
+    // Read reviews
+    public List<Review> readReviews() {
+        List<Review> reviews = new ArrayList<>();
+        
+        try(BufferedReader reader = new BufferedReader(new FileReader(reviewsTextFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(";");
+                if (parts.length == 5) {
+                    int id = Integer.parseInt(parts[0]);
+                    Review.UserType userType = Review.UserType.valueOf(parts[1]);
+                    int typeID = Integer.parseInt(parts[2]);
+                    String content = parts[3];
+                    int rating = Integer.parseInt(parts[4]);
+                    
+                    Review newReview = new Review(id, userType, typeID, content, rating);
+                    reviews.add(newReview);
+                } else {
+                    System.out.println("Review: Skipping lines with incorrect parts.");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return reviews;
+    }
 }
