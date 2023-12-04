@@ -4,9 +4,9 @@
  */
 package food.ordering.system.CustomerGUI;
 
-import food.ordering.system.AdminGUI.ReadFiles;
-import food.ordering.system.AdminGUI.TopUpRequests;
-import food.ordering.system.AdminGUI.TopUpRequests.TransactionStatus;
+import food.ordering.system.ReadFiles;
+import food.ordering.system.TopUpRequests;
+import food.ordering.system.TopUpRequests.TransactionStatus;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;

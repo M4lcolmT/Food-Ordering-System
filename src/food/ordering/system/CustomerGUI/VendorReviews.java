@@ -5,7 +5,7 @@
 package food.ordering.system.CustomerGUI;
 
 import food.ordering.system.VendorGUI.*;
-import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.ReadFiles;
 import food.ordering.system.Review;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

@@ -6,5 +6,5 @@
 6;Bulgogi Brothers;0123922098;bulgogi@gmail.com;bulgogi321;4.2;Korean;Bukit Jalil;Specializing in Korean BBQ;11:30am-9:30pm;Monday-Sunday
 7;Burger King;0114883331;burgerking@gmail.com;burger123;3.9;Fast Food;Bukit Jalil;Have It Your Way;10:00am-10:00pm;Monday-Sunday
 8;One ton mee;0161629098;pandaexpress@gmail.com;panda789;4.3;Chinese;Bukit Jalil;Famous for Wonton Noodles;11:00am-8:00pm;Monday-Sunday
-9;Pizza Hut;0128894338;pizzahut@gmail.com;pizza123;4.0;Western;Bukit Jalil;Delicious Pizza Varieties;12:00pm-9:00pm;Tuesday-Sunday
+9;Pizza Hut;0128894338;pizzahut@gmail.com;pizza123;0.0;Western;Bukit Jalil;Delicious Pizza Varieties;12:00pm-9:00pm;Tuesday-Sunday
 10;Old Town White Coffee;0131822098;oldtown@gmail.com;oldtown123;3.5;Non-Halal;Bukit Jalil;Authentic Malaysian Coffee;7:00am-8:00pm;Monday-Sunday

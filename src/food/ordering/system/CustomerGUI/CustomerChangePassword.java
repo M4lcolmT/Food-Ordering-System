@@ -4,8 +4,8 @@
  */
 package food.ordering.system.CustomerGUI;
 
-import food.ordering.system.AdminGUI.ReadFiles;
-import food.ordering.system.AdminGUI.UserRequest;
+import food.ordering.system.ReadFiles;
+import food.ordering.system.UserRequest;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;

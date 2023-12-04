@@ -4,8 +4,8 @@
  */
 package food.ordering.system.CustomerGUI;
 
-import food.ordering.system.AdminGUI.ReadFiles;
-import food.ordering.system.AdminGUI.TopUpRequests;
+import food.ordering.system.ReadFiles;
+import food.ordering.system.TopUpRequests;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;

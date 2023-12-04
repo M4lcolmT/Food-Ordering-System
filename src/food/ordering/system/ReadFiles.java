@@ -1,7 +1,8 @@
-package food.ordering.system.AdminGUI;
+package food.ordering.system;
 
-import food.ordering.system.AdminGUI.Notification.NotifType;
-import food.ordering.system.AdminGUI.Notification.NotifUserType;
+import food.ordering.system.AdminGUI.Admin;
+import food.ordering.system.Notification.NotifType;
+import food.ordering.system.Notification.NotifUserType;
 import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.CustomerGUI.CustomerRequest;
 import food.ordering.system.Review;

@@ -4,7 +4,7 @@
  */
 package food.ordering.system.VendorGUI;
 
-import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.ReadFiles;
 import food.ordering.system.CustomerGUI.Order;
 import food.ordering.system.CustomerGUI.OrderManager;
 import food.ordering.system.Review;

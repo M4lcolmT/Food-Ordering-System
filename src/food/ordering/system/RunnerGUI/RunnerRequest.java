@@ -4,7 +4,7 @@
  */
 package food.ordering.system.RunnerGUI;
 
-import food.ordering.system.AdminGUI.UserRequest;
+import food.ordering.system.UserRequest;
 
 /**
  *

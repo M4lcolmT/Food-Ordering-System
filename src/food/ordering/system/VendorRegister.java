@@ -5,8 +5,6 @@
 package food.ordering.system;
 
 import food.ordering.system.VendorGUI.*;
-import food.ordering.system.AdminGUI.ReadFiles;
-import food.ordering.system.AdminGUI.UserRequest;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -100,7 +98,6 @@ public class VendorRegister extends javax.swing.JFrame {
 
         jTextField1 = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         descriptionField = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
@@ -124,6 +121,7 @@ public class VendorRegister extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         saveButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         jTextField1.setText("jTextField1");
 
@@ -132,29 +130,36 @@ public class VendorRegister extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(674, 350));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("Register new account");
-
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         descriptionField.setMinimumSize(new java.awt.Dimension(64, 25));
         descriptionField.setPreferredSize(new java.awt.Dimension(200, 22));
 
-        jLabel8.setText("Description:");
+        jLabel8.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel8.setText("Description");
 
+        jLabel2.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(102, 102, 102));
         jLabel2.setText("Name");
 
         phoneNumberField.setMinimumSize(new java.awt.Dimension(64, 25));
 
         nameField.setMinimumSize(new java.awt.Dimension(64, 25));
 
+        jLabel3.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(102, 102, 102));
         jLabel3.setText("Phone Number");
 
+        jLabel4.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(102, 102, 102));
         jLabel4.setText("Email");
 
         emailField.setMinimumSize(new java.awt.Dimension(64, 25));
 
-        jLabel7.setText("Operating hours:");
+        jLabel7.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel7.setText("Operating hours");
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel9.setText("to");
@@ -163,7 +168,9 @@ public class VendorRegister extends javax.swing.JFrame {
         startHourComboBox.setMinimumSize(new java.awt.Dimension(11, 22));
         startHourComboBox.setPreferredSize(new java.awt.Dimension(120, 25));
 
-        jLabel10.setText("Operating days:");
+        jLabel10.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel10.setText("Operating days");
 
         endHourComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10:00pm", "11:00pm", "12:00am", "1:00am", "2:00am", "3:00am", "4:00am", "5:00am", "6:00am", "7:00am", "8:00am", "9:00am", "10:00am", "11:00am", "12:00pm", "1:00pm", "2:00pm", "3:00pm", "4:00pm", "5:00pm", "6:00pm", "7:00pm", "8:00pm", "9:00pm" }));
         endHourComboBox.setMinimumSize(new java.awt.Dimension(11, 22));
@@ -187,10 +194,14 @@ public class VendorRegister extends javax.swing.JFrame {
 
         passwordField.setMinimumSize(new java.awt.Dimension(64, 25));
 
+        jLabel5.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(102, 102, 102));
         jLabel5.setText("Password");
 
         categoryComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Category", "Non-Halal", "Fast Food", "Western", "Korean", "Chinese", "Malay" }));
 
+        jLabel6.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(102, 102, 102));
         jLabel6.setText("Category");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -200,6 +211,15 @@ public class VendorRegister extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addGap(34, 34, 34)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -232,13 +252,9 @@ public class VendorRegister extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
-                            .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
+                            .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(34, 34, 34)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel10)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(startDayComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -286,16 +302,18 @@ public class VendorRegister extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addGap(2, 2, 2)
                         .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jLabel6))
-                .addGap(2, 2, 2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        saveButton.setBackground(new java.awt.Color(255, 255, 254));
         saveButton.setText("Save");
         saveButton.setPreferredSize(new java.awt.Dimension(100, 25));
         saveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -304,6 +322,7 @@ public class VendorRegister extends javax.swing.JFrame {
             }
         });
 
+        cancelButton.setBackground(new java.awt.Color(255, 255, 254));
         cancelButton.setText("Cancel");
         cancelButton.setPreferredSize(new java.awt.Dimension(100, 25));
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -311,6 +330,9 @@ public class VendorRegister extends javax.swing.JFrame {
                 cancelButtonActionPerformed(evt);
             }
         });
+
+        jLabel1.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
+        jLabel1.setText("Create new account");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -322,19 +344,19 @@ public class VendorRegister extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
+                        .addGap(31, 31, 31)
                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(jLabel1)))
                 .addContainerGap(95, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -394,11 +416,11 @@ public class VendorRegister extends javax.swing.JFrame {
             return;
         }
         
-        int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed with the new changes?", "Edit Confirmation", JOptionPane.YES_NO_OPTION);        
+        int confirmationResult = JOptionPane.showConfirmDialog(this, "Confirm details?", "Sign Up Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
             if (saveRequest(name, phoneNumber, email, password, category, description, operationHours, operationDays)) {
-                JOptionPane.showMessageDialog(this, "Successfully sent user profile changes request to admin!");
+                JOptionPane.showMessageDialog(this, "Successfully sent sign up request to admin! Please wait for admin to approve.");
                 VendorLogin page = new VendorLogin();
                 page.setVisible(true);
                 this.dispose();
@@ -406,7 +428,7 @@ public class VendorRegister extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Failed to send user profile changes request to admin, please revalidate your inputs", "Validation Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "User edit process is cancelled", "Changes Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Sign up process is cancelled", "Changes Cancelled", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 

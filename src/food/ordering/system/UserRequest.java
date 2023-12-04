@@ -1,4 +1,4 @@
-package food.ordering.system.AdminGUI;
+package food.ordering.system;
 
 /**
  *

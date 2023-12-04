@@ -4,8 +4,8 @@
  */
 package food.ordering.system.RunnerGUI;
 
-import food.ordering.system.AdminGUI.Notification;
-import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.Notification;
+import food.ordering.system.ReadFiles;
 import food.ordering.system.AdminGUI.UserProfileNotificationPanel;
 import java.io.FileWriter;
 import java.io.IOException;

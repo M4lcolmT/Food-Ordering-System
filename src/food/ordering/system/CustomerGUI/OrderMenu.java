@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package food.ordering.system.CustomerGUI;
-import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.ReadFiles;
 import food.ordering.system.VendorGUI.Vendor;
 import java.util.List;
 import java.util.ArrayList;
@@ -58,17 +58,24 @@ public class OrderMenu extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(700, 400));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         jLabel1.setText("ORDER FOOD");
 
+        jPanel2.setBackground(new java.awt.Color(89, 185, 227));
+
+        jLabel2.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         jLabel2.setText("Non-Halal");
 
+        jLabel3.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         jLabel3.setText("Western");
 
+        jLabel4.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         jLabel4.setText("Japanese");
 
+        jLabel5.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         jLabel5.setText("Korean");
 
+        jLabel6.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         jLabel6.setText("Fast Food");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -132,13 +139,13 @@ public class OrderMenu extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(vendorContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

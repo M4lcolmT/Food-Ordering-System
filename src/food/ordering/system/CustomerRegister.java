@@ -5,8 +5,6 @@
 package food.ordering.system;
 
 import food.ordering.system.CustomerGUI.*;
-import food.ordering.system.AdminGUI.ReadFiles;
-import food.ordering.system.AdminGUI.UserRequest;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -96,6 +94,8 @@ public class CustomerRegister extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jEditorPane1 = new javax.swing.JEditorPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -114,23 +114,30 @@ public class CustomerRegister extends javax.swing.JFrame {
         passwordField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
 
+        jScrollPane1.setViewportView(jEditorPane1);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(674, 350));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText(" Register new account");
+        jLabel1.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
+        jLabel1.setText("Create new account");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
+        jLabel5.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(102, 102, 102));
         jLabel5.setText("City");
 
         streetAddressField.setMinimumSize(new java.awt.Dimension(64, 25));
         streetAddressField.setPreferredSize(new java.awt.Dimension(200, 25));
 
+        jLabel8.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(102, 102, 102));
         jLabel8.setText("Street Address");
 
+        cancelButton.setBackground(new java.awt.Color(255, 255, 254));
         cancelButton.setText("Cancel");
         cancelButton.setPreferredSize(new java.awt.Dimension(100, 25));
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -139,8 +146,11 @@ public class CustomerRegister extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(102, 102, 102));
         jLabel2.setText("Name");
 
+        saveButton.setBackground(new java.awt.Color(255, 255, 254));
         saveButton.setText("Save");
         saveButton.setPreferredSize(new java.awt.Dimension(100, 25));
         saveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -155,8 +165,12 @@ public class CustomerRegister extends javax.swing.JFrame {
         nameField.setMinimumSize(new java.awt.Dimension(64, 25));
         nameField.setPreferredSize(new java.awt.Dimension(64, 25));
 
+        jLabel3.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(102, 102, 102));
         jLabel3.setText("Phone Number");
 
+        jLabel4.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(102, 102, 102));
         jLabel4.setText("Email");
 
         emailField.setMinimumSize(new java.awt.Dimension(64, 25));
@@ -168,6 +182,8 @@ public class CustomerRegister extends javax.swing.JFrame {
         passwordField.setMinimumSize(new java.awt.Dimension(64, 25));
         passwordField.setPreferredSize(new java.awt.Dimension(64, 25));
 
+        jLabel6.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(102, 102, 102));
         jLabel6.setText("Password");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -195,14 +211,6 @@ public class CustomerRegister extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(206, 206, 206)
-                                .addComponent(jLabel8))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(37, 37, 37)
-                                .addComponent(streetAddressField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel4))
@@ -211,17 +219,23 @@ public class CustomerRegister extends javax.swing.JFrame {
                                     .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addComponent(jLabel6)
-                                        .addGap(0, 0, Short.MAX_VALUE)))))
+                                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2))
+                                .addGap(37, 37, 37)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel8)
+                                    .addComponent(streetAddressField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 6, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(jLabel2))
+                .addGap(16, 16, 16)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
                     .addComponent(jLabel8))
                 .addGap(4, 4, 4)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,7 +292,7 @@ public class CustomerRegister extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(2, 2, 2)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -324,11 +338,11 @@ public class CustomerRegister extends javax.swing.JFrame {
             return;
         }
         
-        int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed with the new changes?", "Edit Confirmation", JOptionPane.YES_NO_OPTION);        
+        int confirmationResult = JOptionPane.showConfirmDialog(this, "Confirm details?", "Sign Up Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
             if (saveRequest(name, phoneNumber, email, password, streetAddress, city)) {
-                JOptionPane.showMessageDialog(this, "Successfully sent user profile changes request to admin! Please wait for admin to approve.");
+                JOptionPane.showMessageDialog(this, "Successfully sent sign up request to admin! Please wait for admin to approve.");
                 CustomerLogin page = new CustomerLogin();
                 page.setVisible(true);
                 this.dispose();
@@ -336,7 +350,7 @@ public class CustomerRegister extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Failed to send user profile changes request to admin, please revalidate your inputs", "Validation Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "User edit process is cancelled", "Changes Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Sign up process is cancelled", "Changes Cancelled", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -354,6 +368,7 @@ public class CustomerRegister extends javax.swing.JFrame {
     private javax.swing.JButton cancelButton;
     public javax.swing.JComboBox<String> cityComboBox;
     private javax.swing.JTextField emailField;
+    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -363,6 +378,7 @@ public class CustomerRegister extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nameField;
     private javax.swing.JTextField passwordField;
     private javax.swing.JTextField phoneNumberField;

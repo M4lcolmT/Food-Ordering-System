@@ -4,8 +4,8 @@
  */
 package food.ordering.system.CustomerGUI;
 
-import food.ordering.system.AdminGUI.Notification;
-import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.Notification;
+import food.ordering.system.ReadFiles;
 import food.ordering.system.RunnerGUI.Task;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -174,7 +174,8 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
         cancelButton = new javax.swing.JButton();
         receivedButton = new javax.swing.JButton();
 
-        jPanel1.setBackground(new java.awt.Color(153, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(163, 213, 240));
+        jPanel1.setPreferredSize(new java.awt.Dimension(625, 100));
 
         dateTimeLabel.setText("Date & Time");
 
@@ -217,7 +218,7 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(dateTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -244,14 +245,14 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
                         .addComponent(cancelButton)
                         .addComponent(receivedButton))
                     .addComponent(dateTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 635, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

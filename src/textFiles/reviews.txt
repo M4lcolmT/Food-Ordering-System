@@ -1,0 +1,2 @@
+9;VENDOR;1;i love the pizza!;5
+1;RUNNER;1;fast delivery;4

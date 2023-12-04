@@ -4,8 +4,8 @@
  */
 package food.ordering.system.CustomerGUI;
 
-import food.ordering.system.AdminGUI.Notification;
-import food.ordering.system.AdminGUI.ReadFiles;
+import food.ordering.system.Notification;
+import food.ordering.system.ReadFiles;
 import food.ordering.system.CustomerGUI.Order.OrderType;
 import food.ordering.system.Location;
 import food.ordering.system.RunnerGUI.Runner;

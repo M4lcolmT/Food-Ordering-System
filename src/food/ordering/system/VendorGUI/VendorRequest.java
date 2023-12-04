@@ -1,7 +1,7 @@
 
 package food.ordering.system.VendorGUI;
 
-import food.ordering.system.AdminGUI.UserRequest;
+import food.ordering.system.UserRequest;
 
 /**
  *
