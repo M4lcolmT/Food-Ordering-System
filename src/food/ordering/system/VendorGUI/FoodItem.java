@@ -5,8 +5,6 @@
 package food.ordering.system.VendorGUI;
 
 import java.util.Objects;
-import textFiles.TextFilePaths;
-
 /**
  *
  * @author LENOVO

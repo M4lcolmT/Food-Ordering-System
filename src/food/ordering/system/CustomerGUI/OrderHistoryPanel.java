@@ -59,19 +59,27 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
         totalPrice = new javax.swing.JLabel();
         reorderButton = new javax.swing.JButton();
 
-        jPanel1.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(236, 236, 236), 1, true));
         jPanel1.setPreferredSize(new java.awt.Dimension(680, 100));
 
+        dateTimeField.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         dateTimeField.setText("Date");
 
-        restoranField.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        restoranField.setFont(new java.awt.Font("Ebrima", 1, 16)); // NOI18N
         restoranField.setText("Restauran Kam Lan");
 
+        jLabel2.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         jLabel2.setText("Total:");
 
+        totalPrice.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         totalPrice.setText("RM69.69");
 
+        reorderButton.setBackground(new java.awt.Color(163, 213, 240));
+        reorderButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        reorderButton.setForeground(new java.awt.Color(255, 255, 255));
         reorderButton.setText("Reorder");
+        reorderButton.setPreferredSize(new java.awt.Dimension(76, 25));
         reorderButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 reorderButtonActionPerformed(evt);
@@ -83,7 +91,7 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
@@ -92,24 +100,24 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(dateTimeField, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(restoranField))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 177, Short.MAX_VALUE)
-                .addComponent(reorderButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
+                .addComponent(reorderButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addGap(24, 24, 24)
                 .addComponent(restoranField)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(totalPrice)
                     .addComponent(dateTimeField, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(reorderButton)
+                .addComponent(reorderButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37))
         );
 

@@ -122,6 +122,8 @@ public class CustomerUserProfile extends javax.swing.JFrame {
 
         jLabel8.setText("Street Address");
 
+        cancelButton.setBackground(new java.awt.Color(255, 255, 254));
+        cancelButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         cancelButton.setText("Cancel");
         cancelButton.setPreferredSize(new java.awt.Dimension(100, 25));
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -132,6 +134,8 @@ public class CustomerUserProfile extends javax.swing.JFrame {
 
         jLabel2.setText("Name");
 
+        saveButton.setBackground(new java.awt.Color(255, 255, 254));
+        saveButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         saveButton.setText("Save");
         saveButton.setPreferredSize(new java.awt.Dimension(100, 25));
         saveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -265,9 +269,9 @@ public class CustomerUserProfile extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(changePassword)
                     .addComponent(deleteAccountButton))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addContainerGap(91, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

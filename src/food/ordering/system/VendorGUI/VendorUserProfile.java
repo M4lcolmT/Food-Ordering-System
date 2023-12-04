@@ -126,7 +126,6 @@ public class VendorUserProfile extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         cancelButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         deleteAccountButton = new javax.swing.JButton();
 
         jTextField1.setText("jTextField1");
@@ -202,6 +201,8 @@ public class VendorUserProfile extends javax.swing.JFrame {
 
         jLabel5.setText("Category");
 
+        cancelButton.setBackground(new java.awt.Color(255, 255, 254));
+        cancelButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         cancelButton.setText("Cancel");
         cancelButton.setPreferredSize(new java.awt.Dimension(100, 25));
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -210,6 +211,8 @@ public class VendorUserProfile extends javax.swing.JFrame {
             }
         });
 
+        saveButton.setBackground(new java.awt.Color(255, 255, 254));
+        saveButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         saveButton.setText("Save");
         saveButton.setPreferredSize(new java.awt.Dimension(100, 25));
         saveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -329,13 +332,6 @@ public class VendorUserProfile extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jButton1.setText("Back");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         deleteAccountButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         deleteAccountButton.setForeground(new java.awt.Color(255, 51, 51));
         deleteAccountButton.setText("Delete Account");
@@ -350,21 +346,15 @@ public class VendorUserProfile extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(changePassword)
-                        .addGap(141, 141, 141)
+                        .addGap(135, 135, 135)
                         .addComponent(deleteAccountButton))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(33, 33, 33)
-                            .addComponent(jButton1))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -377,9 +367,7 @@ public class VendorUserProfile extends javax.swing.JFrame {
                     .addComponent(deleteAccountButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -460,12 +448,6 @@ public class VendorUserProfile extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_endHourComboBoxActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        VendorMainMenu page = new VendorMainMenu(vendor);
-        page.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void deleteAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAccountButtonActionPerformed
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Do you wish to delete your account? This request is irreversible!", "Delete Confirmation", JOptionPane.YES_NO_OPTION);        
 
@@ -493,7 +475,6 @@ public class VendorUserProfile extends javax.swing.JFrame {
     private javax.swing.JTextField emailField;
     private javax.swing.JComboBox<String> endDayComboBox;
     private javax.swing.JComboBox<String> endHourComboBox;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

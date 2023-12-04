@@ -114,7 +114,7 @@ public class ViewNewTasks extends javax.swing.JFrame {
                 Customer orderCustomer = order.getCustomer();
                 Vendor orderVendor = order.getVendor();
                 double distance = calculateDistance(orderCustomer.getCity().trim().toLowerCase(), orderVendor.getCity().trim().toLowerCase());
-                Object[] rowData = { task.getTaskID(), orderVendor.getName(), distance, orderCustomer.getName(), orderCustomer.getCity(), task.getTaskStatus()};
+                Object[] rowData = { task.getTaskID(), orderVendor.getName(), distance+"km", orderCustomer.getName(), orderCustomer.getCity(), task.getTaskStatus()};
                 model.addRow(rowData);
             }
         }
@@ -167,7 +167,7 @@ public class ViewNewTasks extends javax.swing.JFrame {
         rejectButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         manageButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -195,6 +195,9 @@ public class ViewNewTasks extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
+        acceptButton.setBackground(new java.awt.Color(255, 255, 254));
+        acceptButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        acceptButton.setForeground(new java.awt.Color(102, 255, 102));
         acceptButton.setText("Accept");
         acceptButton.setPreferredSize(new java.awt.Dimension(100, 25));
         acceptButton.addActionListener(new java.awt.event.ActionListener() {
@@ -203,6 +206,9 @@ public class ViewNewTasks extends javax.swing.JFrame {
             }
         });
 
+        rejectButton.setBackground(new java.awt.Color(255, 255, 254));
+        rejectButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        rejectButton.setForeground(new java.awt.Color(255, 51, 51));
         rejectButton.setText("Reject");
         rejectButton.setPreferredSize(new java.awt.Dimension(100, 25));
         rejectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -214,6 +220,9 @@ public class ViewNewTasks extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("New Task List");
 
+        manageButton.setBackground(new java.awt.Color(255, 255, 254));
+        manageButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        manageButton.setForeground(new java.awt.Color(26, 115, 232));
         manageButton.setText("Manage");
         manageButton.setPreferredSize(new java.awt.Dimension(100, 25));
         manageButton.addActionListener(new java.awt.event.ActionListener() {
@@ -253,10 +262,10 @@ public class ViewNewTasks extends javax.swing.JFrame {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        jButton1.setText("Back");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/back.png"))); // NOI18N
+        jLabel12.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel12MouseClicked(evt);
             }
         });
 
@@ -265,15 +274,15 @@ public class ViewNewTasks extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addGap(13, 13, 13)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(33, 33, 33)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 42, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -286,12 +295,12 @@ public class ViewNewTasks extends javax.swing.JFrame {
                         .addGap(96, 96, 96))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel12)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -384,12 +393,6 @@ public class ViewNewTasks extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_acceptButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        RunnerMainMenu page = new RunnerMainMenu(runner);
-        page.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void manageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageButtonActionPerformed
         DefaultTableModel model = (DefaultTableModel) tasksTable.getModel();
         int selectedRow = tasksTable.getSelectedRow();
@@ -410,10 +413,16 @@ public class ViewNewTasks extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_manageButtonActionPerformed
 
+    private void jLabel12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel12MouseClicked
+        RunnerMainMenu page = new RunnerMainMenu(runner);
+        page.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel12MouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton acceptButton;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

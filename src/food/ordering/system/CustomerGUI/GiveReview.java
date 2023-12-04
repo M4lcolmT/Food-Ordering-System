@@ -125,29 +125,35 @@ public class GiveReview extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(75, 124, 182));
 
-        jLabel2.setFont(new java.awt.Font("Cambria Math", 1, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Give Review");
 
         jPanel2.setBackground(new java.awt.Color(75, 124, 182));
 
+        jLabel4.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Runner review:");
 
+        jLabel5.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Rating:");
 
+        sendReviewButton.setBackground(new java.awt.Color(255, 255, 254));
+        sendReviewButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         sendReviewButton.setText("Send");
-        sendReviewButton.setBorder(null);
+        sendReviewButton.setPreferredSize(new java.awt.Dimension(72, 25));
         sendReviewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sendReviewButtonActionPerformed(evt);
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Vendor review:");
 
+        jLabel3.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Rating:");
 
@@ -197,7 +203,7 @@ public class GiveReview extends javax.swing.JFrame {
                     .addComponent(runnerContentField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(runnerRatingField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(sendReviewButton, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE))
+                .addComponent(sendReviewButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         runnerRatingField.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
@@ -224,7 +230,7 @@ public class GiveReview extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

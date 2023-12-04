@@ -43,7 +43,7 @@ public class FoodItemPanel extends javax.swing.JPanel {
     
     private void updateQuantityLabel() {
         int quantity = calculateQuantity(foodItem);
-        quantityCount.setText(Integer.toString(quantity));
+        quantityCount.setText("x"+Integer.toString(quantity));
     }
         
     @SuppressWarnings("unchecked")
@@ -61,23 +61,28 @@ public class FoodItemPanel extends javax.swing.JPanel {
         setMinimumSize(new java.awt.Dimension(650, 100));
         setPreferredSize(new java.awt.Dimension(650, 100));
 
-        jPanel1.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(239, 239, 239), 1, true));
         jPanel1.setMaximumSize(new java.awt.Dimension(650, 100));
         jPanel1.setMinimumSize(new java.awt.Dimension(650, 100));
         jPanel1.setPreferredSize(new java.awt.Dimension(650, 100));
 
         quantityCount.setText("x1");
 
-        itemName.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        itemName.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         itemName.setText("Cheese Burger");
 
         itemDescription.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
-        itemDescription.setText("asasasdsadsadasdsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsa");
+        itemDescription.setText("-");
         itemDescription.setMaximumSize(new java.awt.Dimension(375, 14));
         itemDescription.setPreferredSize(new java.awt.Dimension(375, 14));
 
+        itemPrice.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         itemPrice.setText("RM12.50");
 
+        addItemButton.setBackground(new java.awt.Color(163, 213, 240));
+        addItemButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        addItemButton.setForeground(new java.awt.Color(255, 255, 255));
         addItemButton.setText("Add");
         addItemButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,9 +101,9 @@ public class FoodItemPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(itemDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(itemName))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addComponent(itemPrice)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(itemPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addItemButton)
                 .addGap(38, 38, 38))
         );
@@ -111,13 +116,13 @@ public class FoodItemPanel extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(quantityCount)
                             .addComponent(addItemButton)
-                            .addComponent(itemPrice)))
+                            .addComponent(itemPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addComponent(itemName)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(itemDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

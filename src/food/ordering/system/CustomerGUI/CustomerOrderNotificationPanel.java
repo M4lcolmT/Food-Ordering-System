@@ -72,7 +72,8 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
                 receivedButton.setVisible(false);
                 cancelButton.setVisible(true);
             }
-            case "Your order is preparing!", "A runner accepted your order!", "Your order is on the way." -> {
+            case "Your order is preparing!", "A runner accepted your order!", 
+                    "Your order is on the way.", "Your order is ready, waiting for pick up!" -> {
                 receivedButton.setVisible(false);
                 takeAwayButton.setVisible(false);
                 dineInButton.setVisible(false);
@@ -84,7 +85,7 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
                 dineInButton.setVisible(true);
                 cancelButton.setVisible(false);
             }
-            case "Order arrived! Click to receive order.", "Your order is ready, waiting for pick up!" -> {
+            case "Order arrived! Click to receive order." -> {
                 receivedButton.setVisible(true);
                 takeAwayButton.setVisible(false);
                 dineInButton.setVisible(false);
@@ -182,6 +183,9 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
         statusLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         statusLabel.setText("-");
 
+        takeAwayButton.setBackground(new java.awt.Color(255, 255, 254));
+        takeAwayButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        takeAwayButton.setForeground(new java.awt.Color(163, 213, 240));
         takeAwayButton.setText("Take Away");
         takeAwayButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -189,6 +193,9 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
             }
         });
 
+        dineInButton.setBackground(new java.awt.Color(255, 255, 254));
+        dineInButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        dineInButton.setForeground(new java.awt.Color(163, 213, 240));
         dineInButton.setText("Dine In");
         dineInButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -196,6 +203,9 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
             }
         });
 
+        cancelButton.setBackground(new java.awt.Color(255, 255, 254));
+        cancelButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        cancelButton.setForeground(new java.awt.Color(163, 213, 240));
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -203,6 +213,9 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
             }
         });
 
+        receivedButton.setBackground(new java.awt.Color(255, 255, 254));
+        receivedButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        receivedButton.setForeground(new java.awt.Color(163, 213, 240));
         receivedButton.setText("Received");
         receivedButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -222,7 +235,7 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(dateTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                         .addComponent(receivedButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(takeAwayButton, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)

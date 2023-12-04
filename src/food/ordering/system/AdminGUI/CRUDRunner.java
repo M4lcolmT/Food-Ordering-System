@@ -181,32 +181,33 @@ public class CRUDRunner extends javax.swing.JFrame {
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setText("Name:");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(95, 16, -1, -1));
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, -1, -1));
 
         jLabel3.setText("Phone Number:");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(306, 16, -1, -1));
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 16, -1, 20));
 
-        jLabel4.setText("Vehicle Model:");
-        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(48, 96, 81, -1));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel4.setText("Model:");
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 81, -1));
 
-        jLabel5.setText("Vehicle Plate Number:");
-        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 56, -1, -1));
+        jLabel5.setText("Plate Number:");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, -1, -1));
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel6.setText("Email:");
-        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(344, 56, 45, -1));
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 46, 45, 30));
 
         jLabel7.setText("City:");
-        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(366, 96, -1, -1));
-        jPanel2.add(vehicleModelField, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 93, 159, -1));
-        jPanel2.add(vehiclePlateField, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 53, 159, -1));
-        jPanel2.add(nameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 13, 159, -1));
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 86, -1, 30));
+        jPanel2.add(vehicleModelField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 159, -1));
+        jPanel2.add(vehiclePlateField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 50, 159, -1));
+        jPanel2.add(nameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 159, -1));
         jPanel2.add(phoneNumberField, new org.netbeans.lib.awtextra.AbsoluteConstraints(395, 13, 218, -1));
         jPanel2.add(emailField, new org.netbeans.lib.awtextra.AbsoluteConstraints(395, 53, 218, -1));
 
         jLabel8.setText("Password:");
-        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(76, 136, -1, -1));
-        jPanel2.add(passwordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 133, 159, -1));
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, -1, -1));
+        jPanel2.add(passwordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 130, 159, -1));
 
         cityComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select City", "Shah Alam", "Petaling Jaya", "Subang Jaya", "Klang", "Puchong", "Ampang", "Kajang", "Cyberjaya", "Seri Kembangan", "Hulu Langat", "Bukit Jalil" }));
         cityComboBox.addItemListener(new java.awt.event.ItemListener() {
@@ -216,6 +217,8 @@ public class CRUDRunner extends javax.swing.JFrame {
         });
         jPanel2.add(cityComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(395, 93, 218, -1));
 
+        delete.setBackground(new java.awt.Color(255, 255, 254));
+        delete.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         delete.setText("Delete");
         delete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -224,6 +227,8 @@ public class CRUDRunner extends javax.swing.JFrame {
         });
         jPanel2.add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(541, 133, -1, -1));
 
+        edit.setBackground(new java.awt.Color(255, 255, 254));
+        edit.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         edit.setText("Edit");
         edit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -232,6 +237,8 @@ public class CRUDRunner extends javax.swing.JFrame {
         });
         jPanel2.add(edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(457, 133, -1, -1));
 
+        add.setBackground(new java.awt.Color(255, 255, 254));
+        add.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         add.setText("Add");
         add.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -284,9 +291,9 @@ public class CRUDRunner extends javax.swing.JFrame {
                     .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
 

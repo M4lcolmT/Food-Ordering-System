@@ -188,6 +188,8 @@ public class RunnerUserProfile extends javax.swing.JFrame {
                     .addComponent(vehicleModelField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
+        saveButton.setBackground(new java.awt.Color(255, 255, 254));
+        saveButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         saveButton.setText("Save");
         saveButton.setPreferredSize(new java.awt.Dimension(100, 25));
         saveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -196,6 +198,8 @@ public class RunnerUserProfile extends javax.swing.JFrame {
             }
         });
 
+        cancelButton.setBackground(new java.awt.Color(255, 255, 254));
+        cancelButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         cancelButton.setText("Cancel");
         cancelButton.setPreferredSize(new java.awt.Dimension(100, 25));
         cancelButton.addActionListener(new java.awt.event.ActionListener() {

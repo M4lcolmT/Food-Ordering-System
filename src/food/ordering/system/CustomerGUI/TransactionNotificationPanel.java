@@ -58,13 +58,16 @@ public class TransactionNotificationPanel extends javax.swing.JPanel {
         dateTimeLabel = new javax.swing.JLabel();
         viewReceiptButton = new javax.swing.JButton();
 
-        jPanel1.setBackground(new java.awt.Color(153, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(163, 213, 240));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Your transaction is approved!");
 
         dateTimeLabel.setText("Date & Time");
 
+        viewReceiptButton.setBackground(new java.awt.Color(255, 255, 254));
+        viewReceiptButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        viewReceiptButton.setForeground(new java.awt.Color(163, 213, 240));
         viewReceiptButton.setText("View Receipt");
         viewReceiptButton.setPreferredSize(new java.awt.Dimension(100, 25));
         viewReceiptButton.addActionListener(new java.awt.event.ActionListener() {
@@ -82,7 +85,7 @@ public class TransactionNotificationPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(dateTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 210, Short.MAX_VALUE)
                 .addComponent(viewReceiptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35))
         );

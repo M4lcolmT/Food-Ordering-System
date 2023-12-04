@@ -176,6 +176,8 @@ public class CRUDCustomer extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         jLabel1.setText("Manage Customer Details");
 
+        addButton.setBackground(new java.awt.Color(255, 255, 254));
+        addButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         addButton.setText("Add");
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -183,6 +185,8 @@ public class CRUDCustomer extends javax.swing.JFrame {
             }
         });
 
+        editButton.setBackground(new java.awt.Color(255, 255, 254));
+        editButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         editButton.setText("Edit");
         editButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -190,6 +194,8 @@ public class CRUDCustomer extends javax.swing.JFrame {
             }
         });
 
+        deleteButton.setBackground(new java.awt.Color(255, 255, 254));
+        deleteButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         deleteButton.setText("Delete");
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -223,6 +229,7 @@ public class CRUDCustomer extends javax.swing.JFrame {
         jLabel6.setText("City:");
         jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(348, 85, -1, -1));
 
+        cityComboBox.setBackground(new java.awt.Color(255, 255, 254));
         cityComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select City", "Shah Alam", "Petaling Jaya", "Subang Jaya", "Klang", "Puchong", "Ampang", "Kajang", "Cyberjaya", "Seri Kembangan", "Hulu Langat", "Bukit Jalil" }));
         cityComboBox.setPreferredSize(new java.awt.Dimension(120, 25));
         jPanel2.add(cityComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(383, 81, 246, -1));

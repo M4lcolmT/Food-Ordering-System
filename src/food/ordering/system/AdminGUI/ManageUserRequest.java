@@ -181,6 +181,8 @@ public class ManageUserRequest extends javax.swing.JFrame {
         });
 
         processButton.setBackground(new java.awt.Color(255, 255, 254));
+        processButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        processButton.setForeground(new java.awt.Color(26, 115, 232));
         processButton.setText("Process Request");
         processButton.setPreferredSize(new java.awt.Dimension(116, 25));
         processButton.addActionListener(new java.awt.event.ActionListener() {
@@ -190,6 +192,11 @@ public class ManageUserRequest extends javax.swing.JFrame {
         });
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/back.png"))); // NOI18N
+        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel8MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -360,6 +367,12 @@ public class ManageUserRequest extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please select a user request to process.", "Manage User Request", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_processButtonActionPerformed
+
+    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
+        AdminMainMenu page = new AdminMainMenu(admin);
+        page.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel8MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox customerCheckBox;

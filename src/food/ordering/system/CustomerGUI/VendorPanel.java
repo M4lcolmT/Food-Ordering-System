@@ -58,25 +58,27 @@ public class VendorPanel extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         vendorName = new javax.swing.JLabel();
-        vendorRating = new javax.swing.JLabel();
+        star = new javax.swing.JLabel();
         vendorCategory = new javax.swing.JLabel();
         distance = new javax.swing.JLabel();
         vendorAddress = new javax.swing.JLabel();
         orderButton = new javax.swing.JButton();
+        vendorRating = new javax.swing.JLabel();
 
-        jPanel1.setBackground(new java.awt.Color(163, 213, 240));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(236, 236, 236), 1, true));
         jPanel1.setMaximumSize(new java.awt.Dimension(500, 100));
         jPanel1.setMinimumSize(new java.awt.Dimension(500, 100));
         jPanel1.setPreferredSize(new java.awt.Dimension(500, 100));
 
-        vendorName.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        vendorName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         vendorName.setForeground(new java.awt.Color(51, 51, 51));
         vendorName.setText("Restaurant Name");
 
-        vendorRating.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        vendorRating.setForeground(new java.awt.Color(51, 51, 51));
-        vendorRating.setText("Ratings");
+        star.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        star.setForeground(new java.awt.Color(51, 51, 51));
+        star.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        star.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/star.png"))); // NOI18N
 
         vendorCategory.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         vendorCategory.setForeground(new java.awt.Color(51, 51, 51));
@@ -90,12 +92,21 @@ public class VendorPanel extends javax.swing.JPanel {
         vendorAddress.setForeground(new java.awt.Color(51, 51, 51));
         vendorAddress.setText("Location");
 
+        orderButton.setBackground(new java.awt.Color(163, 213, 240));
+        orderButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        orderButton.setForeground(new java.awt.Color(255, 255, 255));
         orderButton.setText("Order");
+        orderButton.setPreferredSize(new java.awt.Dimension(72, 25));
         orderButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 orderButtonActionPerformed(evt);
             }
         });
+
+        vendorRating.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        vendorRating.setForeground(new java.awt.Color(51, 51, 51));
+        vendorRating.setText("-");
+        vendorRating.setPreferredSize(new java.awt.Dimension(15, 16));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -105,19 +116,23 @@ public class VendorPanel extends javax.swing.JPanel {
                 .addGap(15, 15, 15)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(vendorAddress)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(vendorAddress)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(star, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(vendorRating, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(6, 6, 6)))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(distance)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(vendorCategory)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 260, Short.MAX_VALUE)
-                                .addComponent(orderButton))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 252, Short.MAX_VALUE)
+                                .addComponent(orderButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(vendorName)
-                            .addComponent(vendorRating))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(vendorName)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(22, 22, 22))
         );
         jPanel1Layout.setVerticalGroup(
@@ -127,14 +142,15 @@ public class VendorPanel extends javax.swing.JPanel {
                 .addComponent(vendorName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(vendorRating)
+                    .addComponent(star, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(vendorCategory)
-                    .addComponent(orderButton))
+                    .addComponent(orderButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(vendorRating, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(vendorAddress)
                     .addComponent(distance))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addGap(11, 11, 11))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -161,6 +177,7 @@ public class VendorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel distance;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton orderButton;
+    private javax.swing.JLabel star;
     private javax.swing.JLabel vendorAddress;
     private javax.swing.JLabel vendorCategory;
     private javax.swing.JLabel vendorName;

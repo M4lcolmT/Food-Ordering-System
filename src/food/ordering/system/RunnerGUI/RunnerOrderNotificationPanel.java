@@ -49,14 +49,18 @@ public class RunnerOrderNotificationPanel extends javax.swing.JPanel {
         statusLabel = new javax.swing.JLabel();
         viewButton = new javax.swing.JButton();
 
-        jPanel1.setBackground(new java.awt.Color(153, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(163, 213, 240));
 
         dateTimeLabel.setText("Date & Time");
 
-        statusLabel.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        statusLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         statusLabel.setText("-");
 
+        viewButton.setBackground(new java.awt.Color(255, 255, 254));
+        viewButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        viewButton.setForeground(new java.awt.Color(163, 213, 240));
         viewButton.setText("View");
+        viewButton.setPreferredSize(new java.awt.Dimension(72, 25));
         viewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewButtonActionPerformed(evt);
@@ -86,7 +90,7 @@ public class RunnerOrderNotificationPanel extends javax.swing.JPanel {
                 .addContainerGap(29, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(viewButton)
+                .addComponent(viewButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(41, 41, 41))
         );
 

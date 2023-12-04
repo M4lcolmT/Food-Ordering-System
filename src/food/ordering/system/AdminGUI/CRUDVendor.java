@@ -189,6 +189,8 @@ public class CRUDVendor extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         jLabel1.setText("Manage Vendor Details");
 
+        add.setBackground(new java.awt.Color(255, 255, 254));
+        add.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         add.setText("Add");
         add.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -196,6 +198,8 @@ public class CRUDVendor extends javax.swing.JFrame {
             }
         });
 
+        edit.setBackground(new java.awt.Color(255, 255, 254));
+        edit.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         edit.setText("Edit");
         edit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -203,6 +207,8 @@ public class CRUDVendor extends javax.swing.JFrame {
             }
         });
 
+        delete.setBackground(new java.awt.Color(255, 255, 254));
+        delete.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         delete.setText("Delete");
         delete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -466,7 +472,6 @@ public class CRUDVendor extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
