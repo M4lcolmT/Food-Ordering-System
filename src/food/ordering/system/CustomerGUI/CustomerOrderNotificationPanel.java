@@ -27,14 +27,13 @@ import textFiles.TextFilePaths;
  * @author LENOVO
  */
 public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
-    private Customer customer;
-    private List<Order> orders;
-    private int orderID;
-    private String updateDescription;
-    private LocalDateTime dateTime;
-    private List<Notification> allNotifications;
-    private List<Task> allTasks;
-    private CustomerNotification custNotifPage;
+    private final Customer customer;
+    private final List<Order> orders;
+    private final int orderID;
+    private final String updateDescription;
+    private final List<Notification> allNotifications;
+    private final List<Task> allTasks;
+    private final CustomerNotification custNotifPage;
     private final OrderManager manager = new OrderManager();
     
     DecimalFormat df = new DecimalFormat("#.#");
@@ -45,7 +44,6 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
         initComponents();
         this.custNotifPage = custNotifPage;
         this.updateDescription = updateDescription;
-        this.dateTime = dateTime;
         this.orderID = orderID;
         this.customer = customer;
         
@@ -87,7 +85,7 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
                 dineInButton.setVisible(true);
                 cancelButton.setVisible(false);
             }
-            case "Order arrived! Click to receive order." -> {
+            case "Order arrived! Click to receive order.", "Your order is ready for dine in or take away." -> {
                 receivedButton.setVisible(true);
                 takeAwayButton.setVisible(false);
                 dineInButton.setVisible(false);
@@ -143,18 +141,6 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
             }
         }
         return null;
-    }
-    
-    // Check max id in notification text file
-    private int checkMaxID() {
-        int maxID = 0;
-        for (Notification i : allNotifications) {
-            if (i.getNotificationID() > maxID) {
-                maxID = i.getNotificationID();
-            }
-        }
-        // Increment the maximum ID
-        return maxID + 1;
     }
     
     private LocalDateTime getDateTime() {
@@ -293,22 +279,32 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void receivedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_receivedButtonActionPerformed
+        String hasRunnerDescription = "Order arrived! Click to receive order.";
+        String noRunnerDescription = "Your order is ready for dine in or take away.";
+        
         Order selectedOrder = manager.findOrder(orderID);
         Customer selectedCustomer = selectedOrder.getCustomer();
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Order received?", "Order Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
-            GiveReview page = new GiveReview(selectedCustomer, orderID);
-            page.setVisible(true);
-            custNotifPage.dispose();
-            removeOrderNotifs();
+            if (updateDescription.equals(noRunnerDescription)) {
+                GiveReview page = new GiveReview(selectedCustomer, orderID, false);
+                page.setVisible(true);
+                custNotifPage.dispose();
+                removeOrderNotifs();
+            } else if (updateDescription.equals(hasRunnerDescription)){
+                GiveReview page = new GiveReview(selectedCustomer, orderID, true);
+                page.setVisible(true);
+                custNotifPage.dispose();
+                removeOrderNotifs();
+            }
         }
     }//GEN-LAST:event_receivedButtonActionPerformed
 
     private void takeAwayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_takeAwayButtonActionPerformed
         Order selectedOrder = manager.findOrder(orderID);
         if (selectedOrder.getStatus() == Order.OrderStatus.READY_FOR_PICKUP) {
-            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "Your order is ready, waiting for pick up!", getDateTime());
+            Notification newNotif = new Notification(Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "Your order is ready, waiting for pick up!", getDateTime());
             newNotif.saveNotification(newNotif);
         } else {
             JOptionPane.showMessageDialog(this, "Your order is not ready.", "Order still preparing", JOptionPane.INFORMATION_MESSAGE);
@@ -318,7 +314,7 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
     private void dineInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dineInButtonActionPerformed
         Order selectedOrder = manager.findOrder(orderID);
         if (selectedOrder.getStatus() == Order.OrderStatus.READY_FOR_PICKUP) {
-            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "Your order is ready, waiting for pick up!", getDateTime());
+            Notification newNotif = new Notification(Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "Your order is ready, waiting for pick up!", getDateTime());
             newNotif.saveNotification(newNotif);
         } else {
             JOptionPane.showMessageDialog(this, "Your order is not ready.", "Order still preparing", JOptionPane.INFORMATION_MESSAGE);

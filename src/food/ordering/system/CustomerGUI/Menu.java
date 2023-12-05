@@ -107,6 +107,7 @@ public class Menu extends javax.swing.JFrame {
         totalPrice = 0;
     }
     
+    // Checking the max order id for creating a primary key
     private int checkMaxOrderID() {
         int maxID = 0;
         for (Order i : orders) {

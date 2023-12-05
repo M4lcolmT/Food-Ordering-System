@@ -30,6 +30,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ManageOrder extends javax.swing.JFrame {
     private Vendor vendor;
+    private boolean runnerAvailability;
     private Order specificOrder;
     private int orderID;
     private OrderStatus orderStatus;
@@ -41,10 +42,11 @@ public class ManageOrder extends javax.swing.JFrame {
     
     DecimalFormat df = new DecimalFormat("#.#");
 
-    public ManageOrder(Vendor vendor, int orderID) {
+    public ManageOrder(Vendor vendor, int orderID, boolean runnerAvailability) {
         initComponents();
         this.vendor = vendor;
         this.orderID = orderID;
+        this.runnerAvailability = runnerAvailability;
         
         allOrders = manager.getOrders();
         specificOrder = manager.findOrder(orderID);
@@ -90,18 +92,6 @@ public class ManageOrder extends javax.swing.JFrame {
             }
         }
         return count;
-    }
-    
-    // Check max id in notification text file
-    private int checkMaxID() {
-        int maxID = 0;
-        for (Notification i : notifications) {
-            if (i.getNotificationID() > maxID) {
-                maxID = i.getNotificationID();
-            }
-        }
-        // Increment the maximum ID
-        return maxID + 1;
     }
     
     private LocalDateTime getDateTime() {
@@ -307,7 +297,7 @@ public class ManageOrder extends javax.swing.JFrame {
             //Save updated order status
             specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.PREPARING);
             //Send notif to customer
-            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, specificOrder.getOrderID(), "Your order is preparing!", getDateTime());
+            Notification newNotif = new Notification(Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, specificOrder.getOrderID(), "Your order is preparing!", getDateTime());
             newNotif.saveNotification(newNotif);
             //Set button visibility
             acceptButton.setVisible(false);
@@ -330,9 +320,9 @@ public class ManageOrder extends javax.swing.JFrame {
             //Save updated order status
             specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.CANCELLED);
             //Sent notif to customer
-            Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, specificOrder.getOrderID(), "Your order is cancelled", getDateTime());
+            Notification newNotif = new Notification(Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, specificOrder.getOrderID(), "Your order is cancelled", getDateTime());
             newNotif.saveNotification(newNotif);
-            ViewOrders page = new ViewOrders(vendor, allOrders);
+            ViewOrders page = new ViewOrders(vendor);
             page.setVisible(true);
             this.dispose();
         }
@@ -342,15 +332,23 @@ public class ManageOrder extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Order is ready.", "Finisihed Order", JOptionPane.INFORMATION_MESSAGE);
         specificOrder.updateOrderStatus(specificOrder, allOrders, OrderStatus.READY_FOR_PICKUP);
         //Sent notif to customer
-        Notification newNotif = new Notification(checkMaxID(), Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, specificOrder.getOrderID(), "Your order is ready, waiting for pick up!", getDateTime());
-        newNotif.saveNotification(newNotif);
-        ViewOrders page = new ViewOrders(vendor, allOrders);
-        page.setVisible(true);
-        this.dispose();
+        if (runnerAvailability == true) {
+            Notification newNotif = new Notification(Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, specificOrder.getOrderID(), "Your order is ready, waiting for pick up!", getDateTime());
+            newNotif.saveNotification(newNotif);
+            ViewOrders page = new ViewOrders(vendor);
+            page.setVisible(true);
+            this.dispose();
+        } else {
+            Notification newNotif = new Notification(Notification.NotifType.ORDER, specificOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, specificOrder.getOrderID(), "Your order is ready for dine in or take away.", getDateTime());
+            newNotif.saveNotification(newNotif);
+            ViewOrders page = new ViewOrders(vendor);
+            page.setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_readyButtonActionPerformed
 
     private void jLabel12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel12MouseClicked
-        ViewOrders page = new ViewOrders(vendor, allOrders);
+        ViewOrders page = new ViewOrders(vendor);
         page.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel12MouseClicked

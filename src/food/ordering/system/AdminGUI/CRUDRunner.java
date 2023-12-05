@@ -82,17 +82,6 @@ public class CRUDRunner extends javax.swing.JFrame {
         return maxID + 1;
     }
     
-    public int checkMaxNotificationID() {
-        int maxID = 0;
-        for (Notification i : notifications) {
-                if (i.getNotificationID() > maxID) {
-                    maxID = i.getNotificationID();
-                }
-            }
-        // Increment the maximum ID
-        return maxID + 1;
-    }
-    
     private void writeNotificationToFile() {        
         try (PrintWriter writer = new PrintWriter(new FileWriter(notificationTextFile))) {
             for (Notification item : notifications) {
@@ -367,7 +356,7 @@ public class CRUDRunner extends javax.swing.JFrame {
                 selectedRunner.setPlateNumber(newVehiclePlate);
                 selectedRunner.setVehicleModel(newVehicleModel);
                 createNewRunners();
-                Notification newNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.USERPROFILE, selectedRunner.getRunnerID(), Notification.NotifUserType.RUNNER, 0, "Your profile is updated!", LocalDateTime.now());
+                Notification newNotif = new Notification(Notification.NotifType.USERPROFILE, selectedRunner.getRunnerID(), Notification.NotifUserType.RUNNER, 0, "Your profile is updated!", LocalDateTime.now());
                 notifications.add(newNotif);
                 writeNotificationToFile();
                 JOptionPane.showMessageDialog(this, "Successfully edited Runner Details", "Success", JOptionPane.INFORMATION_MESSAGE);

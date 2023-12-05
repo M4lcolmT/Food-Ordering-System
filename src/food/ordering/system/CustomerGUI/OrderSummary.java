@@ -178,17 +178,6 @@ public class OrderSummary extends javax.swing.JFrame {
         return maxID + 1;
     }
     
-    private int checkMaxNotificationID() {
-        int maxID = 0;
-        for (Notification notification : notifications) {
-            if (notification.getNotificationID() > maxID) {
-                maxID = notification.getNotificationID();
-            }
-        }
-        // Increment the maximum ID
-        return maxID + 1;
-    }
-    
     private LocalDateTime getDateTime() {
         LocalDateTime originalDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
@@ -515,13 +504,13 @@ public class OrderSummary extends javax.swing.JFrame {
                 newOrderType = OrderType.DELIVERY;
                 placeOrder();
                 //Send notif to vendor
-                Notification vendorNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, vendor.getVendorID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
+                Notification vendorNotif = new Notification(Notification.NotifType.ORDER, vendor.getVendorID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
                 vendorNotif.saveNotification(vendorNotif);
                 //Send notif to runner
-                Notification runnerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, availableRunner.getRunnerID(), Notification.NotifUserType.RUNNER, order.getOrderID(), "New task!", getDateTime());
+                Notification runnerNotif = new Notification(Notification.NotifType.ORDER, availableRunner.getRunnerID(), Notification.NotifUserType.RUNNER, order.getOrderID(), "New task!", getDateTime());
                 runnerNotif.saveNotification(runnerNotif);
                 //Send notif to customer
-                Notification customerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.CUSTOMER, order.getOrderID(), "Your order is processing!", getDateTime());
+                Notification customerNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.CUSTOMER, order.getOrderID(), "Your order is processing!", getDateTime());
                 customerNotif.saveNotification(customerNotif);
             } else {
                 int result = JOptionPane.showOptionDialog(this, "There is no available runners. Would you like to dine in or take away instead?", "No runners", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
@@ -531,16 +520,22 @@ public class OrderSummary extends javax.swing.JFrame {
                         newOrderType = OrderType.TAKEAWAY;
                         placeOrder();
                         //Send notif to vendor
-                        Notification takeAwayNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
-                        takeAwayNotif.saveNotification(takeAwayNotif);
+                        Notification takeAwayVendNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
+                        takeAwayVendNotif.saveNotification(takeAwayVendNotif);
+                        //Send notif to customer
+                        Notification takeAwayCustNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.CUSTOMER, order.getOrderID(), "Your order is processing!", getDateTime());
+                        takeAwayCustNotif.saveNotification(takeAwayCustNotif);
                         break;
                     case JOptionPane.NO_OPTION:
                         // User clicked on "Dine In"
                         newOrderType = OrderType.DINEIN;
                         placeOrder();
-                        Notification dineInNotif;
-                        dineInNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
-                        dineInNotif.saveNotification(dineInNotif);
+                        //Send notif to vendor
+                        Notification dineInVendNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
+                        dineInVendNotif.saveNotification(dineInVendNotif);
+                        //Send notif to customer
+                        Notification dineInCustNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.CUSTOMER, order.getOrderID(), "Your order is processing!", getDateTime());
+                        dineInCustNotif.saveNotification(dineInCustNotif);
                         break;
                     case JOptionPane.CLOSED_OPTION:
                         // User click the x button to close the dialog

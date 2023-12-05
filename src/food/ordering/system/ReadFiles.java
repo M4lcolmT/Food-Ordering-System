@@ -280,6 +280,7 @@ public class ReadFiles {
         }
     }
     
+    // Read all vendor food items from text file
     public List<FoodItem> readFoodItemsFromFile(Vendor vendor) {
         List<FoodItem> foodItems = new ArrayList<>();
 
@@ -353,16 +354,15 @@ public class ReadFiles {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                if (parts.length == 7) {
-                    int notificationID = Integer.parseInt(parts[0]);
-                    NotifType notifType = NotifType.valueOf(parts[1]);
-                    int userID = Integer.parseInt(parts[2]);
-                    NotifUserType userType = NotifUserType.valueOf(parts[3]);
-                    int transactionID = Integer.parseInt(parts[4]);
-                    String updateDesc = parts[5];
-                    LocalDateTime dateTime = parseDateTime(parts[6]);
+                if (parts.length == 6) {
+                    NotifType notifType = NotifType.valueOf(parts[0]);
+                    int userID = Integer.parseInt(parts[1]);
+                    NotifUserType userType = NotifUserType.valueOf(parts[2]);
+                    int transactionID = Integer.parseInt(parts[3]);
+                    String updateDesc = parts[4];
+                    LocalDateTime dateTime = parseDateTime(parts[5]);
                     
-                    Notification newNotification = new Notification(notificationID, notifType, userID, userType, transactionID, updateDesc, dateTime);
+                    Notification newNotification = new Notification(notifType, userID, userType, transactionID, updateDesc, dateTime);
                     notifications.add(newNotification);
                 } else {
                     System.out.println("Notification: Skipping a line with an incorrect number of parts");

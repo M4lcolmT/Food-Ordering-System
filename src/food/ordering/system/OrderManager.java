@@ -5,7 +5,6 @@
 package food.ordering.system;
 
 import food.ordering.system.CustomerGUI.Customer;
-import food.ordering.system.Order;
 import food.ordering.system.Order.OrderType;
 import food.ordering.system.RunnerGUI.Task;
 import food.ordering.system.VendorGUI.FoodItem;
@@ -175,6 +174,7 @@ public class OrderManager {
                 return item;
             }
         }
+        System.out.println("null order");
         return null;
     }
     

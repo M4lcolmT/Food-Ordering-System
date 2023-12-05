@@ -6,9 +6,7 @@ package food.ordering.system.VendorGUI;
 
 import food.ordering.system.Order;
 import food.ordering.system.OrderManager;
-import food.ordering.system.CustomerLogin;
 import food.ordering.system.VendorLogin;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -27,17 +25,6 @@ public class VendorMainMenu extends javax.swing.JFrame {
         
         OrderManager manager = new OrderManager();
         allOrders = manager.getOrders();
-    }
-    
-    private List<Order> getVendorOrders() {
-        List<Order> vendorOrders = new ArrayList<>();
-        
-        for (Order item : allOrders) {
-            if (item.getVendor().getVendorID() == vendor.getVendorID()) {
-                vendorOrders.add(item);
-            }
-        }
-        return vendorOrders;
     }
     
     @SuppressWarnings("unchecked")
@@ -236,16 +223,9 @@ public class VendorMainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_foodMenuButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        List<Order> vendorOrders = getVendorOrders();
-        
-        if (vendorOrders.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "You have no orders.");
-        } else {
-            ViewOrders page = new ViewOrders(vendor, vendorOrders);
-            page.setVisible(true);
-            this.dispose();
-            allOrders.clear();
-        }
+        ViewOrders page = new ViewOrders(vendor);
+        page.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void notificationsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notificationsButtonActionPerformed

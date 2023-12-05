@@ -5,15 +5,11 @@ import food.ordering.system.Notification;
 import food.ordering.system.ReadFiles;
 import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.OrderManager;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import textFiles.TextFilePaths;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -55,17 +51,6 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
                 model.addRow(rowData);
             }
         }
-    }
-    
-    private int checkMaxID() {
-        int maxID = 0;
-        for (Notification i : notifications) {
-            if (i.getNotificationID() > maxID) {
-                maxID = i.getNotificationID();
-            }
-        }
-        // Increment the maximum ID
-        return maxID + 1;
     }
     
     private TopUpRequests findRequest(int id) {
@@ -210,7 +195,6 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
         int selectedRow = requestTable.getSelectedRow();
         
         if (selectedRow != -1) {
-            int newNotifID = checkMaxID();
             int transactionID = (int) model.getValueAt(selectedRow, 0);
             int customerID = (int) model.getValueAt(selectedRow, 2);
             int topAmount = (int) model.getValueAt(selectedRow, 3);
@@ -223,7 +207,7 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
             TopUpRequests selectedRequest = findRequest(transactionID);
             selectedRequest.updateTransactionStatus(selectedRequest, requests);
             
-            Notification requestNotif = new Notification(newNotifID, Notification.NotifType.TOPUP, customerID, Notification.NotifUserType.CUSTOMER, transactionID, "", LocalDateTime.now());
+            Notification requestNotif = new Notification(Notification.NotifType.TOPUP, customerID, Notification.NotifUserType.CUSTOMER, transactionID, "", LocalDateTime.now());
             requestNotif.saveNotification(requestNotif);
             JOptionPane.showMessageDialog(this, "Transaction has been approved.", "Transaction Success", JOptionPane.INFORMATION_MESSAGE);
             loadTopUpRequests();

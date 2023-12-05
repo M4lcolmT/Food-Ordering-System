@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
  */
 public class GiveReview extends javax.swing.JFrame {
     private Customer customer;
+    private boolean runnerAvailability;
     private int orderID;
     private Order order;
     private List<Task> allTasks;
@@ -34,18 +35,36 @@ public class GiveReview extends javax.swing.JFrame {
     
     DecimalFormat df = new DecimalFormat("#.#");
     
-    public GiveReview(Customer customer, int orderID) {
+    public GiveReview(Customer customer, int orderID, boolean runnerAvailability) {
         initComponents();
         this.customer = customer;
         this.orderID = orderID;
+        this.runnerAvailability = runnerAvailability;
         
         order = manager.findOrder(orderID);
         ReadFiles reader = new ReadFiles();
+        
         allTasks = reader.readTasks();
         allReviews = reader.readReviews();
         allVendors = reader.readVendors();
         allRunners = reader.readRunners();
         selectedTask = getTask(orderID);
+        
+        checkRunnerAvailability();
+    }
+    
+    private void checkRunnerAvailability() {
+        if (runnerAvailability == true) {
+            jLabel4.setVisible(true);
+            jLabel5.setVisible(true);
+            runnerContentField.setVisible(true);
+            runnerRatingField.setVisible(true);
+        } else {
+            jLabel4.setVisible(false);
+            jLabel5.setVisible(false);
+            runnerContentField.setVisible(false);
+            runnerRatingField.setVisible(false);
+        }
     }
     
     private Task getTask(int id) {
@@ -75,12 +94,9 @@ public class GiveReview extends javax.swing.JFrame {
         return null;
     }
     
-    private void getRunnerVendorRatings() {
+    private void updateVendorRatings() {
         int vendorRatingSum = 0;
         int vendorRatingCount = 0;
-
-        int runnerRatingSum = 0;
-        int runnerRatingCount = 0;
 
         for (Review i : allReviews) {
             int userID = i.getUserID();
@@ -90,18 +106,37 @@ public class GiveReview extends javax.swing.JFrame {
             if (order.getVendor().getVendorID() == userID && userType == Review.UserType.VENDOR) {
                 vendorRatingSum += rating;
                 vendorRatingCount++;
-            } else if (selectedTask.getRunnerID() == userID && userType == Review.UserType.RUNNER) {
-                runnerRatingSum += rating;
-                runnerRatingCount++;
-            } else {
-                System.out.println("Invalid user id and type!");
             }
         }
 
-        // Calculate averages
+        // Calculate vendor averages
         vendorRating = (vendorRatingCount > 0) ? (double) vendorRatingSum / vendorRatingCount : 0.0;
-        runnerRating = (runnerRatingCount > 0) ? (double) runnerRatingSum / runnerRatingCount : 0.0;
+
+        // Format the vendor rating
         vendorRating = Double.parseDouble(df.format(vendorRating));
+    }
+
+    private void updateRunnerRatings() {
+        int runnerRatingSum = 0;
+        int runnerRatingCount = 0;
+
+        for (Review i : allReviews) {
+            int userID = i.getUserID();
+            Review.UserType userType = i.getUserType();
+            int rating = i.getRating();
+
+            // Only check for runner reviews if there is a runner and runnerAvailability is true
+            if (selectedTask != null && selectedTask.getRunnerID() == userID && userType == Review.UserType.RUNNER && runnerAvailability) {
+                // Code for runner reviews
+                runnerRatingSum += rating;
+                runnerRatingCount++;
+            }
+        }
+
+        // Calculate runner averages
+        runnerRating = (runnerRatingCount > 0 && runnerAvailability) ? (double) runnerRatingSum / runnerRatingCount : 0.0;
+
+        // Format the runner rating
         runnerRating = Double.parseDouble(df.format(runnerRating));
     }
 
@@ -126,10 +161,12 @@ public class GiveReview extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(75, 124, 182));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Give Review");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(27, 20, -1, -1));
 
         jPanel2.setBackground(new java.awt.Color(75, 124, 182));
 
@@ -211,29 +248,7 @@ public class GiveReview extends javax.swing.JFrame {
         runnerRatingField.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
         vendorRatingField.setModel(new javax.swing.SpinnerNumberModel(0, 0, 5, 1));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(67, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
-        );
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 58, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -251,21 +266,31 @@ public class GiveReview extends javax.swing.JFrame {
 
     private void sendReviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendReviewButtonActionPerformed
         String vendorContent = vendorContentField.getText();
-        int vendorrating = (int) vendorRatingField.getValue();
-        String runnerContent = runnerContentField.getText();
-        int runnerrating = (int) runnerRatingField.getValue();
+        int vendorRating = (int) vendorRatingField.getValue();
 
-        Review vendorReview = new Review(order.getVendor().getVendorID(), Review.UserType.VENDOR, orderID, vendorContent, vendorrating);
-        vendorReview.saveReview(vendorReview);
-        
-        Review runnerReview = new Review(selectedTask.getRunnerID(), Review.UserType.RUNNER, selectedTask.getTaskID(), runnerContent, runnerrating);
-        runnerReview.saveReview(runnerReview);
-        
-        getRunnerVendorRatings();
-        Runner runner = findRunner(selectedTask.getRunnerID());
-        runner.updateRunnerRating(runner, allRunners, vendorRating);
-        Vendor vendor = findVendor(order.getVendor().getVendorID());
-        vendor.updateVendorRating(vendor, allVendors, vendorRating);
+        if (runnerAvailability) {
+            String runnerContent = runnerContentField.getText();
+            int runnerRating = (int) runnerRatingField.getValue();
+
+            Review vendorReview = new Review(order.getVendor().getVendorID(), Review.UserType.VENDOR, orderID, vendorContent, vendorRating);
+            vendorReview.saveReview(vendorReview);
+            updateVendorRatings();
+            Vendor vendor = findVendor(order.getVendor().getVendorID());
+            vendor.updateVendorRating(vendor, allVendors, vendorRating);
+
+            Review runnerReview = new Review(selectedTask.getRunnerID(), Review.UserType.RUNNER, selectedTask.getTaskID(), runnerContent, runnerRating);
+            runnerReview.saveReview(runnerReview);
+            updateRunnerRatings();
+            Runner runner = findRunner(selectedTask.getRunnerID());
+            runner.updateRunnerRating(runner, allRunners, runnerRating);
+        } else {
+            Review vendorReview = new Review(order.getVendor().getVendorID(), Review.UserType.VENDOR, orderID, vendorContent, vendorRating);
+            vendorReview.saveReview(vendorReview);
+            updateVendorRatings();
+            Vendor vendor = findVendor(order.getVendor().getVendorID());
+            vendor.updateVendorRating(vendor, allVendors, vendorRating);
+        }
+
         JOptionPane.showMessageDialog(this, "Thank you for providing your reviews!", "Order Complete", JOptionPane.INFORMATION_MESSAGE);
         CustomerMainMenu page = new CustomerMainMenu(customer);
         page.setVisible(true);

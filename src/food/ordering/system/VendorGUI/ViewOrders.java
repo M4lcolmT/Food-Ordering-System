@@ -5,6 +5,7 @@
 package food.ordering.system.VendorGUI;
 
 import food.ordering.system.Order;
+import food.ordering.system.OrderManager;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -20,27 +21,41 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ViewOrders extends javax.swing.JFrame {
     private Vendor vendor;
-    private List<Order> orders;
-    private List<Order> filterOrders;
+    private boolean runnerAvailability;
+    private List<Order> vendorOrders;
+    public List<Order> filterOrders;
     private List<Order> deliveries = new ArrayList<>();
     private List<Order> takeAways = new ArrayList<>();
     private List<Order> dineIns = new ArrayList<>();
-   
-    public ViewOrders(Vendor vendor, List<Order> orders) {
+    private final OrderManager manager = new OrderManager();
+    
+    public ViewOrders(Vendor vendor) {
         initComponents();
         this.vendor = vendor;
-        this.orders = orders;
         
+        vendorOrders = getVendorOrders();
         filterOrders = removeCancelledOrders();
         filterOrders();
         updateTable();
     }
     
+    private List<Order> getVendorOrders() {
+        List<Order> orders = manager.getOrders();
+        List<Order> vendorOrder = new ArrayList<>();
+        
+        for (Order i : orders) {
+            if (i.getVendor().getVendorID() == vendor.getVendorID()) {
+                vendorOrder.add(i);
+            }
+        }
+        return vendorOrder;
+    }
+    
     private List<Order> removeCancelledOrders() {
         List<Order> filtOrders = new ArrayList<>();
         
-        for (Order item : orders) {
-            if (!item.getStatus().name().equals("CANCELLED")) {
+        for (Order item : vendorOrders) {
+            if (item.getStatus() != Order.OrderStatus.CANCELLED) {
                 filtOrders.add(item);
             } else {
                 System.out.println("Cancelled item!");
@@ -277,13 +292,17 @@ public class ViewOrders extends javax.swing.JFrame {
         int selectedRow = orderTable.getSelectedRow();
         if (selectedRow != -1) {
             int orderID = (int) model.getValueAt(selectedRow, 0);
+            Order.OrderType orderType = (Order.OrderType) model.getValueAt(selectedRow, 1);
             String time = (String) model.getValueAt(selectedRow, 2);
             String date = (String) model.getValueAt(selectedRow, 3);
             Order.OrderStatus status = (Order.OrderStatus) model.getValueAt(selectedRow, 4);
+            
+            runnerAvailability = !(orderType == Order.OrderType.DINEIN || orderType == Order.OrderType.TAKEAWAY);
+            
             switch (status.name().trim()) {
                 case "PENDING":
                     {
-                        ManageOrder page = new ManageOrder(vendor, orderID);
+                        ManageOrder page = new ManageOrder(vendor, orderID, runnerAvailability);
                         page.orderIDLabel.setText(Integer.toString(orderID));
                         page.timeLabel.setText(time);
                         page.dateLabel.setText(date);
@@ -297,7 +316,7 @@ public class ViewOrders extends javax.swing.JFrame {
                 case "CONFIRMED":
                 case "PREPARING":
                     {
-                        ManageOrder page = new ManageOrder(vendor, orderID);
+                        ManageOrder page = new ManageOrder(vendor, orderID, runnerAvailability);
                         page.orderIDLabel.setText(Integer.toString(orderID));
                         page.timeLabel.setText(time);
                         page.dateLabel.setText(date);

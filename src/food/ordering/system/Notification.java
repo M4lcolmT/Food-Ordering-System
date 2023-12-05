@@ -15,7 +15,6 @@ import textFiles.TextFilePaths;
  * @author LENOVO
  */
 public class Notification {
-    private int notificationID;
     private NotifType notifType;
     private int userID;
     private NotifUserType userType;
@@ -38,22 +37,13 @@ public class Notification {
         TOPUP
     }
     
-    public Notification(int notificationID, NotifType notifType, int userID, NotifUserType userType, int typeID, String updateDescription, LocalDateTime dateTime) {
-        this.notificationID = notificationID;
+    public Notification(NotifType notifType, int userID, NotifUserType userType, int typeID, String updateDescription, LocalDateTime dateTime) {
         this.notifType = notifType;
         this.userID = userID;
         this.userType = userType;
         this.typeID = typeID;
         this.updateDescription = updateDescription;
         this.dateTime = dateTime;
-    }
-    
-    public int getNotificationID() {
-        return notificationID;
-    }
-
-    public void setNotificationID(int notificationID) {
-        this.notificationID = notificationID;
     }
     
     public NotifUserType getUserType() {
@@ -111,6 +101,6 @@ public class Notification {
     @Override
     public String toString() {
         String delimeter = ";";
-        return notificationID + delimeter + notifType + delimeter + userID + delimeter + userType + delimeter + typeID + delimeter + updateDescription + delimeter + dateTime;
+        return notifType + delimeter + userID + delimeter + userType + delimeter + typeID + delimeter + updateDescription + delimeter + dateTime;
     }
 }

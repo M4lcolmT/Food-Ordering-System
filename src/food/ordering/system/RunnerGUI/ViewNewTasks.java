@@ -35,10 +35,6 @@ public class ViewNewTasks extends javax.swing.JFrame {
     private List<Runner> runners;
     private List<Notification> notifications;
     private final OrderManager manager = new OrderManager();
-
-
-    TextFilePaths path = new TextFilePaths();
-    String taskTextFilePath = path.getRunnerTasksTextFile();
     
     public ViewNewTasks(Runner runner) {
         initComponents();
@@ -76,9 +72,11 @@ public class ViewNewTasks extends javax.swing.JFrame {
     private Task getTask(int id) {
         for (Task i : runnerTasks) {
             if (id == i.getTaskID()) {
+                System.out.println("id:"+i.getOrderID());
                 return i;
             }
         }
+        System.out.println("null task");
         return null;
     }
     
@@ -110,6 +108,7 @@ public class ViewNewTasks extends javax.swing.JFrame {
         
         for (Task task : filteredTasks) {
             if (task.getTaskStatus() != Task.TaskStatus.DECLINED) {
+                System.out.println("task order:"+task.getOrderID());
                 Order order = manager.findOrder(task.getOrderID());
                 Customer orderCustomer = order.getCustomer();
                 Vendor orderVendor = order.getVendor();
@@ -129,17 +128,6 @@ public class ViewNewTasks extends javax.swing.JFrame {
             }
         }
         return null;
-    }
-    
-    private int checkMaxNotificationID() {
-        int maxID = 0;
-        for (Notification notification : notifications) {
-            if (notification.getNotificationID() > maxID) {
-                maxID = notification.getNotificationID();
-            }
-        }
-        // Increment the maximum ID
-        return maxID + 1;
     }
     
     private int checkMaxTaskID() {
@@ -343,7 +331,7 @@ public class ViewNewTasks extends javax.swing.JFrame {
             // Check for another available runner
             if (availableRunner != null) { 
                 // Send notification to the newly available runner
-                Notification runnerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, availableRunner.getRunnerID(), Notification.NotifUserType.RUNNER, selectedTask.getOrderID(), "New task!", getDateTime());
+                Notification runnerNotif = new Notification(Notification.NotifType.ORDER, availableRunner.getRunnerID(), Notification.NotifUserType.RUNNER, selectedTask.getOrderID(), "New task!", getDateTime());
                 runnerNotif.saveNotification(runnerNotif);
                 // Change the task status to rejected
                 selectedTask.updateTaskStatus(selectedTask, allTasks, Task.TaskStatus.DECLINED);
@@ -356,7 +344,7 @@ public class ViewNewTasks extends javax.swing.JFrame {
                 newTask.createTask(newTask);
             } else {
                 // Send a notification to prompt the customer notification to choose dine-in/take-away
-                Notification customerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "No runners are available! Please choose to dine in or take away.", getDateTime());
+                Notification customerNotif = new Notification(Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "No runners are available! Please choose to dine in or take away.", getDateTime());
                 customerNotif.saveNotification(customerNotif);
                 // Change the task status to rejected
                 selectedTask.updateTaskStatus(selectedTask, allTasks, Task.TaskStatus.DECLINED);
@@ -379,7 +367,7 @@ public class ViewNewTasks extends javax.swing.JFrame {
         
         if (selectedRow != -1) {
             // Send notification to the customer that their order is accepted
-            Notification customerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "A runner accepted your order!", getDateTime());
+            Notification customerNotif = new Notification(Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "A runner accepted your order!", getDateTime());
             customerNotif.saveNotification(customerNotif);
             // Change the task status to accepted
             selectedTask.updateTaskStatus(selectedTask, allTasks, Task.TaskStatus.ACCEPTED);

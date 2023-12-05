@@ -61,17 +61,6 @@ public class ManageTaskPage extends javax.swing.JFrame {
         }
     }
     
-    public int checkMaxNotificationID() {
-        int maxID = 0;
-        for (Notification notification : notifications) {
-            if (notification.getNotificationID() > maxID) {
-                maxID = notification.getNotificationID();
-            }
-        }
-        // Increment the maximum ID
-        return maxID + 1;
-    }
-    
     private LocalDateTime getDateTime() {
         LocalDateTime originalDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
@@ -240,7 +229,7 @@ public class ManageTaskPage extends javax.swing.JFrame {
         selectedTask.updateTaskStatus(selectedTask, allTasks, Task.TaskStatus.DELIVERED);
         runner.updateRunnerStatus(runner, runners, true);
         // Send notif to customer
-        Notification customerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "Order arrived! Click to receive order.", getDateTime());
+        Notification customerNotif = new Notification(Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "Order arrived! Click to receive order.", getDateTime());
         customerNotif.saveNotification(customerNotif);
         ViewNewTasks page = new ViewNewTasks(runner);
         page.setVisible(true);
@@ -257,7 +246,7 @@ public class ManageTaskPage extends javax.swing.JFrame {
         
         selectedTask.updateTaskStatus(selectedTask, allTasks, Task.TaskStatus.PICKED_UP);
         // Send notif to customer
-        Notification customerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "Your order picked up.", getDateTime());
+        Notification customerNotif = new Notification(Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "Your order picked up.", getDateTime());
         customerNotif.saveNotification(customerNotif);
         ViewNewTasks page = new ViewNewTasks(runner);
         page.setVisible(true);
@@ -271,7 +260,7 @@ public class ManageTaskPage extends javax.swing.JFrame {
         System.out.println("status"+selectedOrder.getStatus().name().trim());
         selectedTask.updateTaskStatus(selectedTask, allTasks, Task.TaskStatus.ON_THE_WAY);
         // Send notif to customer 
-        Notification customerNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "Your order is on the way.", getDateTime());
+        Notification customerNotif = new Notification(Notification.NotifType.ORDER, selectedOrder.getCustomer().getCustomerID(), Notification.NotifUserType.CUSTOMER, selectedOrder.getOrderID(), "Your order is on the way.", getDateTime());
         customerNotif.saveNotification(customerNotif);
         ViewNewTasks page = new ViewNewTasks(runner);
         page.setVisible(true);

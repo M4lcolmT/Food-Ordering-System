@@ -83,17 +83,6 @@ public class CRUDCustomer extends javax.swing.JFrame {
         return maxID + 1;
     }
     
-    public int checkMaxNotificationID() {
-        int maxID = 0;
-        for (Notification i : notifications) {
-                if (i.getNotificationID() > maxID) {
-                    maxID = i.getNotificationID();
-                }
-            }
-        // Increment the maximum ID
-        return maxID + 1;
-    }
-    
     private void writeCustomerToFile() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(customerTextFile))) {
             for (Customer item : customers) {
@@ -333,7 +322,7 @@ public class CRUDCustomer extends javax.swing.JFrame {
                 selectedCustomer.setStreetAddress(newAddress);
                 selectedCustomer.setCity(newCity);
                 createNewCustomers();
-                Notification newNotif = new Notification(checkMaxNotificationID(), Notification.NotifType.USERPROFILE, selectedCustomer.getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "Your profile is updated!", LocalDateTime.now());
+                Notification newNotif = new Notification(Notification.NotifType.USERPROFILE, selectedCustomer.getCustomerID(), Notification.NotifUserType.CUSTOMER, 0, "Your profile is updated!", LocalDateTime.now());
                 notifications.add(newNotif);
                 writeNotificationToFile();
                 JOptionPane.showMessageDialog(this, "Successfully edited Customer Details", "Success", JOptionPane.INFORMATION_MESSAGE);

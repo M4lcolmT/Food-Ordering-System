@@ -108,7 +108,7 @@ public class VendorOrderNotificationPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void viewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewButtonActionPerformed
-        ViewOrders viewOrder = new ViewOrders(vendor, orders);
+        ViewOrders viewOrder = new ViewOrders(vendor);
         viewOrder.setVisible(true);
         page.dispose();
     }//GEN-LAST:event_viewButtonActionPerformed
