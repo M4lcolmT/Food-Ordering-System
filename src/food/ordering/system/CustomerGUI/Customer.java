@@ -4,6 +4,7 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.Order;
 import food.ordering.system.User;
 import java.util.ArrayList;
 import java.util.List;

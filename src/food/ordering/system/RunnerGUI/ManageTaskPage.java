@@ -2,8 +2,8 @@ package food.ordering.system.RunnerGUI;
 
 import food.ordering.system.Notification;
 import food.ordering.system.ReadFiles;
-import food.ordering.system.CustomerGUI.Order;
-import food.ordering.system.CustomerGUI.OrderManager;
+import food.ordering.system.Order;
+import food.ordering.system.OrderManager;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;

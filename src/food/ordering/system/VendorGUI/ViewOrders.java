@@ -4,7 +4,7 @@
  */
 package food.ordering.system.VendorGUI;
 
-import food.ordering.system.CustomerGUI.Order;
+import food.ordering.system.Order;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

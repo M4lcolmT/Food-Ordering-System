@@ -4,8 +4,8 @@
  */
 package food.ordering.system.VendorGUI;
 
-import food.ordering.system.CustomerGUI.Order;
-import food.ordering.system.CustomerGUI.OrderManager;
+import food.ordering.system.Order;
+import food.ordering.system.OrderManager;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -50,6 +50,7 @@ public class VendorOrderNotificationPanel extends javax.swing.JPanel {
         viewButton = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(163, 213, 240));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(236, 236, 236)));
 
         dateTimeLabel.setText("Date & Time");
 

@@ -7,9 +7,9 @@ package food.ordering.system.VendorGUI;
 import food.ordering.system.Notification;
 import food.ordering.system.ReadFiles;
 import food.ordering.system.CustomerGUI.Customer;
-import food.ordering.system.CustomerGUI.Order;
-import food.ordering.system.CustomerGUI.Order.OrderStatus;
-import food.ordering.system.CustomerGUI.OrderManager;
+import food.ordering.system.Order;
+import food.ordering.system.Order.OrderStatus;
+import food.ordering.system.OrderManager;
 import food.ordering.system.RunnerGUI.Runner;
 import food.ordering.system.RunnerGUI.Task;
 import java.text.DecimalFormat;
@@ -185,9 +185,9 @@ public class ManageOrder extends javax.swing.JFrame {
         orderIDLabel.setFont(new java.awt.Font("Ebrima", 1, 24)); // NOI18N
         orderIDLabel.setText("-");
 
-        acceptButton.setBackground(new java.awt.Color(255, 255, 254));
+        acceptButton.setBackground(new java.awt.Color(68, 179, 68));
         acceptButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        acceptButton.setForeground(new java.awt.Color(102, 255, 102));
+        acceptButton.setForeground(new java.awt.Color(255, 255, 255));
         acceptButton.setText("Accept");
         acceptButton.setPreferredSize(new java.awt.Dimension(100, 25));
         acceptButton.addActionListener(new java.awt.event.ActionListener() {
@@ -196,9 +196,9 @@ public class ManageOrder extends javax.swing.JFrame {
             }
         });
 
-        rejectButton.setBackground(new java.awt.Color(255, 255, 254));
+        rejectButton.setBackground(new java.awt.Color(255, 51, 51));
         rejectButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        rejectButton.setForeground(new java.awt.Color(255, 51, 51));
+        rejectButton.setForeground(new java.awt.Color(255, 255, 255));
         rejectButton.setText("Reject");
         rejectButton.setPreferredSize(new java.awt.Dimension(100, 25));
         rejectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -207,9 +207,9 @@ public class ManageOrder extends javax.swing.JFrame {
             }
         });
 
-        readyButton.setBackground(new java.awt.Color(255, 255, 254));
+        readyButton.setBackground(new java.awt.Color(26, 115, 232));
         readyButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        readyButton.setForeground(new java.awt.Color(26, 115, 232));
+        readyButton.setForeground(new java.awt.Color(255, 255, 255));
         readyButton.setText("Ready");
         readyButton.setPreferredSize(new java.awt.Dimension(100, 25));
         readyButton.addActionListener(new java.awt.event.ActionListener() {

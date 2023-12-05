@@ -1,5 +1,6 @@
 package food.ordering.system.VendorGUI;
 
+import food.ordering.system.ReadFiles;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -31,37 +32,9 @@ public class FoodItemMenu extends javax.swing.JFrame {
         initComponents();
         this.vendor = vendor;
         
-        allFoodItems = readVendorFoodItems();
+        ReadFiles reader = new ReadFiles();
+        allFoodItems = reader.readFoodItemsFromFile(vendor);
         loadFoodItems();
-    }
-
-    private List<FoodItem> readVendorFoodItems() { 
-        List<FoodItem> items = new ArrayList<>();
-        
-        try (BufferedReader reader = new BufferedReader(new FileReader(vendorMenuFilePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split("=");
-                if (parts.length == 7) {
-                    int menuVendorID = Integer.parseInt(parts[0]); 
-                    int itemID = Integer.parseInt(parts[1]);
-                    String itemName = parts[2];
-                    String itemCategory = parts[3];
-                    double itemPrice = Double.parseDouble(parts[4]);
-                    String itemDescription = parts[5];
-                    double itemCost = Double.parseDouble(parts[6]); 
-
-                    FoodItem item = new FoodItem(menuVendorID, itemID, itemName, itemCategory, itemPrice, itemDescription, itemCost);
-                    items.add(item);
-                } else {
-                    System.out.println("Skipping a line with an incorrect number of parts");
-                }
-            }
-        } catch (IOException e) {
-            // Handle the exception, e.g., log or display an error message
-            e.printStackTrace();
-        }
-        return items;
     }
     
     private void loadFoodItems() {
@@ -101,7 +74,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
     
     private FoodItem getFoodItem(int id) {
         for (FoodItem item : allFoodItems) {
-            if (id == item.getItemID() && item.getVendorID() == vendor.getVendorID()) {
+            if (id == item.getItemID()) {
                 return item;
             }
         }
@@ -132,7 +105,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        nameField = new javax.swing.JTextField();
+        costField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         categoryField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -140,7 +113,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         descriptionField = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        costField = new javax.swing.JTextField();
+        nameField1 = new javax.swing.JTextField();
         editButton = new javax.swing.JButton();
         addButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
@@ -197,7 +170,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel3.setText("Food Name:");
 
-        nameField.setPreferredSize(new java.awt.Dimension(150, 25));
+        costField.setPreferredSize(new java.awt.Dimension(150, 25));
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel4.setText("Food Category:");
@@ -217,7 +190,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel7.setText("Food Cost:");
 
-        costField.setPreferredSize(new java.awt.Dimension(150, 25));
+        nameField1.setPreferredSize(new java.awt.Dimension(150, 25));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -233,7 +206,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(descriptionField, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(costField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(nameField1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(categoryField, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(21, 21, 21)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -241,7 +214,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(nameField, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                    .addComponent(costField, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
                     .addComponent(priceField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -252,7 +225,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(costField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nameField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addGap(8, 8, 8)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -264,7 +237,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
                             .addComponent(jLabel6)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(costField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7))
                         .addGap(8, 8, 8)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -400,7 +373,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         DefaultTableModel model = (DefaultTableModel) foodItemTable.getModel();
-        String newName = nameField.getText();
+        String newName = nameField1.getText();
         String newCategory = categoryField.getText();
         String newPrice = priceField.getText();
         String newDescription = descriptionField.getText();
@@ -426,13 +399,12 @@ public class FoodItemMenu extends javax.swing.JFrame {
             writeToFile();
             JOptionPane.showMessageDialog(this, "Successfully edited food item", "Success", JOptionPane.INFORMATION_MESSAGE);
             // Refresh the table with updated data
-            readVendorFoodItems();
             loadFoodItems();
-            nameField.setText("");
+            costField.setText("");
             categoryField.setText("");
             priceField.setText("");
             descriptionField.setText("");
-            costField.setText("");
+            nameField1.setText("");
             editMode = false; // Switch back to view mode
         } else {
             // No changes were made
@@ -443,7 +415,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         int vendorID = vendor.getVendorID();
         int itemID = checkMaxID();
-        String name = nameField.getText();
+        String name = nameField1.getText();
         String category = categoryField.getText();
         double price = Double.parseDouble(priceField.getText());
         String description = descriptionField.getText();
@@ -454,13 +426,12 @@ public class FoodItemMenu extends javax.swing.JFrame {
         writeToFile();
         JOptionPane.showMessageDialog(this, "Successfully added food item", "Success", JOptionPane.INFORMATION_MESSAGE);
         // Refresh the table with updated data
-        readVendorFoodItems();
         loadFoodItems();
-        nameField.setText("");
+        costField.setText("");
         categoryField.setText("");
         priceField.setText("");
         descriptionField.setText("");
-        costField.setText("");
+        nameField1.setText("");
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
@@ -473,7 +444,6 @@ public class FoodItemMenu extends javax.swing.JFrame {
                 FoodItem selectedFoodItem = getFoodItem(itemID);
                 allFoodItems.removeIf(item -> item.getItemID() == selectedFoodItem.getItemID() && item.getVendorID() == vendor.getVendorID());
                 writeToFile();
-                readVendorFoodItems();
                 loadFoodItems();
             } else {
                 JOptionPane.showMessageDialog(this, "Action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
@@ -494,7 +464,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
             double cost = (double) model.getValueAt(selectedRow, 5);
 
             // Set the current data in the text fields
-            nameField.setText(name);
+            nameField1.setText(name);
             categoryField.setText(category);
             priceField.setText(Double.toString(price));
             descriptionField.setText(description);
@@ -531,7 +501,7 @@ public class FoodItemMenu extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField nameField;
+    private javax.swing.JTextField nameField1;
     private javax.swing.JTextField priceField;
     private javax.swing.JButton viewButton;
     // End of variables declaration//GEN-END:variables

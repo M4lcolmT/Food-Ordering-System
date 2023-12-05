@@ -59,6 +59,7 @@ public class TransactionNotificationPanel extends javax.swing.JPanel {
         viewReceiptButton = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(163, 213, 240));
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(236, 236, 236), 1, true));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Your transaction is approved!");

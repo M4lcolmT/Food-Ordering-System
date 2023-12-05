@@ -13,6 +13,7 @@ import java.util.ArrayList;
  */
 public class OrderMenu extends javax.swing.JFrame {
     private Customer customer;
+    private String vendorCategory = "";
     List<Vendor> vendors = new ArrayList<>();
     
     public OrderMenu(Customer customer) {
@@ -22,15 +23,20 @@ public class OrderMenu extends javax.swing.JFrame {
         customerNameLabel.setText("Hi, "+customer.getName());
         ReadFiles reader = new ReadFiles();
         vendors = reader.readVendors();
-        populateVendorInnerPanel(vendors);
+        populateVendorInnerPanel();
     }
     
-    private void populateVendorInnerPanel(List<Vendor> vendors) {
+    private void populateVendorInnerPanel() {
         innerScrollPanel.removeAll();
 
         for (Vendor vendor : vendors) {
-            VendorPanel vendorPanel = new VendorPanel(this, vendor, customer);
-            innerScrollPanel.add(vendorPanel);
+            if (vendor.getCategory().equalsIgnoreCase(vendorCategory)) {
+                VendorPanel vendorPanel = new VendorPanel(this, vendor, customer);
+                innerScrollPanel.add(vendorPanel);
+            } else if (vendorCategory.equals("")) {
+                VendorPanel vendorPanel = new VendorPanel(this, vendor, customer);
+                innerScrollPanel.add(vendorPanel);
+            }
         }
 
         // Repaint and revalidate innerPanel to reflect the changes
@@ -45,11 +51,12 @@ public class OrderMenu extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         customerNameLabel = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        nonHalalLabel = new javax.swing.JLabel();
+        westernLabel = new javax.swing.JLabel();
+        japaneseLabel = new javax.swing.JLabel();
+        koreanLabel = new javax.swing.JLabel();
+        fastFoodLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         vendorContainer = new javax.swing.JScrollPane();
         innerScrollPanel = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
@@ -65,25 +72,59 @@ public class OrderMenu extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(89, 185, 227));
 
+        nonHalalLabel.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
+        nonHalalLabel.setForeground(new java.awt.Color(255, 255, 255));
+        nonHalalLabel.setText("Non-Halal");
+        nonHalalLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nonHalalLabelMouseClicked(evt);
+            }
+        });
+
+        westernLabel.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
+        westernLabel.setForeground(new java.awt.Color(255, 255, 255));
+        westernLabel.setText("Western");
+        westernLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                westernLabelMouseClicked(evt);
+            }
+        });
+
+        japaneseLabel.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
+        japaneseLabel.setForeground(new java.awt.Color(255, 255, 255));
+        japaneseLabel.setText("Japanese");
+        japaneseLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                japaneseLabelMouseClicked(evt);
+            }
+        });
+
+        koreanLabel.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
+        koreanLabel.setForeground(new java.awt.Color(255, 255, 255));
+        koreanLabel.setText("Korean");
+        koreanLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                koreanLabelMouseClicked(evt);
+            }
+        });
+
+        fastFoodLabel.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
+        fastFoodLabel.setForeground(new java.awt.Color(255, 255, 255));
+        fastFoodLabel.setText("Fast Food");
+        fastFoodLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fastFoodLabelMouseClicked(evt);
+            }
+        });
+
         jLabel2.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Non-Halal");
-
-        jLabel3.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Western");
-
-        jLabel4.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Japanese");
-
-        jLabel5.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Korean");
-
-        jLabel6.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("Fast Food");
+        jLabel2.setText("Show All");
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel2MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -91,27 +132,30 @@ public class OrderMenu extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(jLabel2)
+                .addComponent(nonHalalLabel)
                 .addGap(33, 33, 33)
-                .addComponent(jLabel3)
+                .addComponent(westernLabel)
                 .addGap(33, 33, 33)
-                .addComponent(jLabel4)
+                .addComponent(japaneseLabel)
                 .addGap(35, 35, 35)
-                .addComponent(jLabel5)
+                .addComponent(koreanLabel)
                 .addGap(31, 31, 31)
-                .addComponent(jLabel6)
-                .addContainerGap(250, Short.MAX_VALUE))
+                .addComponent(fastFoodLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 196, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(17, 17, 17))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6))
+                    .addComponent(nonHalalLabel)
+                    .addComponent(westernLabel)
+                    .addComponent(japaneseLabel)
+                    .addComponent(koreanLabel)
+                    .addComponent(fastFoodLabel)
+                    .addComponent(jLabel2))
                 .addContainerGap())
         );
 
@@ -146,7 +190,7 @@ public class OrderMenu extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(customerNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,7 +216,7 @@ public class OrderMenu extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
         );
 
         pack();
@@ -184,18 +228,49 @@ public class OrderMenu extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel10MouseClicked
 
+    private void nonHalalLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nonHalalLabelMouseClicked
+        vendorCategory = "non-halal";
+        populateVendorInnerPanel();
+    }//GEN-LAST:event_nonHalalLabelMouseClicked
+
+    private void westernLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_westernLabelMouseClicked
+        vendorCategory = "western";
+        populateVendorInnerPanel();
+    }//GEN-LAST:event_westernLabelMouseClicked
+
+    private void japaneseLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_japaneseLabelMouseClicked
+        vendorCategory = "japanese";
+        populateVendorInnerPanel();
+    }//GEN-LAST:event_japaneseLabelMouseClicked
+
+    private void koreanLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_koreanLabelMouseClicked
+        vendorCategory = "korean";
+        populateVendorInnerPanel();
+    }//GEN-LAST:event_koreanLabelMouseClicked
+
+    private void fastFoodLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fastFoodLabelMouseClicked
+        vendorCategory = "fast food";
+        populateVendorInnerPanel();
+    }//GEN-LAST:event_fastFoodLabelMouseClicked
+
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        vendorCategory = "";
+        populateVendorInnerPanel();
+    }//GEN-LAST:event_jLabel2MouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel customerNameLabel;
+    private javax.swing.JLabel fastFoodLabel;
     private javax.swing.JPanel innerScrollPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel japaneseLabel;
+    private javax.swing.JLabel koreanLabel;
+    private javax.swing.JLabel nonHalalLabel;
     private javax.swing.JScrollPane vendorContainer;
+    private javax.swing.JLabel westernLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -4,7 +4,10 @@
  */
 package food.ordering.system.CustomerGUI;
 
-import food.ordering.system.CustomerGUI.Order.OrderStatus;
+import food.ordering.system.OrderManager;
+import food.ordering.system.Order;
+import food.ordering.system.Order.OrderStatus;
+import food.ordering.system.ReadFiles;
 import food.ordering.system.VendorGUI.Vendor;
 import food.ordering.system.VendorGUI.FoodItem;
 import java.io.BufferedReader;
@@ -22,31 +25,29 @@ import textFiles.TextFilePaths;
  * @author LENOVO
  */
 public class Menu extends javax.swing.JFrame {
-    private Vendor vendor;
-    private Customer customer;
-    private List<FoodItem> menu = new ArrayList<>();
+    private final Vendor vendor;
+    private final Customer customer;
+    private final List<FoodItem> menu;
     private List<FoodItem> basket = new ArrayList<>();
-    private FoodItem foodItem;
     public static double totalPrice = 0.0;
     public static int basketCount = 0;
-    private List<Order> orders;
+    private final List<Order> orders;
     private final OrderManager manager = new OrderManager();
 
     DecimalFormat df = new DecimalFormat("#.#");
 
-    TextFilePaths path = new TextFilePaths();
-    String vendorMenuFilePath = path.getVendorMenuTextFile();
-    
     public Menu(Vendor vendor, Customer customer, List<FoodItem> basket) {
         initComponents();
         this.vendor = vendor;
         this.customer = customer;
         this.basket = basket;
         
+        ReadFiles reader = new ReadFiles();
+        menu = reader.readFoodItemsFromFile(vendor);
+        
         vendorName.setText(vendor.getName());
         vendorRating.setText(Double.toString(vendor.getRating()));
-        readFoodItemsFromFile();
-        populateInnerPanel(menu);
+        populateInnerPanel();
         checkEmptyBasket();
         orders = manager.getOrders();
     }
@@ -55,39 +56,7 @@ public class Menu extends javax.swing.JFrame {
         return vendor.getName();
     }
     
-    private List<FoodItem> readFoodItemsFromFile() {
-        menu.clear();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(vendorMenuFilePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split("=");
-                if (parts.length == 7) {
-                    int vendorID = Integer.parseInt(parts[0]);
-                    if (vendorID == vendor.getVendorID()) {
-                        int itemID = Integer.parseInt(parts[1]);
-                        String itemName = parts[2];
-                        String itemCategory = parts[3];
-                        Double itemPrice = Double.valueOf(parts[4]);
-                        String itemDescription = parts[5];
-                        Double itemCost = Double.valueOf(parts[6]);
-
-                        foodItem = new FoodItem(vendorID, itemID, itemName, itemCategory, itemPrice, itemDescription, itemCost);
-                        menu.add(foodItem);
-                    }
-                } else {
-                    System.out.println("Skipping a line with an incorrect number of parts: " + line);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.err.println("File not found: " + vendorMenuFilePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return menu;
-    }
-    
-    private void populateInnerPanel(List<FoodItem> menu) {
+    private void populateInnerPanel() {
         innerScrollPanel.removeAll();
         for (FoodItem item : menu) {
             FoodItemPanel foodItemPanel = new FoodItemPanel(item, basket, this);

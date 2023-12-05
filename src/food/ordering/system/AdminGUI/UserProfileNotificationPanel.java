@@ -32,6 +32,7 @@ public class UserProfileNotificationPanel extends javax.swing.JPanel {
         dateTimeLabel = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(163, 213, 240));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(231, 231, 231)));
 
         updateLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         updateLabel.setText("Your profile is updated!");
@@ -47,7 +48,7 @@ public class UserProfileNotificationPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(updateLabel)
                     .addComponent(dateTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(407, Short.MAX_VALUE))
+                .addContainerGap(405, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -56,7 +57,7 @@ public class UserProfileNotificationPanel extends javax.swing.JPanel {
                 .addComponent(updateLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(dateTimeLabel)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

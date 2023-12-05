@@ -4,8 +4,8 @@
  */
 package food.ordering.system.RunnerGUI;
 
-import food.ordering.system.CustomerGUI.Order;
-import food.ordering.system.CustomerGUI.OrderManager;
+import food.ordering.system.Order;
+import food.ordering.system.OrderManager;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -50,6 +50,7 @@ public class RunnerOrderNotificationPanel extends javax.swing.JPanel {
         viewButton = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(163, 213, 240));
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(234, 234, 234), 1, true));
 
         dateTimeLabel.setText("Date & Time");
 

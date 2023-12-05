@@ -4,7 +4,7 @@ import food.ordering.system.TopUpRequests;
 import food.ordering.system.Notification;
 import food.ordering.system.ReadFiles;
 import food.ordering.system.CustomerGUI.Customer;
-import food.ordering.system.CustomerGUI.OrderManager;
+import food.ordering.system.OrderManager;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;

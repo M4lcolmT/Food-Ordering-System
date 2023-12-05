@@ -4,9 +4,11 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.OrderManager;
+import food.ordering.system.Order;
 import food.ordering.system.Notification;
 import food.ordering.system.ReadFiles;
-import food.ordering.system.CustomerGUI.Order.OrderType;
+import food.ordering.system.Order.OrderType;
 import food.ordering.system.Location;
 import food.ordering.system.RunnerGUI.Runner;
 import food.ordering.system.RunnerGUI.Task;

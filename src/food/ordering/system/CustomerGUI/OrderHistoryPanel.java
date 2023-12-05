@@ -4,6 +4,8 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.OrderManager;
+import food.ordering.system.Order;
 import food.ordering.system.VendorGUI.FoodItem;
 import food.ordering.system.VendorGUI.Vendor;
 import java.time.LocalDateTime;

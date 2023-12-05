@@ -2,9 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package food.ordering.system.CustomerGUI;
+package food.ordering.system;
 
-import food.ordering.system.CustomerGUI.Order.OrderType;
+import food.ordering.system.CustomerGUI.Customer;
+import food.ordering.system.Order;
+import food.ordering.system.Order.OrderType;
 import food.ordering.system.RunnerGUI.Task;
 import food.ordering.system.VendorGUI.FoodItem;
 import food.ordering.system.VendorGUI.Vendor;

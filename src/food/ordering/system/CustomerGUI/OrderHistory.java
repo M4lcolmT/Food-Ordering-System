@@ -4,6 +4,7 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.Order;
 import java.util.List;
 
 public class OrderHistory extends javax.swing.JFrame {

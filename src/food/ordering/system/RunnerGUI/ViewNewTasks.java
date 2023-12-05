@@ -3,8 +3,8 @@ package food.ordering.system.RunnerGUI;
 import food.ordering.system.Notification;
 import food.ordering.system.ReadFiles;
 import food.ordering.system.CustomerGUI.Customer;
-import food.ordering.system.CustomerGUI.Order;
-import food.ordering.system.CustomerGUI.OrderManager;
+import food.ordering.system.Order;
+import food.ordering.system.OrderManager;
 import food.ordering.system.Location;
 import food.ordering.system.VendorGUI.Vendor;
 import java.time.LocalDateTime;
@@ -195,9 +195,9 @@ public class ViewNewTasks extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        acceptButton.setBackground(new java.awt.Color(255, 255, 254));
+        acceptButton.setBackground(new java.awt.Color(68, 179, 68));
         acceptButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        acceptButton.setForeground(new java.awt.Color(102, 255, 102));
+        acceptButton.setForeground(new java.awt.Color(255, 255, 255));
         acceptButton.setText("Accept");
         acceptButton.setPreferredSize(new java.awt.Dimension(100, 25));
         acceptButton.addActionListener(new java.awt.event.ActionListener() {
@@ -206,9 +206,9 @@ public class ViewNewTasks extends javax.swing.JFrame {
             }
         });
 
-        rejectButton.setBackground(new java.awt.Color(255, 255, 254));
+        rejectButton.setBackground(new java.awt.Color(255, 51, 51));
         rejectButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        rejectButton.setForeground(new java.awt.Color(255, 51, 51));
+        rejectButton.setForeground(new java.awt.Color(255, 255, 255));
         rejectButton.setText("Reject");
         rejectButton.setPreferredSize(new java.awt.Dimension(100, 25));
         rejectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -220,9 +220,9 @@ public class ViewNewTasks extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("New Task List");
 
-        manageButton.setBackground(new java.awt.Color(255, 255, 254));
+        manageButton.setBackground(new java.awt.Color(26, 115, 232));
         manageButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        manageButton.setForeground(new java.awt.Color(26, 115, 232));
+        manageButton.setForeground(new java.awt.Color(255, 255, 255));
         manageButton.setText("Manage");
         manageButton.setPreferredSize(new java.awt.Dimension(100, 25));
         manageButton.addActionListener(new java.awt.event.ActionListener() {

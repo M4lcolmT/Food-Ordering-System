@@ -4,6 +4,8 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.OrderManager;
+import food.ordering.system.Order;
 import food.ordering.system.Notification;
 import food.ordering.system.ReadFiles;
 import food.ordering.system.RunnerGUI.Task;
@@ -176,6 +178,7 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
         receivedButton = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(163, 213, 240));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(239, 239, 239)));
         jPanel1.setPreferredSize(new java.awt.Dimension(625, 100));
 
         dateTimeLabel.setText("Date & Time");
@@ -235,7 +238,7 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(dateTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                         .addComponent(receivedButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(takeAwayButton, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -258,7 +261,7 @@ public class CustomerOrderNotificationPanel extends javax.swing.JPanel {
                         .addComponent(cancelButton)
                         .addComponent(receivedButton))
                     .addComponent(dateTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

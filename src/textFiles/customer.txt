@@ -8,5 +8,5 @@
 11;Sapphire;9085601708;angelsapphire@gmail.com;saphan1728;sky blue gate; Kajang;300.0
 8;James Wilson;0145678901;james@gmail.com;1;32, Jalan Usahawan U1/8, Subang Perdana;Cyberjaya;150.0
 3;Alice Smith;0198765432;alice@gmail.com;1;7, Jalan Masjid, Taman Sri Petaling;Puchong;200.0
-1;weewee;0139008765;nsk@gmail.com;2;12 prima;Klang;70.4
-12;kiki;0111122103;kiki@gmail.com;Bilatko1@;sky blue gate;Petaling Jaya;69.0
+1;weewee;0139008765;nsk@gmail.com;2;12 prima;Klang;49.8
+12;kiki;0111122103;kiki@gmail.com;Bilatko1@;sky blue gate;Petaling Jaya;36.9

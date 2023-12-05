@@ -4,8 +4,8 @@
  */
 package food.ordering.system.VendorGUI;
 
-import food.ordering.system.CustomerGUI.Order;
-import food.ordering.system.CustomerGUI.OrderManager;
+import food.ordering.system.Order;
+import food.ordering.system.OrderManager;
 import food.ordering.system.CustomerLogin;
 import food.ordering.system.VendorLogin;
 import java.util.ArrayList;

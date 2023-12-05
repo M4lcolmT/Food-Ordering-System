@@ -4,6 +4,8 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.OrderManager;
+import food.ordering.system.Order;
 import food.ordering.system.VendorGUI.*;
 import food.ordering.system.ReadFiles;
 import food.ordering.system.Review;

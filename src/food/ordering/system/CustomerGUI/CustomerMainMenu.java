@@ -4,6 +4,8 @@
  */
 package food.ordering.system.CustomerGUI;
 
+import food.ordering.system.OrderManager;
+import food.ordering.system.Order;
 import food.ordering.system.CustomerLogin;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,8 @@ public class CustomerMainMenu extends javax.swing.JFrame {
         OrderManager orderManager = new OrderManager();
         allOrders = orderManager.getOrders();
     }
-
+    
+    // Retrieve the customer's orders (past orders)
     private List<Order> retrieveCustomerOrders() {
         List<Order> custOrders = new ArrayList<>();
         

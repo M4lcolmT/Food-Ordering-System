@@ -5,13 +5,14 @@ import food.ordering.system.Notification.NotifType;
 import food.ordering.system.Notification.NotifUserType;
 import food.ordering.system.CustomerGUI.Customer;
 import food.ordering.system.CustomerGUI.CustomerRequest;
-import food.ordering.system.Review;
 import food.ordering.system.RunnerGUI.Runner;
 import food.ordering.system.RunnerGUI.RunnerRequest;
 import food.ordering.system.RunnerGUI.Task;
+import food.ordering.system.VendorGUI.FoodItem;
 import food.ordering.system.VendorGUI.Vendor;
 import food.ordering.system.VendorGUI.VendorRequest;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ public class ReadFiles {
     String runnerTextFilePath = filePaths.getRunnerTextFile();
     String adminTextFilePath = filePaths.getAdminTextFile();
     String userRequestsTextFilePath = filePaths.getUserCRUDrequestTextFile();
+    String vendorMenuFilePath = filePaths.getVendorMenuTextFile();
     String topUpRequestsTextFilePath = filePaths.getTopUpRequestsTextFile();
     String notificationsTextFilePath = filePaths.getNotificationsTextFile();
     String tasksTextFilePath = filePaths.getRunnerTasksTextFile();
@@ -276,6 +278,38 @@ public class ReadFiles {
                 return LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             }
         }
+    }
+    
+    public List<FoodItem> readFoodItemsFromFile(Vendor vendor) {
+        List<FoodItem> foodItems = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(vendorMenuFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("=");
+                if (parts.length == 7) {
+                    int vendorID = Integer.parseInt(parts[0]);
+                    if (vendorID == vendor.getVendorID()) {
+                        int itemID = Integer.parseInt(parts[1]);
+                        String itemName = parts[2];
+                        String itemCategory = parts[3];
+                        Double itemPrice = Double.valueOf(parts[4]);
+                        String itemDescription = parts[5];
+                        Double itemCost = Double.valueOf(parts[6]);
+
+                        FoodItem foodItem = new FoodItem(vendorID, itemID, itemName, itemCategory, itemPrice, itemDescription, itemCost);
+                        foodItems.add(foodItem);
+                    }
+                } else {
+                    System.out.println("Skipping a line with an incorrect number of parts: " + line);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + vendorMenuFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return foodItems;
     }
     
     // Read top up requests for admin
