@@ -35,6 +35,7 @@ public class VendorReviews extends javax.swing.JFrame {
         loadReviews();
     }
     
+    // Load the reviews from the text file and into the jTable
     private void loadReviews() {
         DefaultTableModel model = (DefaultTableModel) vendorReviewTable.getModel();
 

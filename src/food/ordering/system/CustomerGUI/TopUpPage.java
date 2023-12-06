@@ -408,24 +408,31 @@ public class TopUpPage extends javax.swing.JFrame {
         String remarksText = remarksField.getText();
 
         if (topUpAmount == 0) {
-            JOptionPane.showMessageDialog(this, "Please select your top up amount", "Validation Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select your top up amount", 
+                    "Validation Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
-        if (bankType.equals("Select Bank") || isEmpty(cardNumberText) || isEmpty(cvvText) || isEmpty(mmYyText) || isEmpty(remarksText)) {
-            JOptionPane.showMessageDialog(this, "All fields must be filled", "Validation Error", JOptionPane.ERROR_MESSAGE);
+        if (bankType.equals("Select Bank") || isEmpty(cardNumberText) || isEmpty(cvvText) 
+                || isEmpty(mmYyText) || isEmpty(remarksText)) {
+            JOptionPane.showMessageDialog(this, "All fields must be filled", 
+                    "Validation Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         // Validate card number length
         if (cardNumberText.length() != 16) {
-            JOptionPane.showMessageDialog(this, "Invalid card number format, Card number must be 16 digits", "Validation Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                    "Invalid card number format, Card number must be 16 digits", 
+                    "Validation Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         // Validate CVV length
         if (cvvText.length() != 3) {
-            JOptionPane.showMessageDialog(this, "Invalid CVV format, CVV must be 3 digits", "Validation Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                    "Invalid CVV format, CVV must be 3 digits", 
+                    "Validation Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -433,14 +440,17 @@ public class TopUpPage extends javax.swing.JFrame {
         try {
             YearMonth.parse(mmYyText, java.time.format.DateTimeFormatter.ofPattern("MM/yy"));
         } catch (java.time.format.DateTimeParseException e) {
-            JOptionPane.showMessageDialog(this, "Expiry date must be in MM/YY format", "Validation Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                    "Expiry date must be in MM/YY format", 
+                    "Validation Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
         Long cardNumber = Long.valueOf(cardNumberText); 
         int cvv = Integer.parseInt(cvvText);
         YearMonth monthYear = YearMonth.parse(mmYyText, java.time.format.DateTimeFormatter.ofPattern("MM/yy"));
-        int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed with top up?", "Top Up Confirmation", JOptionPane.YES_NO_OPTION);        
+        int confirmationResult = JOptionPane.showConfirmDialog(this, 
+                "Proceed with top up?", "Top Up Confirmation", JOptionPane.YES_NO_OPTION);        
 
         if (confirmationResult == JOptionPane.YES_OPTION) {
             if (saveRequest(topUpAmount, bankType, cardNumber, monthYear, cvv, remarksText)) {
@@ -449,10 +459,13 @@ public class TopUpPage extends javax.swing.JFrame {
                 menu.setVisible(true);
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to send top-up request to admin, please revalidate your inputs", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, 
+                        "Failed to send top-up request to admin, please revalidate your inputs", 
+                        "Validation Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Top-up request cancelled", "Top Up Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Top-up request cancelled", 
+                    "Top Up Cancelled", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_reloadButtonActionPerformed
 

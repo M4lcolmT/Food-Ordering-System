@@ -20,7 +20,8 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
     private Order order;
     private Customer customer;
     private OrderHistory page;
-    
+    private OrderManager manager = new OrderManager();
+
     public OrderHistoryPanel(OrderHistory page, Order order, Customer customer) {
         initComponents();
         this.page = page;
@@ -34,20 +35,6 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm");
         String formattedDateTime = dateTime.format(formatter);
         dateTimeField.setText(formattedDateTime);
-    }
-    
-    private Order findOrder() {
-        OrderManager orderManager = new OrderManager();
-        List<Order> orders = orderManager.getOrders();
-        
-        for (Order orderItem : orders) {  
-            if (orderItem.getOrderID() == order.getOrderID()) {
-                System.out.println(orderItem.getOrderID());
-                return orderItem;  
-            } 
-        }
-        System.out.println("Order not found!");
-        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -81,7 +68,7 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
         reorderButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         reorderButton.setForeground(new java.awt.Color(255, 255, 255));
         reorderButton.setText("Reorder");
-        reorderButton.setPreferredSize(new java.awt.Dimension(76, 25));
+        reorderButton.setPreferredSize(new java.awt.Dimension(100, 25));
         reorderButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 reorderButtonActionPerformed(evt);
@@ -102,7 +89,7 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(dateTimeField, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(restoranField))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
                 .addComponent(reorderButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
         );
@@ -138,7 +125,7 @@ public class OrderHistoryPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void reorderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reorderButtonActionPerformed
-        Order specificOrder = findOrder();
+        Order specificOrder = manager.findOrder(order.getOrderID());
     
         if (specificOrder != null) {
             Vendor vendor = specificOrder.getVendor(); 

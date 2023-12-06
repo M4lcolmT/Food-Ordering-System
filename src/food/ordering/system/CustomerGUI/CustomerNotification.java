@@ -6,7 +6,7 @@ package food.ordering.system.CustomerGUI;
 
 import food.ordering.system.Notification;
 import food.ordering.system.ReadFiles;
-import food.ordering.system.AdminGUI.UserProfileNotificationPanel;
+import food.ordering.system.AdminGUI.UserProfileNotificationPanel1;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -54,15 +54,17 @@ public class CustomerNotification extends javax.swing.JFrame {
             LocalDateTime dateTime = item.getDateTime();
             switch(notifType) {
                 case "ORDER":
-                    CustomerOrderNotificationPanel orderPanel = new CustomerOrderNotificationPanel(this, customer, item.getTypeID(), updateDesc, dateTime);
+                    CustomerOrderNotificationPanel orderPanel = new CustomerOrderNotificationPanel(this, 
+                            customer, item.getTypeID(), updateDesc, dateTime);
                     innerScrollPanel.add(orderPanel);
                     break;
                 case "USERPROFILE":
-                    UserProfileNotificationPanel userProfilePanel = new UserProfileNotificationPanel(updateDesc, dateTime);
+                    UserProfileNotificationPanel1 userProfilePanel = new UserProfileNotificationPanel1(updateDesc, dateTime);
                     innerScrollPanel.add(userProfilePanel);
                     break;
                 case "TOPUP":
-                    TransactionNotificationPanel transactionPanel = new TransactionNotificationPanel(this, customer, item.getTypeID(), dateTime);
+                    TransactionNotificationPanel transactionPanel = new TransactionNotificationPanel(this, customer, 
+                            item.getTypeID(), dateTime);
                     innerScrollPanel.add(transactionPanel);
                     break;
                 default:

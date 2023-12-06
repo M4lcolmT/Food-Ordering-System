@@ -6,7 +6,7 @@ package food.ordering.system.RunnerGUI;
 
 import food.ordering.system.Notification;
 import food.ordering.system.ReadFiles;
-import food.ordering.system.AdminGUI.UserProfileNotificationPanel;
+import food.ordering.system.AdminGUI.UserProfileNotificationPanel1;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -58,7 +58,7 @@ public class RunnerNotification extends javax.swing.JFrame {
                     innerScrollPanel.add(orderPanel);
                     break;
                 case "USERPROFILE":
-                    UserProfileNotificationPanel userProfilePanel = new UserProfileNotificationPanel(updateDesc, dateTime);
+                    UserProfileNotificationPanel1 userProfilePanel = new UserProfileNotificationPanel1(updateDesc, dateTime);
                     innerScrollPanel.add(userProfilePanel);
                     break;
                 default:

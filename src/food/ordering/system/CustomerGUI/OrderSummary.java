@@ -86,13 +86,6 @@ public class OrderSummary extends javax.swing.JFrame {
     
     public void loadBasketItems(List<FoodItem> items) {
         DefaultTableModel model = (DefaultTableModel) orderSummaryTable.getModel();
-
-        if (items.isEmpty()) {
-            System.out.println("Items list is empty.");
-        } else {
-            System.out.println("Items list contains " + items.size() + " items.");
-        }
-
         // Create a set to keep track of unique items
         Set<FoodItem> uniqueItems = new HashSet<>(items);
 
@@ -117,7 +110,7 @@ public class OrderSummary extends javax.swing.JFrame {
     }
     
     private double calculateTax(){
-        tax = subtotal * 0.0565;
+        tax = subtotal * 0.06;
         return Double.parseDouble(df.format(tax));
     }
     
@@ -132,13 +125,6 @@ public class OrderSummary extends javax.swing.JFrame {
         }
     }
     
-    private void updateDeliveryFee() {
-        calculateDistance(customer.getCity().trim().toLowerCase(), vendor.getCity().trim().toLowerCase());
-        deliveryFee = calculateDeliveryFee();
-        deliveryFeeLabel.setText("RM" + Double.toString(deliveryFee));
-        totalPriceLabel.setText("RM" + Double.toString(calculateTotal()));
-    }
-    
     private double calculateDeliveryFee(){
         if (distance >= 3.0 && distance <= 10.0) {
             deliveryFee = 2.5;
@@ -150,6 +136,13 @@ public class OrderSummary extends javax.swing.JFrame {
             deliveryFee = 10.0;
         }
         return deliveryFee;
+    }
+    
+    private void updateDeliveryFee() {
+        calculateDistance(customer.getCity().trim().toLowerCase(), vendor.getCity().trim().toLowerCase());
+        deliveryFee = calculateDeliveryFee();
+        deliveryFeeLabel.setText("RM" + Double.toString(deliveryFee));
+        totalPriceLabel.setText("RM" + Double.toString(calculateTotal()));
     }
     
     private double calculateTotal() {
@@ -205,7 +198,9 @@ public class OrderSummary extends javax.swing.JFrame {
             saveOrder(newOrderType);
             // New Runner task
             Task newTask;
-            newTask = new Task(checkMaxTaskID(), availableRunner.getRunnerID(),order.getOrderID(), Task.TaskStatus.PENDING, deliveryFee, getDateTime());
+            newTask = new Task(checkMaxTaskID(), availableRunner.getRunnerID(),
+                    order.getOrderID(), Task.TaskStatus.PENDING, deliveryFee, 
+                    getDateTime());
             newTask.createTask(newTask);
         }
         credit = deductCredit();
@@ -495,7 +490,7 @@ public class OrderSummary extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please select a city", "Invalid Input", JOptionPane.ERROR_MESSAGE);
             return;
         } 
-        
+        // Set customer address and city if any changes are made
         customer.setStreetAddress(newstreetAddress);
         customer.setCity(newCity);
         orderManager.saveUpdatedCustomerInfo(customer);
@@ -504,44 +499,56 @@ public class OrderSummary extends javax.swing.JFrame {
                 newOrderType = OrderType.DELIVERY;
                 placeOrder();
                 //Send notif to vendor
-                Notification vendorNotif = new Notification(Notification.NotifType.ORDER, vendor.getVendorID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
+                Notification vendorNotif = new Notification(Notification.NotifType.ORDER, 
+                        vendor.getVendorID(), 
+                        Notification.NotifUserType.VENDOR, order.getOrderID(), 
+                        "New order!", getDateTime());
                 vendorNotif.saveNotification(vendorNotif);
                 //Send notif to runner
-                Notification runnerNotif = new Notification(Notification.NotifType.ORDER, availableRunner.getRunnerID(), Notification.NotifUserType.RUNNER, order.getOrderID(), "New task!", getDateTime());
+                Notification runnerNotif = new Notification(Notification.NotifType.ORDER, 
+                        availableRunner.getRunnerID(), 
+                        Notification.NotifUserType.RUNNER, order.getOrderID(), 
+                        "New task!", getDateTime());
                 runnerNotif.saveNotification(runnerNotif);
                 //Send notif to customer
-                Notification customerNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.CUSTOMER, order.getOrderID(), "Your order is processing!", getDateTime());
+                Notification customerNotif = new Notification(Notification.NotifType.ORDER, 
+                        customer.getCustomerID(), 
+                        Notification.NotifUserType.CUSTOMER, order.getOrderID(), 
+                        "Your order is processing!", getDateTime());
                 customerNotif.saveNotification(customerNotif);
             } else {
-                int result = JOptionPane.showOptionDialog(this, "There is no available runners. Would you like to dine in or take away instead?", "No runners", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+                int result = JOptionPane.showOptionDialog(this, 
+                        "There is no available runners. Would you like to dine in or take away instead?", 
+                        "No runners", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, 
+                        null, options, options[0]);
                 switch (result) {
                     case JOptionPane.YES_OPTION:
-                        // User clicked on "Take Away"
                         newOrderType = OrderType.TAKEAWAY;
                         placeOrder();
                         //Send notif to vendor
-                        Notification takeAwayVendNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
+                        Notification takeAwayVendNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), 
+                                Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
                         takeAwayVendNotif.saveNotification(takeAwayVendNotif);
                         //Send notif to customer
-                        Notification takeAwayCustNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.CUSTOMER, order.getOrderID(), "Your order is processing!", getDateTime());
+                        Notification takeAwayCustNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), 
+                                Notification.NotifUserType.CUSTOMER, order.getOrderID(), "Your order is processing!", getDateTime());
                         takeAwayCustNotif.saveNotification(takeAwayCustNotif);
                         break;
                     case JOptionPane.NO_OPTION:
-                        // User clicked on "Dine In"
                         newOrderType = OrderType.DINEIN;
                         placeOrder();
                         //Send notif to vendor
-                        Notification dineInVendNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
+                        Notification dineInVendNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), 
+                                Notification.NotifUserType.VENDOR, order.getOrderID(), "New order!", getDateTime());
                         dineInVendNotif.saveNotification(dineInVendNotif);
                         //Send notif to customer
-                        Notification dineInCustNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), Notification.NotifUserType.CUSTOMER, order.getOrderID(), "Your order is processing!", getDateTime());
+                        Notification dineInCustNotif = new Notification(Notification.NotifType.ORDER, customer.getCustomerID(), 
+                                Notification.NotifUserType.CUSTOMER, order.getOrderID(), "Your order is processing!", getDateTime());
                         dineInCustNotif.saveNotification(dineInCustNotif);
                         break;
                     case JOptionPane.CLOSED_OPTION:
-                        // User click the x button to close the dialog
                         break;
                     default:
-                        // User selected "Cancel Order"
                         newOrderType = OrderType.DELIVERY; // Pass in placeholder/Temp since cannot be null
                         CustomerMainMenu page = new CustomerMainMenu(customer);
                         page.setVisible(true);
@@ -554,7 +561,9 @@ public class OrderSummary extends javax.swing.JFrame {
             Menu menu = new Menu(order.getVendor(), order.getCustomer(), orderBasket);
             menu.resetTotalPrice();
             double difference = credit - calculateTotal();
-            JOptionPane.showMessageDialog(this, "You are short of RM" + df.format(difference) + ". Please top up before placing an order.", "Insufficient credit", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                    "You are short of RM" + df.format(difference) + ". Please top up before placing an order.", 
+                    "Insufficient credit", JOptionPane.ERROR_MESSAGE);
             TopUpPage page = new TopUpPage(customer);
             page.setVisible(true);
             this.dispose();
@@ -575,7 +584,9 @@ public class OrderSummary extends javax.swing.JFrame {
 
             while (!validInput) {
                 try {
-                    Object result = JOptionPane.showInputDialog(this, "Edit Item Count:", "Edit", JOptionPane.PLAIN_MESSAGE, null, null, currentValue);
+                    Object result = JOptionPane.showInputDialog(this, "Edit Item Count:", 
+                            "Edit", JOptionPane.PLAIN_MESSAGE, 
+                            null, null, currentValue);
 
                     if (result == null) {
                         // User canceled the input
@@ -587,7 +598,9 @@ public class OrderSummary extends javax.swing.JFrame {
                     validInput = true;
                 } catch (NumberFormatException e) {
                     // Input is not a valid integer
-                    JOptionPane.showMessageDialog(this, "Please enter a valid integer.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, 
+                            "Please enter a valid integer.", 
+                            "Invalid Input", JOptionPane.ERROR_MESSAGE);
                 }
             }
 
@@ -623,7 +636,9 @@ public class OrderSummary extends javax.swing.JFrame {
                 }
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Please select a row to edit.", "No Row Selected", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, 
+                    "Please select a row to edit.", 
+                    "No Row Selected", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_updateItemCountActionPerformed
 
@@ -637,7 +652,6 @@ public class OrderSummary extends javax.swing.JFrame {
         if (confirmationResult == JOptionPane.YES_OPTION) {
             Menu menu = new Menu(order.getVendor(), order.getCustomer(), orderBasket);
             menu.resetTotalPrice();
-            System.out.println("subtotal"+order.getTotalPrice());
             CustomerMainMenu page = new CustomerMainMenu(customer);
             page.setVisible(true);
             this.dispose();

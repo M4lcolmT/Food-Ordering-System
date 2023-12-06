@@ -33,7 +33,7 @@ public class VendorPanel extends javax.swing.JPanel {
         calculateDistance(customer.getCity().trim().toLowerCase(), vendor.getCity().trim().toLowerCase());
     }
     
-    
+    // Calculate the distance in between the custoemr and vendor (Tech Uni)
     private void calculateDistance(String customerAddress, String vendorAddress) {
         Location customerLocation = Location.locationMap.get(customerAddress);
         Location vendorLocation = Location.locationMap.get(vendorAddress);
@@ -141,11 +141,12 @@ public class VendorPanel extends javax.swing.JPanel {
                 .addGap(14, 14, 14)
                 .addComponent(vendorName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(star, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(vendorCategory)
-                    .addComponent(orderButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(vendorRating, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(vendorRating, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(vendorCategory)
+                        .addComponent(orderButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(vendorAddress)
@@ -167,7 +168,7 @@ public class VendorPanel extends javax.swing.JPanel {
 
     private void orderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_orderButtonActionPerformed
         List<FoodItem> basket = new ArrayList<>();
-        Menu vendorMenu = new Menu(vendor, customer, basket);
+        Menu vendorMenu = new Menu(vendor,customer, basket);
         vendorMenu.setVisible(true);
         orderMenu.dispose();
     }//GEN-LAST:event_orderButtonActionPerformed

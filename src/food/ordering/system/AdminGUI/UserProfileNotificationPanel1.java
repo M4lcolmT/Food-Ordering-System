@@ -4,7 +4,6 @@
  */
 package food.ordering.system.AdminGUI;
 
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -12,9 +11,9 @@ import java.time.format.DateTimeFormatter;
  *
  * @author LENOVO
  */
-public class UserProfileNotificationPanel extends javax.swing.JPanel {
-
-    public UserProfileNotificationPanel(String updateDescription, LocalDateTime dateTime) {
+public class UserProfileNotificationPanel1 extends javax.swing.JPanel {
+    
+    public UserProfileNotificationPanel1(String updateDescription, LocalDateTime dateTime) {
         initComponents();
         
         updateLabel.setText(updateDescription);
@@ -32,10 +31,10 @@ public class UserProfileNotificationPanel extends javax.swing.JPanel {
         dateTimeLabel = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(163, 213, 240));
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(231, 231, 231)));
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(236, 236, 236), 1, true));
 
         updateLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        updateLabel.setText("Your profile is updated!");
+        updateLabel.setText("Your transaction is approved!");
 
         dateTimeLabel.setText("Date & Time");
 
@@ -48,7 +47,7 @@ public class UserProfileNotificationPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(updateLabel)
                     .addComponent(dateTimeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(405, Short.MAX_VALUE))
+                .addContainerGap(386, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -57,7 +56,7 @@ public class UserProfileNotificationPanel extends javax.swing.JPanel {
                 .addComponent(updateLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(dateTimeLabel)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -68,7 +67,7 @@ public class UserProfileNotificationPanel extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

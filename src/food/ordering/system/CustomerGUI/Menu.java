@@ -7,7 +7,6 @@ package food.ordering.system.CustomerGUI;
 import food.ordering.system.OrderManager;
 import food.ordering.system.Order;
 import food.ordering.system.Order.OrderStatus;
-import food.ordering.system.ReadFiles;
 import food.ordering.system.VendorGUI.Vendor;
 import food.ordering.system.VendorGUI.FoodItem;
 import java.io.BufferedReader;
@@ -25,29 +24,31 @@ import textFiles.TextFilePaths;
  * @author LENOVO
  */
 public class Menu extends javax.swing.JFrame {
-    private final Vendor vendor;
-    private final Customer customer;
-    private final List<FoodItem> menu;
+    private Vendor vendor;
+    private Customer customer;
+    private List<FoodItem> menu = new ArrayList<>();
     private List<FoodItem> basket = new ArrayList<>();
+    private FoodItem foodItem;
     public static double totalPrice = 0.0;
     public static int basketCount = 0;
-    private final List<Order> orders;
+    private List<Order> orders;
     private final OrderManager manager = new OrderManager();
 
     DecimalFormat df = new DecimalFormat("#.#");
 
+    TextFilePaths path = new TextFilePaths();
+    String vendorMenuFilePath = path.getVendorMenuTextFile();
+    
     public Menu(Vendor vendor, Customer customer, List<FoodItem> basket) {
         initComponents();
         this.vendor = vendor;
         this.customer = customer;
         this.basket = basket;
         
-        ReadFiles reader = new ReadFiles();
-        menu = reader.readFoodItemsFromFile(vendor);
-        
         vendorName.setText(vendor.getName());
         vendorRating.setText(Double.toString(vendor.getRating()));
-        populateInnerPanel();
+        readFoodItemsFromFile();
+        populateInnerPanel(menu);
         checkEmptyBasket();
         orders = manager.getOrders();
     }
@@ -56,9 +57,42 @@ public class Menu extends javax.swing.JFrame {
         return vendor.getName();
     }
     
-    private void populateInnerPanel() {
+    private List<FoodItem> readFoodItemsFromFile() {
+        menu.clear();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(vendorMenuFilePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("=");
+                if (parts.length == 7) {
+                    int vendorID = Integer.parseInt(parts[0]);
+                    if (vendorID == vendor.getVendorID()) {
+                        int itemID = Integer.parseInt(parts[1]);
+                        String itemName = parts[2];
+                        String itemCategory = parts[3];
+                        Double itemPrice = Double.valueOf(parts[4]);
+                        String itemDescription = parts[5];
+                        Double itemCost = Double.valueOf(parts[6]);
+
+                        foodItem = new FoodItem(vendorID, itemID, itemName, itemCategory, itemPrice, itemDescription, itemCost);
+                        menu.add(foodItem);
+                    }
+                } else {
+                    System.out.println("Skipping a line with an incorrect number of parts: " + line);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + vendorMenuFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return menu;
+    }
+    
+    private void populateInnerPanel(List<FoodItem> menu) {
         innerScrollPanel.removeAll();
         for (FoodItem item : menu) {
+            System.out.println(item.getItemName());
             FoodItemPanel foodItemPanel = new FoodItemPanel(item, basket, this);
             innerScrollPanel.add(foodItemPanel);
         }
@@ -107,7 +141,6 @@ public class Menu extends javax.swing.JFrame {
         totalPrice = 0;
     }
     
-    // Checking the max order id for creating a primary key
     private int checkMaxOrderID() {
         int maxID = 0;
         for (Order i : orders) {
@@ -142,21 +175,27 @@ public class Menu extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(700, 400));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         vendorName.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         vendorName.setText("McDonald's");
+        jPanel1.add(vendorName, new org.netbeans.lib.awtextra.AbsoluteConstraints(55, 16, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 2, 18)); // NOI18N
         jLabel2.setText("Menu");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 54, -1, -1));
 
         vendorRating.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         vendorRating.setText("4.3");
+        jPanel1.add(vendorRating, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 57, -1, 30));
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         innerScrollPanel.setMinimumSize(new java.awt.Dimension(0, 0));
         innerScrollPanel.setLayout(new javax.swing.BoxLayout(innerScrollPanel, javax.swing.BoxLayout.PAGE_AXIS));
         jScrollPane1.setViewportView(innerScrollPanel);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 88, 650, 200));
 
         jButton1.setBackground(new java.awt.Color(163, 213, 240));
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -167,6 +206,7 @@ public class Menu extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 60, -1, -1));
 
         confirmBasket.setBackground(new java.awt.Color(163, 213, 240));
         confirmBasket.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -200,7 +240,7 @@ public class Menu extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(12, 12, 12)
                 .addComponent(basketItemCount, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 344, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addGap(6, 6, 6)
                 .addComponent(totalPriceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -218,58 +258,18 @@ public class Menu extends javax.swing.JFrame {
                 .addContainerGap(13, Short.MAX_VALUE))
         );
 
+        jPanel1.add(confirmBasket, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 300, 650, -1));
+
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/back.png"))); // NOI18N
         jLabel10.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel10MouseClicked(evt);
             }
         });
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 16, -1, 32));
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/star.png"))); // NOI18N
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(vendorName))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(vendorRating))
-                    .addComponent(jScrollPane1)
-                    .addComponent(confirmBasket, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(49, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(vendorName)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(vendorRating, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(confirmBasket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
-        );
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 60, -1, 20));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

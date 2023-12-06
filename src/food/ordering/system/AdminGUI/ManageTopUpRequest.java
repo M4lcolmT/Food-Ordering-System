@@ -82,7 +82,7 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         requestTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
+        processTransactionButton = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -106,14 +106,14 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(requestTable);
 
-        jButton4.setBackground(new java.awt.Color(255, 255, 254));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(26, 115, 232));
-        jButton4.setText("Process Transaction");
-        jButton4.setPreferredSize(new java.awt.Dimension(133, 25));
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        processTransactionButton.setBackground(new java.awt.Color(255, 255, 254));
+        processTransactionButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        processTransactionButton.setForeground(new java.awt.Color(26, 115, 232));
+        processTransactionButton.setText("Process Transaction");
+        processTransactionButton.setPreferredSize(new java.awt.Dimension(133, 25));
+        processTransactionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                processTransactionButtonActionPerformed(evt);
             }
         });
 
@@ -143,7 +143,7 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 648, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(256, 256, 256)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(processTransactionButton, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -158,7 +158,7 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(processTransactionButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -190,7 +190,7 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void processTransactionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processTransactionButtonActionPerformed
         DefaultTableModel model = (DefaultTableModel) requestTable.getModel();
         int selectedRow = requestTable.getSelectedRow();
         
@@ -207,14 +207,17 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
             TopUpRequests selectedRequest = findRequest(transactionID);
             selectedRequest.updateTransactionStatus(selectedRequest, requests);
             
-            Notification requestNotif = new Notification(Notification.NotifType.TOPUP, customerID, Notification.NotifUserType.CUSTOMER, transactionID, "", LocalDateTime.now());
+            Notification requestNotif = new Notification(Notification.NotifType.TOPUP, customerID, 
+                    Notification.NotifUserType.CUSTOMER, transactionID, "", LocalDateTime.now());
             requestNotif.saveNotification(requestNotif);
-            JOptionPane.showMessageDialog(this, "Transaction has been approved.", "Transaction Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Transaction has been approved.", 
+                    "Transaction Success", JOptionPane.INFORMATION_MESSAGE);
             loadTopUpRequests();
         } else {
-            JOptionPane.showMessageDialog(this, "Please select a row to process transaction", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a row to process transaction", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_processTransactionButtonActionPerformed
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
         AdminMainMenu page = new AdminMainMenu(admin);
@@ -223,7 +226,6 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel7MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel7;
@@ -231,6 +233,7 @@ public class ManageTopUpRequest extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
+    private javax.swing.JButton processTransactionButton;
     private javax.swing.JTable requestTable;
     // End of variables declaration//GEN-END:variables
 

@@ -235,6 +235,7 @@ public class CustomerUserProfile extends javax.swing.JFrame {
                         .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
+        deleteAccountButton.setBackground(new java.awt.Color(255, 255, 254));
         deleteAccountButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         deleteAccountButton.setForeground(new java.awt.Color(255, 51, 51));
         deleteAccountButton.setText("Delete Account");
@@ -294,24 +295,20 @@ public class CustomerUserProfile extends javax.swing.JFrame {
         String email = emailField.getText();
         String city = String.valueOf(cityComboBox.getSelectedItem());
         String streetAddress = streetAddressField.getText();
-        
         if (isEmpty(name) || isEmpty(phoneNumber) || isEmpty(email) || isEmpty(streetAddress) || isEmpty(city))  {
            JOptionPane.showMessageDialog(this, "Please fill in all inputs.", "Input Error", JOptionPane.ERROR_MESSAGE);
            return;
         }
-        
         if (phoneNumber.length() != 10) {
            JOptionPane.showMessageDialog(this, "Phone number must be 10 digits.", "Input Error", JOptionPane.ERROR_MESSAGE);
            return;
         }
-        
         if (!email.contains("@gmail.com")) {
            JOptionPane.showMessageDialog(this, "Enter a valid email address.", "Input Error", JOptionPane.ERROR_MESSAGE);
            return;
         }
         
         int confirmationResult = JOptionPane.showConfirmDialog(this, "Proceed with the new changes?", "Edit Confirmation", JOptionPane.YES_NO_OPTION);        
-
         if (confirmationResult == JOptionPane.YES_OPTION) {
             if (saveRequest(UserRequest.RequestType.UPDATEPROFILE, name, phoneNumber, email, customer.getPassword(), streetAddress, city)) {
                 JOptionPane.showMessageDialog(this, "Successfully sent user profile changes request to admin!");
@@ -319,7 +316,8 @@ public class CustomerUserProfile extends javax.swing.JFrame {
                 menu.setVisible(true);
                 this.dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to send user profile changes request to admin, please revalidate your inputs", "Validation Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Failed to send user profile changes request to admin, "
+                        + "please revalidate your inputs", "Validation Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(this, "User edit process is cancelled", "Changes Cancelled", JOptionPane.INFORMATION_MESSAGE);
